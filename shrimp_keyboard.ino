@@ -9,10 +9,16 @@
 #include <ps4_touchpad.h>
 #include <keys.h>
 
-#define BUTTON_COLUMN1_PIN 10
-#define BUTTON_COLUMN2_PIN 11
-#define BUTTON_ROW1_PIN 12
-#define BUTTON_ROW2_PIN 13
+#define BUTTON_COLUMN_PIN_MOSI 11
+#define BUTTON_COLUMN_PIN_SCK 12
+#define BUTTON_COLUMN_PIN_MISO 13
+
+#define BUTTON_ROW_PIN_1 4
+#define BUTTON_ROW_PIN_2 5
+#define BUTTON_ROW_PIN_3 6
+#define BUTTON_ROW_PIN_4 7
+#define BUTTON_ROW_PIN_5 15
+#define BUTTON_ROW_PIN_6 16
 
 KeyboardDevice* keyboard;
 MouseDevice* mouse;
@@ -40,15 +46,6 @@ void setup() {
   USB.begin();
   Wire.begin();
 
-  pinMode(BUTTON_COLUMN1_PIN, INPUT_PULLUP);
-  pinMode(BUTTON_COLUMN2_PIN, INPUT_PULLUP);
-
-  pinMode(BUTTON_ROW1_PIN, OUTPUT);
-  pinMode(BUTTON_ROW2_PIN, OUTPUT);
-
-  digitalWrite(BUTTON_ROW1_PIN, HIGH);
-  digitalWrite(BUTTON_ROW2_PIN, HIGH);
-
   touchpad.setAddress(0x64);
 
   if (DEBUG) Serial.println("Setup BLE server.");
@@ -75,23 +72,7 @@ void loop() {
   keyboardLoop();
   mouseLoop();
 
-  Serial.print("---");
-  Serial.println();
-  digitalWrite(BUTTON_ROW1_PIN, LOW);
-  Serial.print(!digitalRead(BUTTON_COLUMN1_PIN));
-  Serial.print(" ");
-  Serial.print(!digitalRead(BUTTON_COLUMN2_PIN));
-  digitalWrite(BUTTON_ROW1_PIN, HIGH);
-  Serial.println();
-  digitalWrite(BUTTON_ROW2_PIN, LOW);
-  Serial.print(!digitalRead(BUTTON_COLUMN1_PIN));
-  Serial.print(" ");
-  Serial.print(!digitalRead(BUTTON_COLUMN2_PIN));
-  digitalWrite(BUTTON_ROW2_PIN, HIGH);
-  Serial.println();
-  Serial.print("---");
-  Serial.println();
-  delay(10);
+
 }
 
 void keyboardLoop() {
