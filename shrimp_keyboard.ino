@@ -68,8 +68,6 @@ void setup() {
   USB.begin();
   Wire.begin();
 
-  touchpad.setAddress(TOUCHPAD_ADDRESS);
-
   if (DEBUG) Serial.println("Setup BLE server.");
   KeyboardConfiguration keyboardConfig;
   keyboard = new KeyboardDevice(keyboardConfig);
@@ -88,6 +86,9 @@ void setup() {
   if (DEBUG) Serial.println("Setup USB.");
   keyboardUSB.begin();
   mouseUSB.begin();
+
+  if (DEBUG) Serial.println("Setup touchpad");
+  touchpad.setAddress(TOUCHPAD_ADDRESS);
 
   if (DEBUG) Serial.println("Setup display.");
   display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
