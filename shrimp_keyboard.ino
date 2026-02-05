@@ -5,6 +5,9 @@
 #include <USBHIDMouse.h>
 #include "USB.h"
 #include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <at24c256.h>
 
 #include <ps4_touchpad.h>
 #include <keys.h>
@@ -21,12 +24,23 @@
 #define BUTTON_ROW_PIN_5 15
 #define BUTTON_ROW_PIN_6 16
 
+#define TOUCHPAD_ADDRESS 0x64
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 32
+#define OLED_RESET -1
+#define SCREEN_ADDRESS 0x3C
+
+#define EEPROM_ADDRESS 0x50
+
 KeyboardDevice* keyboard;
 MouseDevice* mouse;
 BleCompositeHID compositeHID("Shrimpboard", "Pink Joke", 100);
 USBHIDKeyboard keyboardUSB;
 USBHIDMouse mouseUSB;
 PS4Touchpad touchpad;
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+AT24C256 eeprom(EEPROM_ADDRESS);
 
 bool DEBUG = true;
 bool USB_MODE = false;
@@ -54,7 +68,7 @@ void setup() {
   USB.begin();
   Wire.begin();
 
-  touchpad.setAddress(0x64);
+  touchpad.setAddress(TOUCHPAD_ADDRESS);
 
   if (DEBUG) Serial.println("Setup BLE server.");
   KeyboardConfiguration keyboardConfig;
@@ -74,6 +88,10 @@ void setup() {
   if (DEBUG) Serial.println("Setup USB.");
   keyboardUSB.begin();
   mouseUSB.begin();
+
+  display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
+
+  display.display();
 }
 
 void loop() {
