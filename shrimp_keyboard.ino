@@ -31,7 +31,7 @@
 #define OLED_RESET -1
 #define SCREEN_ADDRESS 0x3C
 
-#define EEPROM_ADDRESS 0x50
+#define EPROM_ADDRESS 0x50
 
 KeyboardDevice* keyboard;
 MouseDevice* mouse;
@@ -40,7 +40,7 @@ USBHIDKeyboard keyboardUSB;
 USBHIDMouse mouseUSB;
 PS4Touchpad touchpad;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-AT24C256 eeprom(EEPROM_ADDRESS);
+AT24C256 eprom(EPROM_ADDRESS);
 
 bool DEBUG = true;
 bool USB_MODE = false;
@@ -89,8 +89,9 @@ void setup() {
   keyboardUSB.begin();
   mouseUSB.begin();
 
+  if (DEBUG) Serial.println("Setup display.");
   display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
-
+  display.clearDisplay();
   display.display();
 }
 
@@ -123,6 +124,14 @@ void loop() {
 
   xOld = touchpad.getFirstY();
   yOld = touchpad.getFirstX();
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.println("X: " + String(x, 1));
+  display.println("y: " + String(y, 1));
+  display.display();
 }
 
 void keyboardLoop() {
