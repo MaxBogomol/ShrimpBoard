@@ -13,4 +13,8 @@ class ButtonMatrix {
       shiftOut(BUTTON_COLUMN_PIN_MOSI, BUTTON_COLUMN_PIN_SCK, MSBFIRST, 0);
       digitalWrite(BUTTON_COLUMN_PIN_SS, HIGH);
     }
+
+    void read() {
+
+    }
 };

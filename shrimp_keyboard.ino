@@ -10,16 +10,19 @@
 #include <at24c256.h>
 
 /*
+ESP32-S3
 16MB (128Mb)
 16M Flash (3MB APP)
 OPI PSRAM
 
+Touchpad cable
 1 - GND
 2 - VDD
 4 - SDA
 5 - SCL
 */
 
+//Button matrix
 #define BUTTON_COLUMN_PIN_SS 10
 #define BUTTON_COLUMN_PIN_MOSI 11
 #define BUTTON_COLUMN_PIN_SCK 12
@@ -32,17 +35,23 @@ OPI PSRAM
 #define BUTTON_ROW_PIN_5 5
 #define BUTTON_ROW_PIN_6 4
 
+//Touchpad
 #define TOUCHPAD_ADDRESS 0x64
 
+//Screen
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 32
 #define OLED_RESET -1
 #define SCREEN_ADDRESS 0x3C
 
+//EPROM
 #define EPROM_ADDRESS 0x50
 
+//BLE
 #define BLE_DEVICE_NAME "Shrimpboard"
 #define BLE_DEVICE_MANUFACTURER "Pink Joke"
+
+//Setings
 #define DEBUG true
 
 #include <button_matrix.h>
@@ -74,6 +83,14 @@ void setup() {
   USB.begin();
   Wire.begin();
 
+  setupPins();
+  setupBLE();
+  setupUSB();
+  setupTouchpad();
+  setupDisplay();
+}
+
+void setupPins() {
   if (DEBUG) Serial.println("Setup pins.");
   pinMode(BUTTON_COLUMN_PIN_SS, OUTPUT);
   pinMode(BUTTON_COLUMN_PIN_MOSI, OUTPUT);
@@ -86,8 +103,10 @@ void setup() {
   pinMode(BUTTON_ROW_PIN_4, INPUT_PULLDOWN);
   pinMode(BUTTON_ROW_PIN_5, INPUT_PULLDOWN);
   pinMode(BUTTON_ROW_PIN_6, INPUT_PULLDOWN);
+}
 
-  if (DEBUG) Serial.println("Setup BLE server.");
+void setupBLE() {
+  if (DEBUG) Serial.println("Setup BLE.");
   compositeHID = new BleCompositeHID(BLE_DEVICE_NAME, BLE_DEVICE_MANUFACTURER, 100);
 
   KeyboardConfiguration keyboardConfig;
@@ -103,25 +122,35 @@ void setup() {
   hostConfiguration.setHidType(HID_KEYBOARD);
 
   compositeHID->begin(hostConfiguration);
+}
 
+void setupUSB() {
   if (DEBUG) Serial.println("Setup USB.");
   keyboardUSB.begin();
   mouseUSB.begin();
+}
 
+void setupButtonMatrix() {
   if (DEBUG) Serial.println("Setup button matrix");
   buttonMatrix.setup();
+}
 
+void setupTouchpad() {
   if (DEBUG) Serial.println("Setup touchpad");
   touchpad.setAddress(TOUCHPAD_ADDRESS);
+}
 
+void setupDisplay() {
   if (DEBUG) Serial.println("Setup display.");
   display.setup();
 }
 
 void loop() {
+  buttonMatrix.read();
   touchpad.read();
-  keyboardLoop();
-  mouseLoop();
+
+  loopKeyboard();
+  loopMouse();
 
   if (touchpad.isFirstPressed()) {
     if (old) {
@@ -187,11 +216,11 @@ void loop() {
   Serial.println();
 }
 
-void keyboardLoop() {
+void loopKeyboard() {
 
 }
 
-void mouseLoop() {
+void loopMouse() {
 
 }
 
