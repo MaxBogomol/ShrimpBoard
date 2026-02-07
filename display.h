@@ -1,3 +1,5 @@
+#pragma once
+
 class Display {
   private:
     Adafruit_SSD1306* display;

@@ -1,3 +1,5 @@
+#pragma once
+
 class PS4Touchpad {
   private:
     uint8_t TOUCHPAD_ADDR = 0x4B;

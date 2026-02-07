@@ -57,6 +57,8 @@ Touchpad cable
 #include <button_matrix.h>
 #include <ps4_touchpad.h>
 #include <display.h>
+#include <eprom.h>
+#include <settings.h>
 #include <keys.h>
 
 KeyboardDevice* keyboard;
@@ -67,7 +69,7 @@ USBHIDMouse mouseUSB;
 ButtonMatrix buttonMatrix;
 PS4Touchpad touchpad;
 Display display;
-AT24C256 eprom(EPROM_ADDRESS);
+EPROM eprom;
 
 bool USB_MODE = false;
 
