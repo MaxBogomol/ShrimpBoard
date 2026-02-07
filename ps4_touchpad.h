@@ -1,5 +1,3 @@
-#include <Wire.h>
-
 class PS4Touchpad {
   private:
     uint8_t TOUCHPAD_ADDR = 0x4B;
@@ -31,8 +29,8 @@ class PS4Touchpad {
         int x1 = ((data[5] << 8) | data[4]) - 61440;
         int y1 = ((data[7] << 8) | data[6]) - 49152;
 
-        firstTouchX = x1;//map(x1, 0, MAX_X, 0, 100);
-        firstTouchY = y1;//map(y1, 0, MAX_Y, 0, 100);
+        firstTouchX = x1;
+        firstTouchY = y1;
         firstTouchPressed = true;
       }
 
@@ -40,8 +38,8 @@ class PS4Touchpad {
         int x2 = ((data[11] << 8) | data[10]) - 61440;
         int y2 = ((data[13] << 8) | data[12]) - 49152;
 
-        secondTouchX = x2;//map(x2, 0, MAX_X, 0, 100);
-        secondTouchY = y2;//map(y2, 0, MAX_Y, 0, 100);
+        secondTouchX = x2;
+        secondTouchY = y2;
         secondTouchPressed = true;
       }
     }
@@ -80,5 +78,21 @@ class PS4Touchpad {
 
     int getSecondY() {
       return secondTouchY;
+    }
+
+    double getNormalizedFirstX() {
+      return map(getFirstX(), 0.0, MAX_X, 0.0, 100.0);
+    }
+
+    double getNormalizedFirstY() {
+      return map(getFirstY(), 0.0, MAX_Y, 0.0, 100.0);
+    }
+
+    double getNormalizedSecondX() {
+      return map(getSecondX(), 0.0, MAX_X, 0.0, 100);
+    }
+
+    double getNormalizedSecondY() {
+      return map(getSecondY(), 0.0, MAX_Y, 0.0, 100.0);
     }
 };
