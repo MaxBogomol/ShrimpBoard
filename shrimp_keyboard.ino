@@ -5,6 +5,7 @@
 #include <USBHIDMouse.h>
 #include "USB.h"
 #include <Wire.h>
+#include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <at24c256.h>
@@ -26,6 +27,7 @@ Touchpad cable
 #define BUTTON_COLUMN_PIN_SS 10
 #define BUTTON_COLUMN_PIN_MOSI 11
 #define BUTTON_COLUMN_PIN_SCK 12
+#define BUTTON_COLUMN_PIN_OE 13
 #define BUTTON_COLUMN_PIN_17 14
 
 #define BUTTON_ROW_PIN_1 16
@@ -88,6 +90,7 @@ void setup() {
   setupPins();
   setupBLE();
   setupUSB();
+  setupButtonMatrix();
   setupTouchpad();
   setupDisplay();
 }
@@ -97,6 +100,7 @@ void setupPins() {
   pinMode(BUTTON_COLUMN_PIN_SS, OUTPUT);
   pinMode(BUTTON_COLUMN_PIN_MOSI, OUTPUT);
   pinMode(BUTTON_COLUMN_PIN_SCK, OUTPUT);
+  pinMode(BUTTON_COLUMN_PIN_OE, OUTPUT);
   pinMode(BUTTON_COLUMN_PIN_17, OUTPUT);
 
   pinMode(BUTTON_ROW_PIN_1, INPUT_PULLDOWN);
@@ -186,36 +190,6 @@ void loop() {
   display.getDisplay().println("X: " + String(x, 1));
   display.getDisplay().println("y: " + String(y, 1));
   display.getDisplay().display();
-
-  for (int i = 0; i < 17; i++) {
-    uint8_t data1 = 0b10000000;
-    uint8_t data2 = 0b10000000;
-    if (i < 8) {
-      data1 = data1 >> i;
-      data2 = 0b00000000;
-    } else {
-      data2 = data2 >> (i - 8);
-      data1 = 0b00000000;
-    }
-    if (i >= 16) {
-      data1 = 0b00000000;
-      data2 = 0b00000000;
-      digitalWrite(BUTTON_COLUMN_PIN_17, HIGH);
-    }
-
-    digitalWrite(BUTTON_COLUMN_PIN_SS, LOW);
-    shiftOut(BUTTON_COLUMN_PIN_MOSI, BUTTON_COLUMN_PIN_SCK, MSBFIRST, data2);
-    shiftOut(BUTTON_COLUMN_PIN_MOSI, BUTTON_COLUMN_PIN_SCK, MSBFIRST, data1);
-    digitalWrite(BUTTON_COLUMN_PIN_SS, HIGH);
-
-    Serial.print(digitalRead(BUTTON_ROW_PIN_1));
-    Serial.print(" ");
-
-    if (i >= 16) {
-      digitalWrite(BUTTON_COLUMN_PIN_17, HIGH);
-    }
-  }
-  Serial.println();
 }
 
 void loopKeyboard() {
