@@ -30,7 +30,6 @@ class ButtonMatrix {
         readColumn(i);
       }
 
-      //clearBytes();
       digitalWrite(BUTTON_COLUMN_PIN_OE, HIGH);
       digitalWrite(BUTTON_COLUMN_PIN_17, HIGH);
       readColumn(16);
