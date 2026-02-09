@@ -3,6 +3,7 @@
 #include <MouseDevice.h>
 #include <USBHIDKeyboard.h>
 #include <USBHIDMouse.h>
+#include "USBHIDConsumerControl.h"
 #include "USB.h"
 #include <Wire.h>
 #include <SPI.h>
@@ -63,11 +64,12 @@ Touchpad cable
 #include <settings.h>
 #include <keys.h>
 
-KeyboardDevice* keyboard;
-MouseDevice* mouse;
+KeyboardDevice* keyboardBLE;
+MouseDevice* mouseBLE;
 BleCompositeHID* compositeHID;
 USBHIDKeyboard keyboardUSB;
 USBHIDMouse mouseUSB;
+USBHIDConsumerControl consumerControl;
 ButtonMatrix buttonMatrix;
 PS4Touchpad touchpad;
 Display display;
@@ -82,13 +84,42 @@ float yOld = 0;
 bool old = false;
 bool oldS = false;
 
-static const unsigned char PROGMEM MATRIX_LIST[6][17] = {
+static const uint8_t PROGMEM KEYBOARD_MATRIX[6][17] = {
   {KEY_NONE, KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_SYSRQ, KEY_SCROLLLOCK, KEY_PAUSE},
   {KEY_NONE, KEY_GRAVE, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS, KEY_EQUAL, KEY_BACKSPACE, KEY_INSERT, KEY_HOME},
   {KEY_NONE, KEY_TAB, KEY_Q, KEY_W, KEY_E, KEY_R, KEY_T, KEY_Y, KEY_U, KEY_I, KEY_O, KEY_P, KEY_LEFTBRACE, KEY_RIGHTBRACE, KEY_BACKSLASH, KEY_DELETE, KEY_END},
   {KEY_NONE, KEY_CAPSLOCK, KEY_A, KEY_S, KEY_D, KEY_F, KEY_G, KEY_H, KEY_J, KEY_K, KEY_L, KEY_SEMICOLON, KEY_APOSTROPHE, KEY_ENTER, KEY_NONE, KEY_NONE, KEY_PAGEUP},
   {KEY_NONE, KEY_LEFTSHIFT, KEY_Z, KEY_X, KEY_C, KEY_V, KEY_B, KEY_N, KEY_M, KEY_COMMA, KEY_DOT, KEY_SLASH, KEY_RIGHTSHIFT, KEY_UP, KEY_NONE, KEY_NONE, KEY_PAGEDOWN},
-  {KEY_NONE, KEY_RIGHTSHIFT, KEY_LEFTGUI, KEY_LEFTALT, KEY_SPACE, KEY_SPACE, KEY_RIGHTALT, KEY_RIGHTGUI, KEY_NONE, KEY_RIGHTCTRL, KEY_LEFT, KEY_DOWN, KEY_RIGHT, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE}
+  {KEY_NONE, KEY_RIGHTCTRL, KEY_LEFTGUI, KEY_LEFTALT, KEY_SPACE, KEY_SPACE, KEY_RIGHTALT, KEY_RIGHTGUI, KEY_NONE, KEY_RIGHTCTRL, KEY_LEFT, KEY_DOWN, KEY_RIGHT, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE}
+};
+
+static const uint8_t PROGMEM KEYBOARD_MATRIX_FN[6][17] = {
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+};
+
+static const uint8_t PROGMEM KEYBOARD_MATRIX_FN_SHIFT[6][17] = {
+  {KEY_NONE, KEY_NONE, KEY_F13, KEY_F14, KEY_F15, KEY_F16, KEY_F17, KEY_F18, KEY_F19, KEY_F20, KEY_F21, KEY_F22, KEY_F23, KEY_F24, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+  {KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE},
+};
+
+#define MEDIA_KEY_USB_NONE 0x0000
+
+static const uint16_t PROGMEM KEYBOARD_MATRIX_MEDIA_KEYS_USB[6][17] = {
+  {MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, CONSUMER_CONTROL_SCAN_PREVIOUS, CONSUMER_CONTROL_PLAY_PAUSE, CONSUMER_CONTROL_SCAN_NEXT, CONSUMER_CONTROL_MUTE, CONSUMER_CONTROL_VOLUME_DECREMENT, CONSUMER_CONTROL_VOLUME_INCREMENT, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE},
+  {MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE},
+  {MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE},
+  {MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE},
+  {MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE},
+  {MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE, MEDIA_KEY_USB_NONE}
 };
 
 void setup() {
@@ -125,13 +156,13 @@ void setupBLE() {
   compositeHID = new BleCompositeHID(BLE_DEVICE_NAME, BLE_DEVICE_MANUFACTURER, 100);
 
   KeyboardConfiguration keyboardConfig;
-  keyboard = new KeyboardDevice(keyboardConfig);
+  keyboardBLE = new KeyboardDevice(keyboardConfig);
 
   MouseConfiguration mouseConfig;
-  mouse = new MouseDevice(mouseConfig);
+  mouseBLE = new MouseDevice(mouseConfig);
 
-  compositeHID->addDevice(keyboard);
-  compositeHID->addDevice(mouse);
+  compositeHID->addDevice(keyboardBLE);
+  compositeHID->addDevice(mouseBLE);
 
   BLEHostConfiguration hostConfiguration;
   hostConfiguration.setHidType(HID_KEYBOARD);
@@ -143,6 +174,7 @@ void setupUSB() {
   if (DEBUG) Serial.println("Setup USB.");
   keyboardUSB.begin();
   mouseUSB.begin();
+  consumerControl.begin();
 }
 
 void setupButtonMatrix() {
@@ -175,18 +207,13 @@ void loop() {
     }
     x = touchpad.getFirstY() - xOld;
     y = yOld - touchpad.getFirstX();
-    mouseUSB.move(x, y, 0);
-  } else {
-    old = true;
-  }
-
-  if (touchpad.isSecondPressed()) {
-    if (oldS) {
-      mouseUSB.click(MOUSE_LEFT);
-      oldS = false;
+    if (!touchpad.isSecondPressed()) {
+      mouseUSB.move(x, y, 0);
+    } else {
+      mouseUSB.move(0, 0, -y / 10);
     }
   } else {
-    oldS = true;
+    old = true;
   }
 
   xOld = touchpad.getFirstY();
@@ -202,13 +229,94 @@ void loop() {
 }
 
 void loopKeyboard() {
-
+  for (int i = 0; i < 6; i++) {
+    for (int j = 0; j < 17; j++) {
+      uint8_t c = KEYBOARD_MATRIX[i][j];
+      if (isFNPress() || isFNReleased()) {
+        keyboardUSB.releaseAll();
+        consumerControl.release();
+      }
+      if (isFNPressed()) {
+        c = KEYBOARD_MATRIX_FN[i][j];
+        if (isShiftPressed()) {
+          c = KEYBOARD_MATRIX_FN_SHIFT[i][j];
+        } else {
+          if (c == KEY_NONE) {
+            uint16_t media_c = KEYBOARD_MATRIX_MEDIA_KEYS_USB[i][j];
+            if (media_c != MEDIA_KEY_USB_NONE) {
+              if (buttonMatrix.isPress(i, j)) {
+                consumerControl.press(media_c);
+              }
+              if (buttonMatrix.isRelease(i, j)) {
+                consumerControl.release();
+              }
+            }
+          }
+        }
+      }
+      if (c != KEY_NONE) {
+        if (buttonMatrix.isPress(i, j)) {
+          keyboardUSB.pressRaw(c);
+        }
+        if (buttonMatrix.isRelease(i, j)) {
+          keyboardUSB.releaseRaw(c);
+        }
+      }
+    }
+  }
 }
 
 void loopMouse() {
+  if (isMouseButtonPress(1, 0, 4, 15)) mouseUSB.press(MOUSE_LEFT);
+  if (isMouseButtonRelease(1, 0, 4, 15)) mouseUSB.release(MOUSE_LEFT);
 
+  if (isMouseButtonPress(2, 0, 5, 13)) mouseUSB.press(MOUSE_MIDDLE);
+  if (isMouseButtonRelease(2, 0, 5, 13)) mouseUSB.release(MOUSE_MIDDLE);
+
+  if (isMouseButtonPress(3, 0, 5, 14)) mouseUSB.press(MOUSE_RIGHT);
+  if (isMouseButtonRelease(3, 0, 5, 14)) mouseUSB.release(MOUSE_RIGHT);
+
+  if (isMouseButtonPress(4, 0, 5, 15)) mouseUSB.press(MOUSE_FORWARD);
+  if (isMouseButtonRelease(4, 0, 5, 15)) mouseUSB.release(MOUSE_FORWARD);
+
+  if (isMouseButtonPress(5, 0, 5, 16)) mouseUSB.press(MOUSE_BACKWARD);
+  if (isMouseButtonRelease(5, 0, 5, 16)) mouseUSB.release(MOUSE_BACKWARD);
 }
 
 bool isBLEConnected() {
   return compositeHID->isConnected();
+}
+
+bool isLeftShiftPressed() {
+  return buttonMatrix.isPressed(4, 1);
+}
+
+bool isRightShiftPressed() {
+  return buttonMatrix.isPressed(4, 12);
+}
+
+bool isShiftPressed() {
+  return isLeftShiftPressed() || isRightShiftPressed();
+}
+
+bool isFNPress() {
+  return buttonMatrix.isPress(5, 8);
+}
+
+bool isFNPressed() {
+  return buttonMatrix.isPressed(5, 8);
+}
+
+bool isFNReleased() {
+  return buttonMatrix.isRelease(5, 8);
+}
+
+bool isMouseButtonPress(int row1, int collumn1, int row2, int collumn2) {
+  return ((buttonMatrix.isPress(row1, collumn1) && !(buttonMatrix.isPressed(row2, collumn2))) ||
+          (buttonMatrix.isPress(row2, collumn2) && !(buttonMatrix.isPressed(row1, collumn1))));
+}
+
+bool isMouseButtonRelease(int row1, int collumn1, int row2, int collumn2) {
+  return ((buttonMatrix.isRelease(row1, collumn1) && !(buttonMatrix.isPressed(row2, collumn2))) ||
+          (buttonMatrix.isRelease(row2, collumn2) && !(buttonMatrix.isPressed(row1, collumn1))));
 }

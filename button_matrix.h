@@ -12,12 +12,36 @@ class ButtonMatrix {
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
     };
 
+    bool matrixOld[6][17] = {
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+    };
+
+    int matrixNormalized[6][17] = {
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+    };
+
   public:
     void setup() {
       digitalWrite(BUTTON_COLUMN_PIN_OE, HIGH);
     }
 
     void read() {
+      for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 17; j++) {
+          matrixOld[i][j] = matrix[i][j];
+        }
+      }
+
       for (int i = 0; i < 16; i++) {
         uint16_t data = 0b1000000000000000;
         data = data >> i;
@@ -35,15 +59,28 @@ class ButtonMatrix {
       readColumn(16);
       digitalWrite(BUTTON_COLUMN_PIN_17, LOW);
       digitalWrite(BUTTON_COLUMN_PIN_OE, LOW);
-      
+
       for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 17; j++) {
-          Serial.print(matrix[i][j]);
+          bool button = matrix[i][j];
+          bool buttonOld = matrixOld[i][j];
+          int value = 0;
+          if (button && !buttonOld) value = 1;
+          if (button && buttonOld) value = 2;
+          if (!button && buttonOld) value = 3;
+          matrixNormalized[i][j] = value;
+        }
+      }
+      
+      /*
+      for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 17; j++) {
+          Serial.print(matrixNormalized[i][j]);
         }
         Serial.println();
       }
       Serial.println();
-      delay(100);
+      delay(100);*/
     }
 
     void readColumn(int row) {
@@ -53,5 +90,36 @@ class ButtonMatrix {
       matrix[3][row] = digitalRead(BUTTON_ROW_PIN_4);
       matrix[4][row] = digitalRead(BUTTON_ROW_PIN_5);
       matrix[5][row] = digitalRead(BUTTON_ROW_PIN_6);
+    }
+
+    bool (*getMatrix())[17] {
+      return matrix;
+    }
+
+    bool (*getMatrixOld())[17] {
+      return matrix;
+    }
+
+    int (*getMatrixNormalized())[17] {
+      return matrixNormalized;
+    }
+
+    int getValue(int row, int collumn) {
+      return matrixNormalized[row][collumn];
+    }
+
+    bool isPress(int row, int collumn) {
+      int value = getValue(row, collumn);
+      return value == 1;
+    }
+
+    bool isPressed(int row, int collumn) {
+      int value = getValue(row, collumn);
+      return value == 2;
+    }
+
+    bool isRelease(int row, int collumn) {
+      int value = getValue(row, collumn);
+      return value == 3;
     }
 };
