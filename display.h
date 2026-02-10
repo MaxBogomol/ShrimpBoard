@@ -7,9 +7,9 @@ class Display {
   public:
     void setup() {
         this->display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-        getDisplay().begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
-        getDisplay().clearDisplay();
-        getDisplay().display();
+        display->begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
+        display->clearDisplay();
+        display->display();
     }
 
     Adafruit_SSD1306& getDisplay() {

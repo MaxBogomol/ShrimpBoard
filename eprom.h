@@ -1,5 +1,4 @@
 #pragma once
-#include <settings.h>
 
 class EPROM {
   private:

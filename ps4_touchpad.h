@@ -58,6 +58,18 @@ class PS4Touchpad {
       MAX_Y = max;
     }
 
+    uint8_t getAddress() {
+      return TOUCHPAD_ADDR;
+    }
+
+    int getMaxX() {
+      return MAX_X;
+    }
+
+    int getMaxY() {
+      return MAX_Y;
+    }
+
     bool isFirstPressed() {
       return firstTouchPressed;
     }
@@ -82,19 +94,19 @@ class PS4Touchpad {
       return secondTouchY;
     }
 
-    double getNormalizedFirstX() {
+    double getFirstXLimited() {
       return map(getFirstX(), 0.0, MAX_X, 0.0, 100.0);
     }
 
-    double getNormalizedFirstY() {
+    double getFirstYLimited() {
       return map(getFirstY(), 0.0, MAX_Y, 0.0, 100.0);
     }
 
-    double getNormalizedSecondX() {
+    double getSecondXLimited() {
       return map(getSecondX(), 0.0, MAX_X, 0.0, 100);
     }
 
-    double getNormalizedSecondY() {
+    double getSecondYLimited() {
       return map(getSecondY(), 0.0, MAX_Y, 0.0, 100.0);
     }
 };

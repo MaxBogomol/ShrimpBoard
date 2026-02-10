@@ -1,4 +1,3 @@
-#include "esp32-hal.h"
 #pragma once
 
 class ButtonMatrix {
@@ -64,11 +63,7 @@ class ButtonMatrix {
         for (int j = 0; j < 17; j++) {
           bool button = matrix[i][j];
           bool buttonOld = matrixOld[i][j];
-          int value = 0;
-          if (button && !buttonOld) value = 1;
-          if (button && buttonOld) value = 2;
-          if (!button && buttonOld) value = 3;
-          matrixNormalized[i][j] = value;
+          matrixNormalized[i][j] = normalizeValue(button, buttonOld);
         }
       }
       
@@ -104,22 +99,27 @@ class ButtonMatrix {
       return matrixNormalized;
     }
 
+    int normalizeValue(bool button, bool buttonOld) {
+      int value = 0;
+      if (button && !buttonOld) value = 1;
+      if (button && buttonOld) value = 2;
+      if (!button && buttonOld) value = 3;
+      return value;
+    }
+
     int getValue(int row, int collumn) {
       return matrixNormalized[row][collumn];
     }
 
     bool isPress(int row, int collumn) {
-      int value = getValue(row, collumn);
-      return value == 1;
+      return getValue(row, collumn) == 1;
     }
 
     bool isPressed(int row, int collumn) {
-      int value = getValue(row, collumn);
-      return value == 2;
+      return getValue(row, collumn) == 2;
     }
 
     bool isRelease(int row, int collumn) {
-      int value = getValue(row, collumn);
-      return value == 3;
+      return getValue(row, collumn) == 3;
     }
 };
