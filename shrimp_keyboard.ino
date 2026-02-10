@@ -57,10 +57,10 @@ Touchpad cable
 //Setings
 #define DEBUG true
 
-#include <button_matrix.h>
 #include <ps4_touchpad.h>
-#include <touchpad.h>
 #include <settings.h>
+#include <button_matrix.h>
+#include <touchpad.h>
 #include <eprom.h>
 #include <keys.h>
 #include <keys_matrix.h>
@@ -76,8 +76,7 @@ ButtonMatrix buttonMatrix;
 Touchpad touchpad;
 Display display;
 EPROM eprom;
-
-bool USB_MODE = true;
+Settings* settings;
 
 void setup() {
   Serial.begin(115200);
@@ -90,6 +89,8 @@ void setup() {
   setupButtonMatrix();
   setupTouchpad();
   setupDisplay();
+  setupEPROM();
+  setupSettings();
 }
 
 void setupPins() {
@@ -149,6 +150,16 @@ void setupDisplay() {
   display.setup();
 }
 
+void setupEPROM() {
+  if (DEBUG) Serial.println("Setup EPROM.");
+  eprom.setup();
+}
+
+void setupSettings() {
+  if (DEBUG) Serial.println("Setup settings.");
+  settings = &eprom.getSettings();
+}
+
 void loop() {
   buttonMatrix.read();
   touchpad.read();
@@ -204,14 +215,14 @@ void loopKeyboard() {
     if (isTwoLinkedButtonPress(5, 4, 5, 5)) keyboardPress(KEY_SPACE);
     if (isTwoLinkedButtonRelease(5, 4, 5, 5)) keyboardRelease(KEY_SPACE);
   } else {
-    if (buttonMatrix.isPress(5, 2)) USB_MODE = !USB_MODE;
+    if (buttonMatrix.isPress(5, 2)) settings->setUSBMode(!settings->isUSBMode());
   }
 }
 
 void loopMouse() {
   if (touchpad.isFirstTocuhPressed()) {
-    int x = touchpad.getFirstX() - touchpad.getFirstXOld();
-    int y = touchpad.getFirstY() - touchpad.getFirstYOld();
+    int x = touchpad.getFirstXMoved();
+    int y = touchpad.getFirstYMoved();
     mouseMove(x, y);
   }
 
@@ -233,6 +244,10 @@ void loopMouse() {
 
 bool isBLEConnected() {
   return compositeHID->isConnected();
+}
+
+bool isUSBMode() {
+  return settings->isUSBMode();
 }
 
 bool isLeftShiftPressed() {
@@ -270,7 +285,7 @@ bool isTwoLinkedButtonRelease(int row1, int collumn1, int row2, int collumn2) {
 }
 
 void keyboardPress(uint8_t k) {
-  if (USB_MODE) {
+  if (isUSBMode()) {
     keyboardUSB.pressRaw(k);
   } else if (isBLEConnected()) {
     keyboardBLE->keyPress(k);
@@ -278,7 +293,7 @@ void keyboardPress(uint8_t k) {
 }
 
 void keyboardRelease(uint8_t k) {
-  if (USB_MODE) {
+  if (isUSBMode()) {
     keyboardUSB.releaseRaw(k);
   } else if (isBLEConnected()) {
     keyboardBLE->keyRelease(k);
@@ -286,7 +301,7 @@ void keyboardRelease(uint8_t k) {
 }
 
 void keyboardReleaseAll() {
-  if (USB_MODE) {
+  if (isUSBMode()) {
     keyboardUSB.releaseAll();
   } else if (isBLEConnected()) {
     keyboardBLE->resetKeys();
@@ -294,7 +309,7 @@ void keyboardReleaseAll() {
 }
 
 void mousePress(uint8_t b) {
-  if (USB_MODE) {
+  if (isUSBMode()) {
     mouseUSB.press(b);
   } else if (isBLEConnected()) {
     mouseBLE->mousePress(b);
@@ -302,7 +317,7 @@ void mousePress(uint8_t b) {
 }
 
 void mouseRelease(uint8_t b) {
-  if (USB_MODE) {
+  if (isUSBMode()) {
     mouseUSB.release(b);
   } else if (isBLEConnected()) {
     mouseBLE->mouseRelease(b);
@@ -310,7 +325,7 @@ void mouseRelease(uint8_t b) {
 }
 
 void mouseMove(int x, int y, int wheel, int pan) {
-  if (USB_MODE) {
+  if (isUSBMode()) {
     mouseUSB.move(x, y, wheel, pan);
   } else if (isBLEConnected()) {
     mouseBLE->mouseMove(x, y, wheel, pan);
@@ -326,7 +341,7 @@ void mouseMove(int x, int y) {
 }
 
 void mediaPress(int row, int collumn) {
-  if (USB_MODE) {
+  if (isUSBMode()) {
     uint16_t media_c = KEYBOARD_MATRIX_MEDIA_KEYS_USB[row][collumn];
     if (media_c != MEDIA_KEY_USB_NONE) {
       mediaPressUSB(media_c);
@@ -348,7 +363,7 @@ void mediaPressBLE(uint32_t c) {
 }
 
 void mediaRelease(int row, int collumn) {
-  if (USB_MODE) {
+  if (isUSBMode()) {
     mediaReleaseUSB();
   } else if (isBLEConnected()) {
     uint32_t media_c = KEYBOARD_MATRIX_MEDIA_KEYS_BLE[row][collumn];

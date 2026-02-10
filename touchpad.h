@@ -21,6 +21,11 @@ class Touchpad {
     int firstTouchNormalized = 0;
     int secondTouchNormalized = 0;
 
+    int firstTouchXMoved = 0;
+    int firstTouchYMoved = 0;
+    int secondTouchXMoved = 0;
+    int secondTouchYMoved = 0;
+
   public:
     void setup() {
       this->touchpad = new PS4Touchpad();
@@ -48,6 +53,11 @@ class Touchpad {
 
       firstTouchNormalized = normalizeValue(firstTouch, firstTouchOld);
       secondTouchNormalized = normalizeValue(secondTouch, secondTouchOld);
+
+      firstTouchXMoved = firstTouchX - firstTouchXOld;
+      firstTouchYMoved = firstTouchY - firstTouchYOld;
+      secondTouchXMoved = secondTouchX - secondTouchXOld;
+      secondTouchYMoved = secondTouchY - secondTouchYOld;
     }
 
     PS4Touchpad& getTouchpad() {
@@ -100,6 +110,22 @@ class Touchpad {
 
     int getSecondYOld() {
       return secondTouchYOld;
+    }
+
+    int getFirstXMoved() {
+      return firstTouchXMoved;
+    }
+
+    int getFirstYMoved() {
+      return firstTouchYMoved;
+    }
+
+    int getSecondXMoved() {
+      return secondTouchXMoved;
+    }
+
+    int getSecondYMoved() {
+      return secondTouchYMoved;
     }
     
     int getFirstTocuhValue() {
