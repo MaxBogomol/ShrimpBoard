@@ -66,16 +66,6 @@ class ButtonMatrix {
           matrixNormalized[i][j] = normalizeValue(button, buttonOld);
         }
       }
-      
-      /*
-      for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 17; j++) {
-          Serial.print(matrixNormalized[i][j]);
-        }
-        Serial.println();
-      }
-      Serial.println();
-      delay(100);*/
     }
 
     void readColumn(int row) {

@@ -57,14 +57,14 @@ Touchpad cable
 //Setings
 #define DEBUG true
 
-#include <ps4_touchpad.h>
-#include <settings.h>
-#include <button_matrix.h>
-#include <touchpad.h>
-#include <eprom.h>
-#include <keys.h>
-#include <keys_matrix.h>
-#include <display.h>
+#include <PS4Touchpad.h>
+#include <Settings.h>
+#include <ButtonMatrix.h>
+#include <Touchpad.h>
+#include <Display.h>
+#include <EPROM.h>
+#include <ScanCodes.h>
+#include <ScanMatrix.h>
 
 KeyboardDevice* keyboardBLE;
 MouseDevice* mouseBLE;
@@ -72,11 +72,11 @@ BleCompositeHID* compositeHID;
 USBHIDKeyboard keyboardUSB;
 USBHIDMouse mouseUSB;
 USBHIDConsumerControl consumerControl;
+Settings* settings;
 ButtonMatrix buttonMatrix;
 Touchpad touchpad;
 Display display;
 EPROM eprom;
-Settings* settings;
 
 void setup() {
   Serial.begin(115200);
@@ -183,7 +183,7 @@ void loopKeyboard() {
       uint8_t c = KEYBOARD_MATRIX[i][j];
       if (isFNPress() || isFNReleased()) {
         keyboardReleaseAll();
-        consumerControl.release();
+        mediaReleaseUSB();
       }
       if (isFNPressed()) {
         c = KEYBOARD_MATRIX_FN[i][j];
@@ -223,7 +223,11 @@ void loopMouse() {
   if (touchpad.isFirstTocuhPressed()) {
     int x = touchpad.getFirstXMoved();
     int y = touchpad.getFirstYMoved();
-    mouseMove(x, y);
+    if (!touchpad.isSecondTocuhPressed()) {
+      mouseMove(x, y);
+    } else {
+      mouseMove(0, 0, -y / 20, x / 20);
+    }
   }
 
   if (isTwoLinkedButtonPress(1, 0, 4, 15)) mousePress(MOUSE_LEFT);
