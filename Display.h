@@ -40,7 +40,50 @@ class Display {
       return SSD1306_INVERSE;
     }
 
+    int width() {
+      return display->width();
+    }
+
+    int height() {
+      return display->height();
+    }
+
     void drawPixel(int x, int y, int color) {
       display->drawPixel(x, y, color);
+    }
+
+    void drawLine(int x1, int y1, int x2, int y2, int color) {
+      display->drawLine(x1, y1, x2, y2, color);
+    }
+
+    void setTextSize(int size) {
+      display->setTextSize(size);
+    }
+
+    void setTextPos(int x, int y) {
+      display->setCursor(x, y);
+    }
+
+    void setTextColor(int color) {
+      display->setTextColor(color);
+    }
+
+    void setTextWrap(bool wrap) {
+      display->setTextWrap(wrap);
+    }
+
+    void drawText(String text) {
+      display->print(text);
+    }
+
+    void drawTextln(String text) {
+      display->println(text);
+    }
+
+    void textReset() {
+      setTextSize(1);
+      setTextPos(0, 0);
+      setTextColor(white());
+      setTextWrap(true);
     }
 };

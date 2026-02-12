@@ -1,7 +1,8 @@
 #pragma once
 
 #include <Screen.h>
-#include <LoadingScreen.h>
+#include <LoadingScreens.h>
+#include <MainScreens.h>
 
 class Interface {
   private:
@@ -15,15 +16,33 @@ class Interface {
     Screen* screen;
 
     LoadingScreenLines loadingScreenLines;
+    LoadingScreenShrimpBoard loadingScreenShrimpBoard;
 
   public:
     void setupScreens() {
+      setupScreensParameters();
+      setupScreensNexts();
+
+      setScreen(&loadingScreenLines);
+      getScreen().begin();
+    }
+
+    void setupScreensParameters() {
       setScreenParameters(&loadingScreenLines);
+      setScreenParameters(&loadingScreenShrimpBoard);
+    }
+
+    void setupScreensNexts() {
+      loadingScreenLines.setNextScreen(&loadingScreenShrimpBoard);
     }
 
     void loop() {
-      setScreen(&loadingScreenLines);
       getScreen().loop();
+
+      if (getScreen().hasNextScreen()) {
+        setScreen(&(getScreen().getNextScreen()));
+        getScreen().begin();
+      }
     }
 
     void setSettings(Settings* settings) {
@@ -80,10 +99,5 @@ class Interface {
       screen->setTouchpad(touchpad);
       screen->setDisplay(display);
       screen->setEPROM(eprom);
-    }
-
-    Screen& getLoadingScreen() {
-      Screen* screen = &loadingScreenLines;
-      return *screen;
     }
 };

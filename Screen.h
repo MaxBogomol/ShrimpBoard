@@ -9,9 +9,20 @@ class Screen {
     Display* display;
     EPROM* eprom;
 
+    Screen* nextScreen;
+
   public:
+    virtual void begin() {
+      getDisplay().clear();
+      getDisplay().update();
+    }
+
     virtual void loop() {
 
+    }
+
+    virtual void end() {
+      
     }
 
     void setSettings(Settings* settings) {
@@ -52,5 +63,17 @@ class Screen {
 
     EPROM& getEPROM() {
       return *this->eprom;
+    }
+
+    virtual bool hasNextScreen() {
+      return false;
+    }
+
+    virtual void setNextScreen(Screen* nextScreen) {
+      this->nextScreen = nextScreen;
+    }
+
+    virtual Screen& getNextScreen() {
+      return *this->nextScreen;
     }
 };
