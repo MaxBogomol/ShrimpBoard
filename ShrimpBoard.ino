@@ -65,6 +65,7 @@ Touchpad cable
 #include <EPROM.h>
 #include <ScanCodes.h>
 #include <ScanMatrix.h>
+#include <Interface.h>
 
 KeyboardDevice* keyboardBLE;
 MouseDevice* mouseBLE;
@@ -77,6 +78,7 @@ ButtonMatrix buttonMatrix;
 Touchpad touchpad;
 Display display;
 EPROM eprom;
+Interface interface;
 
 void setup() {
   Serial.begin(115200);
@@ -90,7 +92,9 @@ void setup() {
   setupTouchpad();
   setupDisplay();
   setupEPROM();
+  setupInterface();
   setupSettings();
+  setupScreens();
 }
 
 void setupPins() {
@@ -155,9 +159,24 @@ void setupEPROM() {
   eprom.setup();
 }
 
+void setupInterface() {
+  if (DEBUG) Serial.println("Setup interface.");
+  interface.setButtonMatrix(&buttonMatrix);
+  interface.setTouchpad(&touchpad);
+  interface.setDisplay(&display);
+  interface.setEPROM(&eprom);
+}
+
 void setupSettings() {
   if (DEBUG) Serial.println("Setup settings.");
   settings = &eprom.getSettings();
+
+  interface.setSettings(settings);
+}
+
+void setupScreens() {
+  if (DEBUG) Serial.println("Setup screens.");
+  interface.setupScreens();
 }
 
 void loop() {
@@ -166,15 +185,7 @@ void loop() {
 
   loopKeyboard();
   loopMouse();
-
-/*
-  display.getDisplay().clearDisplay();
-  display.getDisplay().setTextSize(1);
-  display.getDisplay().setTextColor(SSD1306_WHITE);
-  display.getDisplay().setCursor(0, 0);
-  display.getDisplay().println("X: " + String(x, 1));
-  display.getDisplay().println("y: " + String(y, 1));
-  display.getDisplay().display();*/
+  loopInterface();
 }
 
 void loopKeyboard() {
@@ -244,6 +255,10 @@ void loopMouse() {
 
   if (isTwoLinkedButtonPress(5, 0, 5, 16)) mousePress(MOUSE_BACKWARD);
   if (isTwoLinkedButtonRelease(5, 0, 5, 16)) mouseRelease(MOUSE_BACKWARD);
+}
+
+void loopInterface() {
+  interface.loop();
 }
 
 bool isBLEConnected() {
