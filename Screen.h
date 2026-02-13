@@ -95,6 +95,14 @@ class Screen {
       return getSettings().isUSBMode();
     }
 
+    bool isUseUSB() {
+      return isUSBMode();
+    }
+
+    bool isUseBLE() {
+      return !isUSBMode() && isBLEConnected();
+    }
+
     bool isTwoLinkedButtonPress(int row1, int collumn1, int row2, int collumn2) {
       return ((getButtonMatrix().isPress(row1, collumn1) && !(getButtonMatrix().isPressed(row2, collumn2))) ||
               (getButtonMatrix().isPress(row2, collumn2) && !(getButtonMatrix().isPressed(row1, collumn1))));

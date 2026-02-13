@@ -81,6 +81,25 @@ Display display;
 EPROM eprom;
 Interface interface;
 
+bool mouseScroll;
+
+void keyboardBLEOnLEDEvent(KeyboardOutputReport data) {
+    settings->setNumLockBLE(data.numLockActive);
+    settings->setCapsLockBLE(data.capsLockActive);
+    settings->setScrollLockBLE(data.scrollLockActive);
+}
+
+void keyboardUSBEventCallback(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
+  if (event_base == ARDUINO_USB_HID_KEYBOARD_EVENTS) {
+    arduino_usb_hid_keyboard_event_data_t* data = (arduino_usb_hid_keyboard_event_data_t*)event_data;
+    if (event_id == ARDUINO_USB_HID_KEYBOARD_LED_EVENT) {
+      settings->setNumLockUSB(data->numlock);
+      settings->setCapsLockUSB(data->capslock);
+      settings->setScrollLockUSB(data->scrolllock);
+    }
+  }
+}
+
 void setup() {
   Serial.begin(115200);
   USB.begin();
@@ -120,6 +139,8 @@ void setupBLE() {
 
   KeyboardConfiguration keyboardConfig;
   keyboardBLE = new KeyboardDevice(keyboardConfig);
+  FunctionSlot<KeyboardOutputReport> OnLEDEventSlot(keyboardBLEOnLEDEvent);
+  keyboardBLE->onLED.attach(OnLEDEventSlot);
 
   MouseConfiguration mouseConfig;
   mouseBLE = new MouseDevice(mouseConfig);
@@ -135,6 +156,7 @@ void setupBLE() {
 
 void setupUSB() {
   if (DEBUG) Serial.println("Setup USB.");
+  keyboardUSB.onEvent(keyboardUSBEventCallback);
   keyboardUSB.begin();
   mouseUSB.begin();
   consumerControl.begin();
@@ -234,20 +256,20 @@ void loopKeyboard() {
 
 void loopMouse() {
   if (touchpad.isFirstTouchPressed()) {
-    if (touchpad.isSecondTouchPressed()) {
-      if (!isTouchpadScroll()) settings->setTouchpadScroll(true);
+    if (settings->isTouchpadScroll() && touchpad.isSecondTouchPressed()) {
+      if (!mouseScroll) mouseScroll = true;
     }
     float x = touchpad.getFirstXMoved();
     float y = touchpad.getFirstYMoved();
     x = touchpad.getFirstXRounded();
     y = touchpad.getFirstYRounded();
-    if (!isTouchpadScroll()) {
+    if (!mouseScroll) {
       mouseMove((int) x, (int) y);
     } else {
       mouseMove(0, 0, round(-y / 10), round(x / 10));
     }
   } else {
-    if (isTouchpadScroll()) settings->setTouchpadScroll(false);
+    if (mouseScroll) mouseScroll = false;
   }
 
   if (buttonMatrix.isPress(0, 0)) {
@@ -297,6 +319,13 @@ void loopMouse() {
       if (buttonMatrix.isPress(5, 16)) mousePress(MOUSE_BACKWARD);
       if (buttonMatrix.isRelease(5, 16)) mouseRelease(MOUSE_BACKWARD);
     }
+  }
+
+  if (isFNPressed()) {
+    if (buttonMatrix.isPressed(4, 13)) mouseMove(0, -1);
+    if (buttonMatrix.isPressed(5, 10)) mouseMove(-1, 0);
+    if (buttonMatrix.isPressed(5, 11)) mouseMove(0, 1);
+    if (buttonMatrix.isPressed(5, 12)) mouseMove(1, 0);
   }
 }
 
@@ -349,11 +378,6 @@ bool isTwoLinkedButtonRelease(int row1, int collumn1, int row2, int collumn2) {
   return ((buttonMatrix.isRelease(row1, collumn1) && !(buttonMatrix.isPressed(row2, collumn2))) ||
           (buttonMatrix.isRelease(row2, collumn2) && !(buttonMatrix.isPressed(row1, collumn1))));
 }
-
-bool isTouchpadScroll() {
-  return settings->isTouchpadScroll();
-}
-
 
 bool isLeftMouseLock() {
   return settings->isLeftMouseLock();
