@@ -234,21 +234,31 @@ void loopKeyboard() {
 
 void loopMouse() {
   if (touchpad.isFirstTouchPressed()) {
+    if (touchpad.isSecondTouchPressed()) {
+      if (!isTouchpadScroll()) settings->setTouchpadScroll(true);
+    }
     float x = touchpad.getFirstXMoved();
     float y = touchpad.getFirstYMoved();
     x = touchpad.getFirstXRounded();
     y = touchpad.getFirstYRounded();
-    if (!touchpad.isSecondTouchPressed()) {
+    if (!isTouchpadScroll()) {
       mouseMove((int) x, (int) y);
     } else {
-      //x += touchpad.getSecondXMoved();
-      //y += touchpad.getSecondYMoved();
-      x += touchpad.getSecondXRounded();
-      y += touchpad.getSecondYRounded();
-      x = x / 2;
-      y = y / 2;
-      mouseMove(0, 0, (int) (-y / 10), (int) (x / 10));
+      mouseMove(0, 0, round(-y / 10), round(x / 10));
     }
+  } else {
+    if (isTouchpadScroll()) settings->setTouchpadScroll(false);
+  }
+
+  if (buttonMatrix.isPress(0, 0)) {
+    settings->setLeftMouseLock(!settings->isLeftMouseLock());
+    mouseRelease(MOUSE_FORWARD);
+    mouseRelease(MOUSE_BACKWARD);
+  }
+  if (buttonMatrix.isPress(4, 14)) {
+    settings->setRightMouseLock(!settings->isRightMouseLock());
+    mouseRelease(MOUSE_FORWARD);
+    mouseRelease(MOUSE_BACKWARD);
   }
 
   if (isTwoLinkedButtonPress(1, 0, 4, 15)) mousePress(MOUSE_LEFT);
@@ -260,11 +270,34 @@ void loopMouse() {
   if (isTwoLinkedButtonPress(3, 0, 5, 14)) mousePress(MOUSE_RIGHT);
   if (isTwoLinkedButtonRelease(3, 0, 5, 14)) mouseRelease(MOUSE_RIGHT);
 
-  if (isTwoLinkedButtonPress(4, 0, 5, 15)) mousePress(MOUSE_FORWARD);
-  if (isTwoLinkedButtonRelease(4, 0, 5, 15)) mouseRelease(MOUSE_FORWARD);
+  if (!isLeftMouseLock() && !isRightMouseLock()) {
+    if (isTwoLinkedButtonPress(4, 0, 5, 15)) mousePress(MOUSE_FORWARD);
+    if (isTwoLinkedButtonRelease(4, 0, 5, 15)) mouseRelease(MOUSE_FORWARD);
 
-  if (isTwoLinkedButtonPress(5, 0, 5, 16)) mousePress(MOUSE_BACKWARD);
-  if (isTwoLinkedButtonRelease(5, 0, 5, 16)) mouseRelease(MOUSE_BACKWARD);
+    if (isTwoLinkedButtonPress(5, 0, 5, 16)) mousePress(MOUSE_BACKWARD);
+    if (isTwoLinkedButtonRelease(5, 0, 5, 16)) mouseRelease(MOUSE_BACKWARD);
+  } else {
+    if (isLeftMouseLock()) {
+      if (buttonMatrix.isPress(4, 0)) mouseMove(0, 0, 1);
+      if (buttonMatrix.isPress(5, 0)) mouseMove(0, 0, -1);
+    } else {
+      if (buttonMatrix.isPress(4, 0)) mousePress(MOUSE_FORWARD);
+      if (buttonMatrix.isRelease(4, 0)) mouseRelease(MOUSE_FORWARD);
+
+      if (buttonMatrix.isPress(5, 0)) mousePress(MOUSE_BACKWARD);
+      if (buttonMatrix.isRelease(5, 0)) mouseRelease(MOUSE_BACKWARD);
+    }
+    if (isRightMouseLock()) {
+      if (buttonMatrix.isPress(5, 15)) mouseMove(0, 0, 1);
+      if (buttonMatrix.isPress(5, 16)) mouseMove(0, 0, -1);
+    } else {
+      if (buttonMatrix.isPress(5, 15)) mousePress(MOUSE_FORWARD);
+      if (buttonMatrix.isRelease(5, 15)) mouseRelease(MOUSE_FORWARD);
+
+      if (buttonMatrix.isPress(5, 16)) mousePress(MOUSE_BACKWARD);
+      if (buttonMatrix.isRelease(5, 16)) mouseRelease(MOUSE_BACKWARD);
+    }
+  }
 }
 
 void loopInterface() {
@@ -316,6 +349,11 @@ bool isTwoLinkedButtonRelease(int row1, int collumn1, int row2, int collumn2) {
   return ((buttonMatrix.isRelease(row1, collumn1) && !(buttonMatrix.isPressed(row2, collumn2))) ||
           (buttonMatrix.isRelease(row2, collumn2) && !(buttonMatrix.isPressed(row1, collumn1))));
 }
+
+bool isTouchpadScroll() {
+  return settings->isTouchpadScroll();
+}
+
 
 bool isLeftMouseLock() {
   return settings->isLeftMouseLock();

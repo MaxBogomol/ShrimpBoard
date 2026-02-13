@@ -36,8 +36,12 @@ class MainScreen : public Screen {
 
     void drawKeyboard(int x, int y) {
       getDisplay().drawRectangle(x + 2, y + 4, 70, 24, getDisplay().white());
-      getDisplay().drawRectangle(x + 4, y + 24, 66, 2, getDisplay().white());
       getDisplay().drawRectangle(x + 58, y + 6, 9, 17, getDisplay().white());
+
+      getDisplay().drawRectangle(x + 7, y + 24, 41, 2, getDisplay().white());
+      getDisplay().drawRectangle(x + 58, y + 24, 9, 2, getDisplay().white());
+      if (getSettings().isLeftMouseLock()) getDisplay().drawRectangle(x + 4, y + 24, 2, 2, getDisplay().white());
+      if (getSettings().isRightMouseLock()) getDisplay().drawRectangle(x + 68, y + 24, 2, 2, getDisplay().white());
 
       if (getTouchpad().isFirstTouchPressed()) {
         int tx = map(getTouchpad().getFirstX(), 0, getTouchpad().getMaxX(), 0, 7);
