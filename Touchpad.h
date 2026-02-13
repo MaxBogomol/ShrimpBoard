@@ -26,6 +26,14 @@ class Touchpad {
     int secondTouchXMoved = 0;
     int secondTouchYMoved = 0;
 
+    float firstTouchXRounded = 0;
+    float firstTouchYRounded = 0;
+    float secondTouchXRounded = 0;
+    float secondTouchYRounded = 0;
+
+    float firstRound[10][2] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
+    float secondRound[10][2] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
+
   public:
     void setup() {
       this->touchpad = new PS4Touchpad();
@@ -58,6 +66,51 @@ class Touchpad {
       firstTouchYMoved = firstTouchY - firstTouchYOld;
       secondTouchXMoved = secondTouchX - secondTouchXOld;
       secondTouchYMoved = secondTouchY - secondTouchYOld;
+
+      if (isFirstTouchPress()) {
+        firstTouchXMoved = 0;
+        firstTouchYMoved = 0;
+        for (int i = 0; i < 10; i++) {
+          firstRound[i][0] = firstTouchXMoved;
+          firstRound[i][1] = firstTouchYMoved;
+        }
+      }
+      if (isSecondTouchPress()) {
+        secondTouchXMoved = 0;
+        secondTouchYMoved = 0;
+        for (int i = 0; i < 10; i++) {
+          secondRound[i][0] = secondTouchXMoved;
+          secondRound[i][1] = secondTouchYMoved;
+        }
+      }
+
+      int roundLimit = getRoundLimit();
+
+      for (int i = 0; i < roundLimit - 1; i++) {
+        firstRound[i][0] = firstRound[i + 1][0];
+        firstRound[i][1] = firstRound[i + 1][1];
+        secondRound[i][0] = secondRound[i + 1][0];
+        secondRound[i][1] = secondRound[i + 1][1];
+      }
+      firstRound[roundLimit - 1][0] = firstTouchXMoved;
+      firstRound[roundLimit - 1][1] = firstTouchYMoved;
+      secondRound[roundLimit - 1][0] = secondTouchXMoved;
+      secondRound[roundLimit - 1][1] = secondTouchYMoved;
+
+      firstTouchXRounded = 0;
+      firstTouchYRounded = 0;
+      secondTouchXRounded = 0;
+      secondTouchYRounded = 0;
+      for (int i = 0; i < roundLimit; i++) {
+        firstTouchXRounded += firstRound[i][0];
+        firstTouchYRounded += firstRound[i][1];
+        secondTouchXRounded += secondRound[i][0];
+        secondTouchYRounded += secondRound[i][1];
+      }
+      firstTouchXRounded = firstTouchXRounded / roundLimit;
+      firstTouchYRounded = firstTouchYRounded / roundLimit;
+      secondTouchXRounded = secondTouchXRounded / roundLimit;
+      secondTouchYRounded = secondTouchYRounded / roundLimit;
     }
 
     PS4Touchpad& getTouchpad() {
@@ -70,6 +123,10 @@ class Touchpad {
 
     int getMaxY() {
       return touchpad->getMaxX();
+    }
+
+    int getRoundLimit() {
+      return 5;
     }
 
     int normalizeValue(bool button, bool buttonOld) {
@@ -127,36 +184,52 @@ class Touchpad {
     int getSecondYMoved() {
       return secondTouchYMoved;
     }
+
+    float getFirstXRounded() {
+      return firstTouchXRounded;
+    }
+
+    float getFirstYRounded() {
+      return firstTouchYRounded;
+    }
+
+    float getSecondXRounded() {
+      return secondTouchXRounded;
+    }
+
+    float getSecondYRounded() {
+      return secondTouchYRounded;
+    }
     
-    int getFirstTocuhValue() {
+    int getFirstTouchValue() {
       return firstTouchNormalized;
     }
 
-    bool isFirstTocuhPress() {
-      return getFirstTocuhValue() == 1;
+    bool isFirstTouchPress() {
+      return getFirstTouchValue() == 1;
     }
 
-    bool isFirstTocuhPressed() {
-      return getFirstTocuhValue() == 2;
+    bool isFirstTouchPressed() {
+      return getFirstTouchValue() == 2;
     }
 
-    bool isFirstTocuhRelease() {
-      return getFirstTocuhValue() == 3;
+    bool isFirstTouchRelease() {
+      return getFirstTouchValue() == 3;
     }
 
-    int getSecondTocuhValue() {
+    int getSecondTouchValue() {
       return secondTouchNormalized;
     }
 
-    bool isSecondTocuhPress() {
-      return getSecondTocuhValue() == 1;
+    bool isSecondTouchPress() {
+      return getSecondTouchValue() == 1;
     }
 
-    bool isSecondTocuhPressed() {
-      return getSecondTocuhValue() == 2;
+    bool isSecondTouchPressed() {
+      return getSecondTouchValue() == 2;
     }
 
-    bool isSecondTocuhRelease() {
-      return getSecondTocuhValue() == 3;
+    bool isSecondTouchRelease() {
+      return getSecondTouchValue() == 3;
     }
 };

@@ -86,4 +86,16 @@ class Display {
       setTextColor(white());
       setTextWrap(true);
     }
+
+    void drawBitmap(const uint8_t bitmap[], int x, int y, int w, int h, int color) {
+      display->drawBitmap(x, y, bitmap, w, h, color);
+    }
+
+    void drawRectangle(int x, int y, int w, int h, int color) {
+      display->drawRect(x, y, w, h, color);
+    }
+
+    void drawFilledRectangle(int x, int y, int w, int h, int color) {
+      display->fillRect(x, y, w, h, color);
+    }
 };

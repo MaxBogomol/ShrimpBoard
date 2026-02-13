@@ -4,12 +4,12 @@
 #include <USBHIDKeyboard.h>
 #include <USBHIDMouse.h>
 #include "USBHIDConsumerControl.h"
-#include "USB.h"
-#include <Wire.h>
-#include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <at24c256.h>
+#include "USB.h"
+#include <Wire.h>
+#include <SPI.h>
 
 /*
 ESP32-S3
@@ -65,6 +65,7 @@ Touchpad cable
 #include <EPROM.h>
 #include <ScanCodes.h>
 #include <ScanMatrix.h>
+#include <Images.h>
 #include <Interface.h>
 
 KeyboardDevice* keyboardBLE;
@@ -161,6 +162,7 @@ void setupEPROM() {
 
 void setupInterface() {
   if (DEBUG) Serial.println("Setup interface.");
+  interface.setCompositeHID(compositeHID);
   interface.setButtonMatrix(&buttonMatrix);
   interface.setTouchpad(&touchpad);
   interface.setDisplay(&display);
@@ -189,13 +191,13 @@ void loop() {
 }
 
 void loopKeyboard() {
+  if (isFNPress() || isFNReleased()) {
+    keyboardReleaseAll();
+    mediaReleaseUSB();
+  }
   for (int i = 0; i < 6; i++) {
     for (int j = 0; j < 17; j++) {
       uint8_t c = KEYBOARD_MATRIX[i][j];
-      if (isFNPress() || isFNReleased()) {
-        keyboardReleaseAll();
-        mediaReleaseUSB();
-      }
       if (isFNPressed()) {
         c = KEYBOARD_MATRIX_FN[i][j];
         if (isShiftPressed()) {
@@ -226,18 +228,26 @@ void loopKeyboard() {
     if (isTwoLinkedButtonPress(5, 4, 5, 5)) keyboardPress(KEY_SPACE);
     if (isTwoLinkedButtonRelease(5, 4, 5, 5)) keyboardRelease(KEY_SPACE);
   } else {
-    if (buttonMatrix.isPress(5, 2)) settings->setUSBMode(!settings->isUSBMode());
+    if (isTwoLinkedButtonPress(5, 2, 5, 7)) settings->setUSBMode(!settings->isUSBMode());
   }
 }
 
 void loopMouse() {
-  if (touchpad.isFirstTocuhPressed()) {
-    int x = touchpad.getFirstXMoved();
-    int y = touchpad.getFirstYMoved();
-    if (!touchpad.isSecondTocuhPressed()) {
-      mouseMove(x, y);
+  if (touchpad.isFirstTouchPressed()) {
+    float x = touchpad.getFirstXMoved();
+    float y = touchpad.getFirstYMoved();
+    x = touchpad.getFirstXRounded();
+    y = touchpad.getFirstYRounded();
+    if (!touchpad.isSecondTouchPressed()) {
+      mouseMove((int) x, (int) y);
     } else {
-      mouseMove(0, 0, -y / 20, x / 20);
+      //x += touchpad.getSecondXMoved();
+      //y += touchpad.getSecondYMoved();
+      x += touchpad.getSecondXRounded();
+      y += touchpad.getSecondYRounded();
+      x = x / 2;
+      y = y / 2;
+      mouseMove(0, 0, (int) (-y / 10), (int) (x / 10));
     }
   }
 
@@ -269,16 +279,16 @@ bool isUSBMode() {
   return settings->isUSBMode();
 }
 
-bool isLeftShiftPressed() {
-  return buttonMatrix.isPressed(4, 1);
+bool isUseUSB() {
+  return isUSBMode();
 }
 
-bool isRightShiftPressed() {
-  return buttonMatrix.isPressed(4, 12);
+bool isUseBLE() {
+  return !isUSBMode() && isBLEConnected();
 }
 
 bool isShiftPressed() {
-  return isLeftShiftPressed() || isRightShiftPressed();
+  return isTwoLinkedButtonPressed(4, 1, 4, 12);
 }
 
 bool isFNPress() {
@@ -298,55 +308,67 @@ bool isTwoLinkedButtonPress(int row1, int collumn1, int row2, int collumn2) {
           (buttonMatrix.isPress(row2, collumn2) && !(buttonMatrix.isPressed(row1, collumn1))));
 }
 
+bool isTwoLinkedButtonPressed(int row1, int collumn1, int row2, int collumn2) {
+  return (buttonMatrix.isPressed(row1, collumn1) || buttonMatrix.isPressed(row2, collumn2));
+}
+
 bool isTwoLinkedButtonRelease(int row1, int collumn1, int row2, int collumn2) {
   return ((buttonMatrix.isRelease(row1, collumn1) && !(buttonMatrix.isPressed(row2, collumn2))) ||
           (buttonMatrix.isRelease(row2, collumn2) && !(buttonMatrix.isPressed(row1, collumn1))));
 }
 
+bool isLeftMouseLock() {
+  return settings->isLeftMouseLock();
+}
+
+bool isRightMouseLock() {
+  return settings->isRightMouseLock();
+}
+
 void keyboardPress(uint8_t k) {
-  if (isUSBMode()) {
+  if (isUseUSB()) {
     keyboardUSB.pressRaw(k);
-  } else if (isBLEConnected()) {
+  } else if (isUseBLE()) {
     keyboardBLE->keyPress(k);
   }
 }
 
 void keyboardRelease(uint8_t k) {
-  if (isUSBMode()) {
+  if (isUseUSB()) {
     keyboardUSB.releaseRaw(k);
-  } else if (isBLEConnected()) {
+  } else if (isUseBLE()) {
     keyboardBLE->keyRelease(k);
   }
 }
 
 void keyboardReleaseAll() {
-  if (isUSBMode()) {
+  if (isUseUSB()) {
     keyboardUSB.releaseAll();
-  } else if (isBLEConnected()) {
+  } else if (isUseBLE()) {
     keyboardBLE->resetKeys();
   }
 }
 
 void mousePress(uint8_t b) {
-  if (isUSBMode()) {
+  if (isUseUSB()) {
     mouseUSB.press(b);
-  } else if (isBLEConnected()) {
+  } else if (isUseBLE()) {
     mouseBLE->mousePress(b);
   }
 }
 
 void mouseRelease(uint8_t b) {
-  if (isUSBMode()) {
+  if (isUseUSB()) {
     mouseUSB.release(b);
-  } else if (isBLEConnected()) {
+  } else if (isUseBLE()) {
     mouseBLE->mouseRelease(b);
   }
 }
 
 void mouseMove(int x, int y, int wheel, int pan) {
-  if (isUSBMode()) {
+  if (isUseUSB()) {
     mouseUSB.move(x, y, wheel, pan);
-  } else if (isBLEConnected()) {
+  } else if (isUseBLE()) {
     mouseBLE->mouseMove(x, y, wheel, pan);
   }
 }
@@ -360,12 +382,12 @@ void mouseMove(int x, int y) {
 }
 
 void mediaPress(int row, int collumn) {
-  if (isUSBMode()) {
+  if (isUseUSB()) {
     uint16_t media_c = KEYBOARD_MATRIX_MEDIA_KEYS_USB[row][collumn];
     if (media_c != MEDIA_KEY_USB_NONE) {
       mediaPressUSB(media_c);
     }
-  } else if (isBLEConnected()) {
+  } else if (isUseBLE()) {
     uint32_t media_c = KEYBOARD_MATRIX_MEDIA_KEYS_BLE[row][collumn];
     if (media_c != MEDIA_KEY_BLE_NONE) {
       mediaPressBLE(media_c);
@@ -382,9 +404,9 @@ void mediaPressBLE(uint32_t c) {
 }
 
 void mediaRelease(int row, int collumn) {
-  if (isUSBMode()) {
+  if (isUseUSB()) {
     mediaReleaseUSB();
-  } else if (isBLEConnected()) {
+  } else if (isUseBLE()) {
     uint32_t media_c = KEYBOARD_MATRIX_MEDIA_KEYS_BLE[row][collumn];
     if (media_c != MEDIA_KEY_BLE_NONE) {
       mediaReleaseBLE(media_c);

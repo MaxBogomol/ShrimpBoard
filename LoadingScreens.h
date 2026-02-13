@@ -1,10 +1,11 @@
 #pragma once
 
-class LoadingScreenLines : public Screen {
+class LoadingLinesScreen : public Screen {
   private:
     unsigned long previousMillis = 0;
     bool next = false;
     int line = 0;
+    int step = 2;
 
   public:
     virtual void begin() override {
@@ -12,18 +13,21 @@ class LoadingScreenLines : public Screen {
       previousMillis = millis();
       next = false;
       line = 0;
+      step = 2;
     }
 
     virtual void loop() override {
       unsigned long currentMillis = millis();
 
       if (line < 80) {
-        if (currentMillis - previousMillis > 35) {
-          getDisplay().drawLine(-32 + (line * 2), 32, (line * 2), 0, getDisplay().white());
+        if (currentMillis - previousMillis > 25) {
+          for (int i = 0; i < step; i++) {
+            getDisplay().drawLine(-32 + ((line + i) * 2), 32, ((line + i) * 2), 0, getDisplay().white());
+          }
           getDisplay().update();
 
           previousMillis = millis();
-          line++;
+          line += step;
         }
       } else {
         next = true;
@@ -35,11 +39,11 @@ class LoadingScreenLines : public Screen {
     }
 };
 
-class LoadingScreenShrimpBoard : public Screen {
+class LoadingShrimpBoardScreen : public Screen {
   private:
     unsigned long previousMillis = 0;
     bool next = false;
-    int line = 0;
+    int step = 0;
     String text = "Shrimpboard";
 
   public:
@@ -47,27 +51,28 @@ class LoadingScreenShrimpBoard : public Screen {
       Screen::begin();
       previousMillis = millis();
       next = false;
-      line = 0;
+      step = 0;
     }
 
     virtual void loop() override {
       unsigned long currentMillis = millis();
 
-      if (line < 288) {
-        if (currentMillis - previousMillis > 35) {
+      if (step < 288) {
+        if (currentMillis - previousMillis > 25) {
           getDisplay().clear();
+          getDisplay().textReset();
           getDisplay().setTextSize(2);
-          getDisplay().setTextPos(line - 144, 10);
+          getDisplay().setTextPos(step - 144, 8);
           getDisplay().setTextWrap(false);
           getDisplay().setTextColor(getDisplay().white());
           getDisplay().drawText(text);
           getDisplay().update();
 
           previousMillis = millis();
-          line++;
+          step += 2;
         }
       } else {
-        
+        next = true;
       }
     }
 

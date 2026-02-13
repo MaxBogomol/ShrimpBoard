@@ -3,6 +3,8 @@
 class Screen {
   private:
     Settings* settings;
+
+    BleCompositeHID* compositeHID;
     
     ButtonMatrix* buttonMatrix;
     Touchpad* touchpad;
@@ -29,6 +31,10 @@ class Screen {
       this->settings = settings;
     }
 
+    void setCompositeHID(BleCompositeHID* compositeHID) {
+      this->compositeHID = compositeHID;
+    }
+
     void setButtonMatrix(ButtonMatrix* buttonMatrix) {
       this->buttonMatrix = buttonMatrix;
     }
@@ -47,6 +53,10 @@ class Screen {
 
     Settings& getSettings() {
       return *this->settings;
+    }
+
+    BleCompositeHID& getCompositeHID() {
+      return *this->compositeHID;
     }
 
     ButtonMatrix& getButtonMatrix() {
@@ -75,5 +85,27 @@ class Screen {
 
     virtual Screen& getNextScreen() {
       return *this->nextScreen;
+    }
+
+    bool isBLEConnected() {
+      return getCompositeHID().isConnected();
+    }
+
+    bool isUSBMode() {
+      return getSettings().isUSBMode();
+    }
+
+    bool isTwoLinkedButtonPress(int row1, int collumn1, int row2, int collumn2) {
+      return ((getButtonMatrix().isPress(row1, collumn1) && !(getButtonMatrix().isPressed(row2, collumn2))) ||
+              (getButtonMatrix().isPress(row2, collumn2) && !(getButtonMatrix().isPressed(row1, collumn1))));
+    }
+
+    bool isTwoLinkedButtonPressed(int row1, int collumn1, int row2, int collumn2) {
+      return (getButtonMatrix().isPressed(row1, collumn1) || getButtonMatrix().isPressed(row2, collumn2));
+    }
+
+    bool isTwoLinkedButtonRelease(int row1, int collumn1, int row2, int collumn2) {
+      return ((getButtonMatrix().isRelease(row1, collumn1) && !(getButtonMatrix().isPressed(row2, collumn2))) ||
+              (getButtonMatrix().isRelease(row2, collumn2) && !(getButtonMatrix().isPressed(row1, collumn1))));
     }
 };

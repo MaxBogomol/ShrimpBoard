@@ -8,6 +8,8 @@ class Interface {
   private:
     Settings* settings;
 
+    BleCompositeHID* compositeHID;
+
     ButtonMatrix* buttonMatrix;
     Touchpad* touchpad;
     Display* display;
@@ -15,31 +17,37 @@ class Interface {
 
     Screen* screen;
 
-    LoadingScreenLines loadingScreenLines;
-    LoadingScreenShrimpBoard loadingScreenShrimpBoard;
+    LoadingLinesScreen loadingLinesScreen;
+    LoadingShrimpBoardScreen loadingShrimpBoardScreen;
+
+    MainScreen mainScreen;
 
   public:
     void setupScreens() {
       setupScreensParameters();
       setupScreensNexts();
 
-      setScreen(&loadingScreenLines);
+      setScreen(&loadingLinesScreen);
       getScreen().begin();
     }
 
     void setupScreensParameters() {
-      setScreenParameters(&loadingScreenLines);
-      setScreenParameters(&loadingScreenShrimpBoard);
+      setScreenParameters(&loadingLinesScreen);
+      setScreenParameters(&loadingShrimpBoardScreen);
+
+      setScreenParameters(&mainScreen);
     }
 
     void setupScreensNexts() {
-      loadingScreenLines.setNextScreen(&loadingScreenShrimpBoard);
+      loadingLinesScreen.setNextScreen(&mainScreen);
+      loadingShrimpBoardScreen.setNextScreen(&mainScreen);
     }
 
     void loop() {
       getScreen().loop();
 
       if (getScreen().hasNextScreen()) {
+        getScreen().end();
         setScreen(&(getScreen().getNextScreen()));
         getScreen().begin();
       }
@@ -47,6 +55,10 @@ class Interface {
 
     void setSettings(Settings* settings) {
       this->settings = settings;
+    }
+
+    void setCompositeHID(BleCompositeHID* compositeHID) {
+      this->compositeHID = compositeHID;
     }
 
     void setButtonMatrix(ButtonMatrix* buttonMatrix) {
@@ -73,6 +85,10 @@ class Interface {
       return *this->settings;
     }
 
+    BleCompositeHID& getCompositeHID() {
+      return *this->compositeHID;
+    }
+
     ButtonMatrix& getButtonMatrix() {
       return *this->buttonMatrix;
     }
@@ -95,6 +111,7 @@ class Interface {
 
     void setScreenParameters(Screen* screen) {
       screen->setSettings(settings);
+      screen->setCompositeHID(compositeHID);
       screen->setButtonMatrix(buttonMatrix);
       screen->setTouchpad(touchpad);
       screen->setDisplay(display);
