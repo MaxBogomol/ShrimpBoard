@@ -138,6 +138,7 @@ void setupBLE() {
   compositeHID = new BleCompositeHID(BLE_DEVICE_NAME, BLE_DEVICE_MANUFACTURER, 100);
 
   KeyboardConfiguration keyboardConfig;
+  keyboardConfig.setUseMediaKeys(true);
   keyboardBLE = new KeyboardDevice(keyboardConfig);
   FunctionSlot<KeyboardOutputReport> OnLEDEventSlot(keyboardBLEOnLEDEvent);
   keyboardBLE->onLED.attach(OnLEDEventSlot);

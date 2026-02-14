@@ -10,9 +10,9 @@
 
 //What keys
 #define KEY_NONE 0x00 //No key pressed
-#define KEY_ERROR_ROLL_OVER 0x01 //Keyboard Error Roll Over - used for all slots if too many keys are pressed ("Phantom key")
+/*#define KEY_ERROR_ROLL_OVER 0x01 //Keyboard Error Roll Over - used for all slots if too many keys are pressed ("Phantom key")
 #define KEY_POST_FAIL 0x02 //Keyboard POST Fail
-#define KEY_ERROR_UNDEFINED 0x03 //Keyboard Error Undefined
+#define KEY_ERROR_UNDEFINED 0x03 //Keyboard Error Undefined*/
 
 //Letters keys
 #define KEY_A 0x04 //Keyboard a and A
@@ -123,10 +123,10 @@
 #define KEY_KPDOT 0x63 //Keypad . and Delete
 
 //Huh keys
-#define KEY_102ND 0x64 //Keyboard Non-US \ and |
+/*#define KEY_102ND 0x64 //Keyboard Non-US \ and |
 #define KEY_COMPOSE 0x65 //Keyboard Application
 #define KEY_POWER 0x66 //Keyboard Power
-#define KEY_KPEQUAL 0x67 //Keypad =
+#define KEY_KPEQUAL 0x67 //Keypad =*/
 
 //Additional F keys
 #define KEY_F13 0x68 //Keyboard F13
@@ -143,7 +143,7 @@
 #define KEY_F24 0x73 //Keyboard F24
 
 //
-#define KEY_OPEN 0x74 //Keyboard Execute
+/*#define KEY_OPEN 0x74 //Keyboard Execute
 #define KEY_HELP 0x75 //Keyboard Help
 #define KEY_PROPS 0x76 //Keyboard Menu
 #define KEY_FRONT 0x77 //Keyboard Select
@@ -156,12 +156,12 @@
 #define KEY_FIND 0x7e //Keyboard Find
 #define KEY_MUTE 0x7f //Keyboard Mute
 #define KEY_VOLUMEUP 0x80 //Keyboard Volume Up
-#define KEY_VOLUMEDOWN 0x81 //Keyboard Volume Down
+#define KEY_VOLUMEDOWN 0x81 //Keyboard Volume Down*/
 
 //Uhh keys
-#define KEY_KPCOMMA 0x85 //Keypad Comma
+/*#define KEY_KPCOMMA 0x85 //Keypad Comma
 #define KEY_KPLEFTPAREN 0xb6 //Keypad (
-#define KEY_KPRIGHTPAREN 0xb7 //Keypad )
+#define KEY_KPRIGHTPAREN 0xb7 //Keypad )*/
 
 //Functional keys
 #define KEY_LEFTCTRL 0xe0 //Keyboard Left Control
@@ -174,7 +174,7 @@
 #define KEY_RIGHTGUI 0xe7 //Keyboard Right GUI
 
 //Media keys
-#define KEY_MEDIA_PLAYPAUSE 0xe8 //Play and pause
+/*#define KEY_MEDIA_PLAYPAUSE 0xe8 //Play and pause
 #define KEY_MEDIA_STOPCD 0xe9 //Stop
 #define KEY_MEDIA_PREVIOUSSONG 0xea //Previous song
 #define KEY_MEDIA_NEXTSONG 0xeb //Next song
@@ -193,4 +193,4 @@
 #define KEY_MEDIA_SLEEP 0xf8
 #define KEY_MEDIA_COFFEE 0xf9
 #define KEY_MEDIA_REFRESH 0xfa
-#define KEY_MEDIA_CALC 0xfb //Calculator
+#define KEY_MEDIA_CALC 0xfb //Calculator*/
