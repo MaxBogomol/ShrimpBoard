@@ -97,15 +97,36 @@ class SettingsScreen : public Screen {
       if (currentMillis - previousMillis > 25) {
         getDisplay().clear();
         node = settingsIndices;
+        int i = 0;
         while (true) {
-          drawIndex(6, 6, node->getBitmap());
+          drawIndex(6 + (i * 24), (i == selectedIndex) ? 2 : 6, node->getBitmap());
 
           if (!node->hasNext()) break;
-          node = &(settingsIndices->getNextNode());
+          node = &(node->getNextNode());
+          i++;
         }
         getDisplay().update();
 
         previousMillis = millis();
+      }
+      
+      node = settingsIndices;
+      int i = 0;
+      while (true) {
+        if (!node->hasNext()) break;
+        node = &(node->getNextNode());
+        i++;
+      }
+      int max = i + 1;
+
+      if (isLeftPress()) {
+        selectedIndex--;
+        if (selectedIndex < 0) selectedIndex = 0;
+      }
+
+      if (isRightPress()) {
+        selectedIndex++;
+        if (selectedIndex > max - 1) selectedIndex = max - 1;
       }
 
       if (isEnterPress()) select = true;

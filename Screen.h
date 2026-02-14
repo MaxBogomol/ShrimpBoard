@@ -125,6 +125,22 @@ class Screen {
       return getButtonMatrix().isPress(3, 13);
     }
 
+    bool isLeftPress() {
+      return getButtonMatrix().isPress(5, 10);
+    }
+
+    bool isRightPress() {
+      return getButtonMatrix().isPress(5, 12);
+    }
+
+    bool isUpPress() {
+      return getButtonMatrix().isPress(4, 13);
+    }
+
+    bool isDownPress() {
+      return getButtonMatrix().isPress(5, 11);
+    }
+
     bool isFNPress() {
       return getButtonMatrix().isPress(5, 8);
     }

@@ -26,6 +26,9 @@ class Interface {
     SettingsScreen settingsScreen;
 
     SettingsIndexScreen mainSettingsIndexScreen;
+    SettingsIndexScreen keyboardSettingsIndexScreen;
+    SettingsIndexScreen mouseSettingsIndexScreen;
+    SettingsIndexScreen screenSettingsIndexScreen;
 
   public:
     void setupScreens() {
@@ -45,10 +48,28 @@ class Interface {
       setScreenParameters(&settingsScreen);
 
       setScreenParameters(&mainSettingsIndexScreen);
+      setScreenParameters(&keyboardSettingsIndexScreen);
+      setScreenParameters(&mouseSettingsIndexScreen);
+      setScreenParameters(&screenSettingsIndexScreen);
 
       SettingsIndexNode* settingsIndexNode = new SettingsIndexNode();
       settingsIndexNode->setData(&mainSettingsIndexScreen);
       settingsIndexNode->setBitmap(SETTINGS_BMP);
+
+      SettingsIndexNode* settingsIndexNode1 = new SettingsIndexNode();
+      settingsIndexNode1->setData(&keyboardSettingsIndexScreen);
+      settingsIndexNode1->setBitmap(KEYBOARD_BMP);
+      settingsIndexNode->setNextNode(settingsIndexNode1);
+
+      SettingsIndexNode* settingsIndexNode2 = new SettingsIndexNode();
+      settingsIndexNode2->setData(&mouseSettingsIndexScreen);
+      settingsIndexNode2->setBitmap(SETTINGS_BMP);
+      settingsIndexNode1->setNextNode(settingsIndexNode2);
+
+      SettingsIndexNode* settingsIndexNode3 = new SettingsIndexNode();
+      settingsIndexNode3->setData(&screenSettingsIndexScreen);
+      settingsIndexNode3->setBitmap(SETTINGS_BMP);
+      settingsIndexNode2->setNextNode(settingsIndexNode3);
 
       settingsScreen.setSettingsIndices(settingsIndexNode);
     }
@@ -62,6 +83,9 @@ class Interface {
       settingsScreen.setNextScreen(&mainScreen);
 
       mainSettingsIndexScreen.setNextScreen(&settingsScreen);
+      keyboardSettingsIndexScreen.setNextScreen(&settingsScreen);
+      mouseSettingsIndexScreen.setNextScreen(&settingsScreen);
+      screenSettingsIndexScreen.setNextScreen(&settingsScreen);
     }
 
     void loop() {
