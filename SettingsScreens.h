@@ -1,6 +1,6 @@
 #pragma once
 
-class SettingsScreen : public Screen {
+class SettingsIndexScreen : public Screen {
   private:
     unsigned long previousMillis = 0;
     bool next = false;
@@ -18,17 +18,130 @@ class SettingsScreen : public Screen {
 
       if (currentMillis - previousMillis > 25) {
         getDisplay().clear();
-        getDisplay().drawRoundRectangle(6, 6, 20, 20, 3, getDisplay().white());
-        getDisplay().drawBitmap(SETTINGS_BMP, 8, 8, 16, 16, getDisplay().white());
         getDisplay().update();
 
         previousMillis = millis();
       }
 
-      if (isScreenFocus()) next = true;
+      if (isEscPress()) next = true;
     }
 
     virtual bool hasNextScreen() override {
       return next;
+    }
+};
+
+class SettingsIndexNode {
+  private:
+    Screen* data;
+    SettingsIndexNode* nextNode;
+    bool next = false;
+
+    const uint8_t* BMP = SETTINGS_BMP;
+
+  public:
+    void setData(Screen* data) {
+      this->data = data;
+    }
+
+    void setNextNode(SettingsIndexNode* nextNode) {
+      this->nextNode = nextNode;
+      next = true;
+    }
+
+    Screen& getData() {
+      return *this->data;
+    }
+
+    SettingsIndexNode& getNextNode() {
+      return *this->nextNode;
+    }
+
+    bool hasNext() {
+      return next;
+    }
+
+    void setBitmap(const uint8_t BMP[]) {
+      this->BMP = BMP;
+    }
+
+    const uint8_t (*getBitmap()) {
+      return BMP;
+    }
+};
+
+class SettingsScreen : public Screen {
+  private:
+    unsigned long previousMillis = 0;
+    bool next = false;
+    bool select = false;
+
+    int selectedIndex = 0;
+
+    SettingsIndexNode* settingsIndices;
+    Screen* index;
+    SettingsIndexNode* node;
+
+  public:
+    virtual void begin() override {
+      Screen::begin();
+      previousMillis = millis();
+      next = false;
+      select = false;
+      getSettings().setScreenFocus(true);
+    }
+
+    virtual void loop() override {
+      unsigned long currentMillis = millis();
+
+      if (currentMillis - previousMillis > 25) {
+        getDisplay().clear();
+        node = settingsIndices;
+        while (true) {
+          drawIndex(6, 6, node->getBitmap());
+
+          if (!node->hasNext()) break;
+          node = &(settingsIndices->getNextNode());
+        }
+        getDisplay().update();
+
+        previousMillis = millis();
+      }
+
+      if (isEnterPress()) select = true;
+
+      if (isEscPress()) next = true;
+    }
+
+    virtual bool hasNextScreen() override {
+      return next || select;
+    }
+
+    virtual Screen& getNextScreen() {
+      if (select) {
+        node = settingsIndices;
+        int i = 0;
+        while (true) {
+          if (i == selectedIndex) return node->getData();
+
+          if (!node->hasNext()) break;
+          node = &(settingsIndices->getNextNode());
+          i++;
+        }
+      }
+      return Screen::getNextScreen();
+    }
+
+    void setSettingsIndices(SettingsIndexNode* settingsIndices) {
+      this->settingsIndices = settingsIndices;
+    }
+
+    SettingsIndexNode& getSettingsIndices() {
+      return *this->settingsIndices;
+    }
+
+    void drawIndex(int x, int y, const uint8_t BMP[]) {
+      getDisplay().drawRoundRectangle(x, y, 20, 20, 3, getDisplay().white());
+      getDisplay().drawBitmap(BMP, x + 2, y + 2, 16, 16, getDisplay().white());
     }
 };

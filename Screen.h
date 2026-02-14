@@ -117,7 +117,27 @@ class Screen {
               (getButtonMatrix().isRelease(row2, collumn2) && !(getButtonMatrix().isPressed(row1, collumn1))));
     }
 
+    bool isEscPress() {
+      return getButtonMatrix().isPress(0, 1);
+    }
+
+    bool isEnterPress() {
+      return getButtonMatrix().isPress(3, 13);
+    }
+
+    bool isFNPress() {
+      return getButtonMatrix().isPress(5, 8);
+    }
+
+    bool isFNPressed() {
+      return getButtonMatrix().isPressed(5, 8);
+    }
+
+    bool isFNReleased() {
+      return getButtonMatrix().isRelease(5, 8);
+    }
+
     bool isScreenFocus() {
-      return getButtonMatrix().isPressed(5, 8) && getButtonMatrix().isPress(0, 1);
+      return isFNPressed() && isEscPress();
     }
 };

@@ -22,7 +22,10 @@ class Interface {
     LoadingShrimpBoardScreen loadingShrimpBoardScreen;
 
     MainScreen mainScreen;
+
     SettingsScreen settingsScreen;
+
+    SettingsIndexScreen mainSettingsIndexScreen;
 
   public:
     void setupScreens() {
@@ -40,6 +43,14 @@ class Interface {
       setScreenParameters(&mainScreen);
 
       setScreenParameters(&settingsScreen);
+
+      setScreenParameters(&mainSettingsIndexScreen);
+
+      SettingsIndexNode* settingsIndexNode = new SettingsIndexNode();
+      settingsIndexNode->setData(&mainSettingsIndexScreen);
+      settingsIndexNode->setBitmap(SETTINGS_BMP);
+
+      settingsScreen.setSettingsIndices(settingsIndexNode);
     }
 
     void setupScreensNexts() {
@@ -49,6 +60,8 @@ class Interface {
       mainScreen.setNextScreen(&settingsScreen);
 
       settingsScreen.setNextScreen(&mainScreen);
+
+      mainSettingsIndexScreen.setNextScreen(&settingsScreen);
     }
 
     void loop() {

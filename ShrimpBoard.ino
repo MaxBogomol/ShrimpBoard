@@ -257,7 +257,12 @@ void loopKeyboard() {
     if (isTwoLinkedButtonPress(5, 4, 5, 5)) keyboardPress(KEY_SPACE);
     if (isTwoLinkedButtonRelease(5, 4, 5, 5)) keyboardRelease(KEY_SPACE);
   } else {
-    if (isTwoLinkedButtonPress(5, 2, 5, 7)) settings->setUSBMode(!settings->isUSBMode());
+    if (isTwoLinkedButtonPress(5, 2, 5, 7)) {
+      keyboardReleaseAll();
+      mediaReleaseUSB();
+      mouseReleaseAll();
+      settings->setUSBMode(!settings->isUSBMode());
+    }
   }
 }
 
