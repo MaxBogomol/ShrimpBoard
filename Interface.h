@@ -30,6 +30,10 @@ class Interface {
     SettingsIndexScreen mouseSettingsIndexScreen;
     SettingsIndexScreen screenSettingsIndexScreen;
 
+    ModeSettingsEntry modeSettingsEntry;
+    SaveSettingsEntry saveSettingsEntry;
+    ResetSettingsEntry resetSettingsEntry;
+
   public:
     void setupScreens() {
       setupScreensParameters();
@@ -63,15 +67,32 @@ class Interface {
 
       SettingsIndexNode* settingsIndexNode2 = new SettingsIndexNode();
       settingsIndexNode2->setData(&mouseSettingsIndexScreen);
-      settingsIndexNode2->setBitmap(SETTINGS_BMP);
+      settingsIndexNode2->setBitmap(MOUSE_BMP);
       settingsIndexNode1->setNextNode(settingsIndexNode2);
 
       SettingsIndexNode* settingsIndexNode3 = new SettingsIndexNode();
       settingsIndexNode3->setData(&screenSettingsIndexScreen);
-      settingsIndexNode3->setBitmap(SETTINGS_BMP);
+      settingsIndexNode3->setBitmap(SCREEN_BMP);
       settingsIndexNode2->setNextNode(settingsIndexNode3);
 
       settingsScreen.setSettingsIndices(settingsIndexNode);
+
+      SettingsEntryNode* settingsEntryNodeMain = new SettingsEntryNode();
+      settingsEntryNodeMain->setData(&modeSettingsEntry);
+
+      SettingsEntryNode* settingsEntryNodeMain1 = new SettingsEntryNode();
+      settingsEntryNodeMain1->setData(&saveSettingsEntry);
+      settingsEntryNodeMain->setNextNode(settingsEntryNodeMain1);
+
+      SettingsEntryNode* settingsEntryNodeMain2 = new SettingsEntryNode();
+      settingsEntryNodeMain2->setData(&resetSettingsEntry);
+      settingsEntryNodeMain1->setNextNode(settingsEntryNodeMain2);
+
+      mainSettingsIndexScreen.setSettingsEntries(settingsEntryNodeMain);
+
+      modeSettingsEntry.setSettings(settings);
+      saveSettingsEntry.setSettings(settings);
+      resetSettingsEntry.setSettings(settings);
     }
 
     void setupScreensNexts() {
