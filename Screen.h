@@ -116,4 +116,8 @@ class Screen {
       return ((getButtonMatrix().isRelease(row1, collumn1) && !(getButtonMatrix().isPressed(row2, collumn2))) ||
               (getButtonMatrix().isRelease(row2, collumn2) && !(getButtonMatrix().isPressed(row1, collumn1))));
     }
+
+    bool isScreenFocus() {
+      return getButtonMatrix().isPressed(5, 8) && getButtonMatrix().isPress(0, 1);
+    }
 };

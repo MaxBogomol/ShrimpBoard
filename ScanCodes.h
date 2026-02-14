@@ -125,8 +125,8 @@
 //Huh keys
 /*#define KEY_102ND 0x64 //Keyboard Non-US \ and |
 #define KEY_COMPOSE 0x65 //Keyboard Application
-#define KEY_POWER 0x66 //Keyboard Power
-#define KEY_KPEQUAL 0x67 //Keypad =*/
+#define KEY_POWER 0x66 //Keyboard Power*/
+#define KEY_KPEQUAL 0x67 //Keypad =
 
 //Additional F keys
 #define KEY_F13 0x68 //Keyboard F13
@@ -159,9 +159,9 @@
 #define KEY_VOLUMEDOWN 0x81 //Keyboard Volume Down*/
 
 //Uhh keys
-/*#define KEY_KPCOMMA 0x85 //Keypad Comma
+#define KEY_KPCOMMA 0x85 //Keypad Comma
 #define KEY_KPLEFTPAREN 0xb6 //Keypad (
-#define KEY_KPRIGHTPAREN 0xb7 //Keypad )*/
+#define KEY_KPRIGHTPAREN 0xb7 //Keypad )
 
 //Functional keys
 #define KEY_LEFTCTRL 0xe0 //Keyboard Left Control

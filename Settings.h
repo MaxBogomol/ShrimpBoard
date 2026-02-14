@@ -3,8 +3,7 @@
 class Settings {
   private:
     bool usbMode = true;
-    
-    bool touchpadScroll = true;
+    bool screenFocus = false;
 
     bool numLockUSB = false;
     bool capsLockUSB = false;
@@ -14,10 +13,16 @@ class Settings {
     bool scrollLockBLE = false;
     bool leftMouseLock = false;
     bool rightMouseLock = false;
+    
+    bool touchpadScroll = true;
 
   public:
     void setUSBMode(bool value) {
       usbMode = value;
+    }
+
+    void setScreenFocus(bool value) {
+      screenFocus = value;
     }
 
     void setTouchpadScroll(bool value) {
@@ -58,6 +63,10 @@ class Settings {
 
     bool isUSBMode() {
       return usbMode;
+    }
+
+    bool isScreenFocus() {
+      return screenFocus;
     }
 
     bool isTouchpadScroll() {

@@ -81,7 +81,8 @@ Display display;
 EPROM eprom;
 Interface interface;
 
-bool mouseScroll;
+bool screenFocus = false;
+bool mouseScroll = false;
 
 void keyboardBLEOnLEDEvent(KeyboardOutputReport data) {
     settings->setNumLockBLE(data.numLockActive);
@@ -208,13 +209,18 @@ void loop() {
   buttonMatrix.read();
   touchpad.read();
 
-  loopKeyboard();
-  loopMouse();
+  if (!screenFocus) {
+    loopKeyboard();
+    loopMouse();
+  }
   loopInterface();
+
+  if (settings->isScreenFocus() && !screenFocus) screenFocus = true;
+  if (!(settings->isScreenFocus()) && screenFocus) screenFocus = false;
 }
 
 void loopKeyboard() {
-  if (isFNPress() || isFNReleased()) {
+  if (isFNPress() || isFNReleased() || (settings->isScreenFocus() && !screenFocus)) {
     keyboardReleaseAll();
     mediaReleaseUSB();
   }
@@ -271,6 +277,10 @@ void loopMouse() {
     }
   } else {
     if (mouseScroll) mouseScroll = false;
+  }
+
+  if (settings->isScreenFocus() && !screenFocus) {
+    mouseReleaseAll();
   }
 
   if (buttonMatrix.isPress(0, 0)) {
@@ -425,6 +435,14 @@ void mouseRelease(uint8_t b) {
     mouseUSB.release(b);
   } else if (isUseBLE()) {
     mouseBLE->mouseRelease(b);
+  }
+}
+
+void mouseReleaseAll() {
+  if (isUseUSB()) {
+    mouseUSB.release(MOUSE_ALL);
+  } else if (isUseBLE()) {
+    mouseBLE->resetButtons();
   }
 }
 

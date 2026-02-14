@@ -3,11 +3,14 @@
 class MainScreen : public Screen {
   private:
     unsigned long previousMillis = 0;
+    bool next = false;
 
   public:
     virtual void begin() override {
       Screen::begin();
       previousMillis = millis();
+      next = false;
+      getSettings().setScreenFocus(false);
     }
 
     virtual void loop() override {
@@ -22,6 +25,12 @@ class MainScreen : public Screen {
 
         previousMillis = millis();
       }
+
+      if (isScreenFocus()) next = true;
+    }
+
+    virtual bool hasNextScreen() override {
+      return next;
     }
 
     void drawStats(int x, int y) {

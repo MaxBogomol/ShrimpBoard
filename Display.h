@@ -98,4 +98,12 @@ class Display {
     void drawFilledRectangle(int x, int y, int w, int h, int color) {
       display->fillRect(x, y, w, h, color);
     }
+
+    void drawRoundRectangle(int x, int y, int w, int h, int radius, int color) {
+      display->drawRoundRect(x, y, w, h, radius, color);
+    }
+
+    void drawFilledRoundRectangle(int x, int y, int w, int h, int radius, int color) {
+      display->fillRoundRect(x, y, w, h, radius, color);
+    }
 };

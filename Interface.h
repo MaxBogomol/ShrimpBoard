@@ -3,6 +3,7 @@
 #include <Screen.h>
 #include <LoadingScreens.h>
 #include <MainScreens.h>
+#include <SettingsScreens.h>
 
 class Interface {
   private:
@@ -21,6 +22,7 @@ class Interface {
     LoadingShrimpBoardScreen loadingShrimpBoardScreen;
 
     MainScreen mainScreen;
+    SettingsScreen settingsScreen;
 
   public:
     void setupScreens() {
@@ -36,11 +38,17 @@ class Interface {
       setScreenParameters(&loadingShrimpBoardScreen);
 
       setScreenParameters(&mainScreen);
+
+      setScreenParameters(&settingsScreen);
     }
 
     void setupScreensNexts() {
       loadingLinesScreen.setNextScreen(&mainScreen);
       loadingShrimpBoardScreen.setNextScreen(&mainScreen);
+
+      mainScreen.setNextScreen(&settingsScreen);
+
+      settingsScreen.setNextScreen(&mainScreen);
     }
 
     void loop() {
