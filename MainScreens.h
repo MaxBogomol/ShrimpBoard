@@ -16,7 +16,7 @@ class MainScreen : public Screen {
     virtual void loop() override {
       unsigned long currentMillis = millis();
 
-      if (currentMillis - previousMillis > 25) {
+      if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
         getDisplay().clear();
         getDisplay().textReset();
         drawStats(74, 0);

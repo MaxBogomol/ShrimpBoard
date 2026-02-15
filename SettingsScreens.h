@@ -9,6 +9,15 @@ class SettingsEntry {
       return "Entry";
     }
 
+    String getBoolName(String name, bool value) {
+      if (value) {
+        name = name + "+";
+      } else {
+        name = name + "-";
+      }
+      return name;
+    }
+
     virtual void use() {
       
     }
@@ -91,7 +100,7 @@ class SettingsIndexScreen : public Screen {
       }
       int max = i + 1;
 
-      if (currentMillis - previousMillis > 25) {
+      if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
         getDisplay().clear();
         getDisplay().textReset();
         node = settingsEntries;
@@ -227,7 +236,7 @@ class SettingsScreen : public Screen {
       }
       int max = i + 1;
 
-      if (currentMillis - previousMillis > 25) {
+      if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
         getDisplay().clear();
         node = settingsIndices;
         i = 0;
@@ -331,16 +340,33 @@ class ResetSettingsEntry : public SettingsEntry {
     }
 };
 
+class MouseSpeedSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Mouse speed: " + String(getSettings().getMouseSpeed());
+    }
+
+    virtual void left() override {
+      float value = getSettings().getMouseSpeed();
+      if (value - 0.1 >= 0.09) {
+        value -= 0.1;
+        getSettings().setMouseSpeed(value);
+      }
+    }
+
+    virtual void right() override {
+      float value = getSettings().getMouseSpeed();
+      if (value + 0.1 <= 3.01) {
+        value += 0.1;
+        getSettings().setMouseSpeed(value);
+      }
+    }
+};
+
 class TouchpadScrollSettingsEntry : public SettingsEntry {
   public:
     virtual String getName() override {
-      String name = "Scroll: ";
-      if (getSettings().isTouchpadScroll()) {
-        name = name + "+";
-      } else {
-        name = name + "-";
-      }
-      return name;
+      return getBoolName("Touchpad scroll: ", getSettings().isTouchpadScroll());
     }
 
     virtual void use() override {
@@ -348,16 +374,66 @@ class TouchpadScrollSettingsEntry : public SettingsEntry {
     }
 };
 
+class MouseLockScrollSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("M lock scroll: ", getSettings().isMouseLockScroll());
+    }
+
+    virtual void use() override {
+      getSettings().setMouseLockScroll(!getSettings().isMouseLockScroll());
+    }
+};
+
+class LeftMouseLockScrollSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("L M lock scroll: ", getSettings().isLeftMouseLockScroll());
+    }
+
+    virtual void use() override {
+      getSettings().setLeftMouseLockScroll(!getSettings().isLeftMouseLockScroll());
+    }
+};
+
+class RightMouseLockScrollSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("R M lock scroll: ", getSettings().isRightMouseLockScroll());
+    }
+
+    virtual void use() override {
+      getSettings().setRightMouseLockScroll(!getSettings().isRightMouseLockScroll());
+    }
+};
+
+class MouseScrollSpeedSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Scroll speed: " + String(getSettings().getMouseScrollSpeed());
+    }
+
+    virtual void left() override {
+      float value = getSettings().getMouseScrollSpeed();
+      if (value - 0.1 >= 0.09) {
+        value -= 0.1;
+        getSettings().setMouseScrollSpeed(value);
+      }
+    }
+
+    virtual void right() override {
+      float value = getSettings().getMouseScrollSpeed();
+      if (value + 0.1 <= 2.01) {
+        value += 0.1;
+        getSettings().setMouseScrollSpeed(value);
+      }
+    }
+};
+
 class TouchpadRoundedSettingsEntry : public SettingsEntry {
   public:
     virtual String getName() override {
-      String name = "Rounded: ";
-      if (getSettings().isTouchpadRounded()) {
-        name = name + "+";
-      } else {
-        name = name + "-";
-      }
-      return name;
+      return getBoolName("Rounded: ", getSettings().isTouchpadRounded());
     }
 
     virtual void use() override {
@@ -384,6 +460,29 @@ class TouchpadRoundLimitSettingsEntry : public SettingsEntry {
       if (value + 1 <= 10) {
         value++;
         getSettings().setTouchpadRoundLimit(value);
+      }
+    }
+};
+
+class DisplayUpdateDelaySettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Update delay: " + String(getSettings().getDisplayUpdateDelay()) + " ms";
+    }
+
+    virtual void left() override {
+      int value = getSettings().getDisplayUpdateDelay();
+      if (value - 5 >= 0) {
+        value -=5;
+        getSettings().setDisplayUpdateDelay(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getDisplayUpdateDelay();
+      if (value + 5 <= 100) {
+        value += 5;
+        getSettings().setDisplayUpdateDelay(value);
       }
     }
 };

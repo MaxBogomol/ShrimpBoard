@@ -14,15 +14,29 @@ class Settings {
     bool leftMouseLock = false;
     bool rightMouseLock = false;
     
+    float mouseSpeed = 1;
     bool touchpadScroll = true;
+    bool mouseLockScroll = false;
+    bool leftMouseLockScroll = false;
+    bool rightMouseLockScroll = false;
+    float mouseScrollSpeed = 1;
     bool touchpadRounded = true;
     int touchpadRoundLimit = 5;
 
+    int displayUpdateDelay = 25;
+
   public:
     void reset() {
-      bool touchpadScroll = true;
-      bool touchpadRounded = true;
+      mouseSpeed = 1;
+      touchpadScroll = true;
+      mouseLockScroll = false;
+      leftMouseLockScroll = false;
+      rightMouseLockScroll = false;
+      mouseScrollSpeed = 1;
+      touchpadRounded = true;
       touchpadRoundLimit = 5;
+
+      displayUpdateDelay = 25;
     }
 
     void setUSBMode(bool value) {
@@ -65,8 +79,32 @@ class Settings {
       rightMouseLock = value;
     }
 
+    void setMouseSpeed(float value) {
+      if (value < 0.1) value = 0.1;
+      if (value > 3) value = 3;
+      mouseSpeed = value;
+    }
+
     void setTouchpadScroll(bool value) {
       touchpadScroll = value;
+    }
+
+    void setMouseLockScroll(bool value) {
+      mouseLockScroll = value;
+    }
+
+    void setLeftMouseLockScroll(bool value) {
+      leftMouseLockScroll = value;
+    }
+
+    void setRightMouseLockScroll(bool value) {
+      rightMouseLockScroll = value;
+    }
+
+    void setMouseScrollSpeed(float value) {
+      if (value < 0.1) value = 0.1;
+      if (value > 2) value = 2;
+      mouseScrollSpeed = value;
     }
 
     void setTouchpadRounded(bool value) {
@@ -77,6 +115,12 @@ class Settings {
       if (value < 2) value = 2;
       if (value > 10) value = 10;
       touchpadRoundLimit = value;
+    }
+
+    void setDisplayUpdateDelay(int value) {
+      if (value < 0) value = 0;
+      if (value > 100) value = 100;
+      displayUpdateDelay = value;
     }
 
     bool isUSBMode() {
@@ -119,8 +163,28 @@ class Settings {
       return rightMouseLock;
     }
 
+    float getMouseSpeed() {
+      return mouseSpeed;
+    }
+
     bool isTouchpadScroll() {
       return touchpadScroll;
+    }
+
+    bool isMouseLockScroll() {
+      return mouseLockScroll;
+    }
+
+    bool isLeftMouseLockScroll() {
+      return leftMouseLockScroll;
+    }
+
+    bool isRightMouseLockScroll() {
+      return rightMouseLockScroll;
+    }
+
+    float getMouseScrollSpeed() {
+      return mouseScrollSpeed;
     }
 
     bool isTouchpadRounded() {
@@ -129,5 +193,9 @@ class Settings {
 
     int getTouchpadRoundLimit() {
       return touchpadRoundLimit;
+    }
+
+    int getDisplayUpdateDelay() {
+      return displayUpdateDelay;
     }
 };

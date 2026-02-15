@@ -20,7 +20,7 @@ class LoadingLinesScreen : public Screen {
       unsigned long currentMillis = millis();
 
       if (line < 80) {
-        if (currentMillis - previousMillis > 25) {
+        if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
           for (int i = 0; i < step; i++) {
             getDisplay().drawLine(-32 + ((line + i) * 2), 32, ((line + i) * 2), 0, getDisplay().white());
           }
@@ -58,7 +58,7 @@ class LoadingShrimpBoardScreen : public Screen {
       unsigned long currentMillis = millis();
 
       if (step < 288) {
-        if (currentMillis - previousMillis > 25) {
+        if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
           getDisplay().clear();
           getDisplay().textReset();
           getDisplay().setTextSize(2);

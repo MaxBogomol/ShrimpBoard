@@ -279,10 +279,16 @@ void loopMouse() {
       x = touchpad.getFirstXRounded();
       y = touchpad.getFirstYRounded();
     }
-    if (!mouseScroll) {
+    if (!isMouseScroll()) {
+      float speed = settings->getMouseSpeed();
+      x = x * speed;
+      y = y * speed;
       mouseMove((int) x, (int) y);
     } else {
-      mouseMove(0, 0, round(-y / 10), round(x / 10));
+      float speed = settings->getMouseScrollSpeed();
+      x = x * speed * 0.1;
+      y = y * speed * 0.1;
+      mouseMove(0, 0, round(-y), round(x));
     }
   } else {
     if (mouseScroll) mouseScroll = false;
@@ -369,6 +375,13 @@ bool isUseBLE() {
   return !isUSBMode() && isBLEConnected();
 }
 
+bool isMouseScroll() {
+  return ((mouseScroll) ||
+          (settings->isMouseLockScroll() && isMouseLock()) ||
+          (settings->isLeftMouseLockScroll() && isLeftMouseLock()) ||
+          (settings->isRightMouseLockScroll() && isRightMouseLock()));
+}
+
 bool isShiftPressed() {
   return isTwoLinkedButtonPressed(4, 1, 4, 12);
 }
@@ -397,6 +410,10 @@ bool isTwoLinkedButtonPressed(int row1, int collumn1, int row2, int collumn2) {
 bool isTwoLinkedButtonRelease(int row1, int collumn1, int row2, int collumn2) {
   return ((buttonMatrix.isRelease(row1, collumn1) && !(buttonMatrix.isPressed(row2, collumn2))) ||
           (buttonMatrix.isRelease(row2, collumn2) && !(buttonMatrix.isPressed(row1, collumn1))));
+}
+
+bool isMouseLock() {
+  return isLeftMouseLock() || isRightMouseLock();
 }
 
 bool isLeftMouseLock() {

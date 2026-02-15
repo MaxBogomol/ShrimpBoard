@@ -38,9 +38,16 @@ class Interface {
     SaveSettingsEntry saveSettingsEntry;
     ResetSettingsEntry resetSettingsEntry;
 
+    MouseSpeedSettingsEntry mouseSpeedSettingsEntry;
     TouchpadScrollSettingsEntry touchpadScrollSettingsEntry;
+    MouseLockScrollSettingsEntry mouseLockScrollSettingsEntry;
+    LeftMouseLockScrollSettingsEntry leftMouseLockScrollSettingsEntry;
+    RightMouseLockScrollSettingsEntry rightMouseLockScrollSettingsEntry;
+    MouseScrollSpeedSettingsEntry mouseScrollSpeedSettingsEntry;
     TouchpadRoundedSettingsEntry touchpadRoundedSettingsEntry;
     TouchpadRoundLimitSettingsEntry touchpadRoundLimitSettingsEntry;
+
+    DisplayUpdateDelaySettingsEntry displayUpdateDelaySettingsEntry;
 
   public:
     void setupScreens() {
@@ -94,17 +101,31 @@ class Interface {
 
       //Mouse
       SettingsEntryNode* mouseSettingsEntryNode = new SettingsEntryNode();
-      setSettingsEntryNode(mouseSettingsEntryNode, &touchpadScrollSettingsEntry);
+      setSettingsEntryNode(mouseSettingsEntryNode, &mouseSpeedSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &touchpadScrollSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &mouseLockScrollSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &leftMouseLockScrollSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &rightMouseLockScrollSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &mouseScrollSpeedSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadRoundedSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadRoundLimitSettingsEntry);
       mouseSettingsIndexScreen.setSettingsEntries(mouseSettingsEntryNode);
 
+      mouseSpeedSettingsEntry.setSettings(settings);
       touchpadScrollSettingsEntry.setSettings(settings);
+      mouseLockScrollSettingsEntry.setSettings(settings);
+      leftMouseLockScrollSettingsEntry.setSettings(settings);
+      rightMouseLockScrollSettingsEntry.setSettings(settings);
+      mouseScrollSpeedSettingsEntry.setSettings(settings);
       touchpadRoundedSettingsEntry.setSettings(settings);
       touchpadRoundLimitSettingsEntry.setSettings(settings);
 
       //Screen
-      screenSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+      SettingsEntryNode* screenSettingsEntryNode = new SettingsEntryNode();
+      setSettingsEntryNode(screenSettingsEntryNode, &displayUpdateDelaySettingsEntry);
+      screenSettingsIndexScreen.setSettingsEntries(screenSettingsEntryNode);
+
+      displayUpdateDelaySettingsEntry.setSettings(settings);
 
       //Battery
       batterySettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
