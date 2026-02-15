@@ -17,6 +17,10 @@ class Settings {
     bool touchpadScroll = true;
 
   public:
+    void reset() {
+      
+    }
+
     void setUSBMode(bool value) {
       usbMode = value;
     }

@@ -29,6 +29,8 @@ class Interface {
     SettingsIndexScreen keyboardSettingsIndexScreen;
     SettingsIndexScreen mouseSettingsIndexScreen;
     SettingsIndexScreen screenSettingsIndexScreen;
+    SettingsIndexScreen batterySettingsIndexScreen;
+    SettingsIndexScreen gamesSettingsIndexScreen;
 
     ModeSettingsEntry modeSettingsEntry;
     SaveSettingsEntry saveSettingsEntry;
@@ -55,39 +57,22 @@ class Interface {
       setScreenParameters(&keyboardSettingsIndexScreen);
       setScreenParameters(&mouseSettingsIndexScreen);
       setScreenParameters(&screenSettingsIndexScreen);
+      setScreenParameters(&batterySettingsIndexScreen);
+      setScreenParameters(&gamesSettingsIndexScreen);
 
       SettingsIndexNode* settingsIndexNode = new SettingsIndexNode();
-      settingsIndexNode->setData(&mainSettingsIndexScreen);
-      settingsIndexNode->setBitmap(SETTINGS_BMP);
-
-      SettingsIndexNode* settingsIndexNode1 = new SettingsIndexNode();
-      settingsIndexNode1->setData(&keyboardSettingsIndexScreen);
-      settingsIndexNode1->setBitmap(KEYBOARD_BMP);
-      settingsIndexNode->setNextNode(settingsIndexNode1);
-
-      SettingsIndexNode* settingsIndexNode2 = new SettingsIndexNode();
-      settingsIndexNode2->setData(&mouseSettingsIndexScreen);
-      settingsIndexNode2->setBitmap(MOUSE_BMP);
-      settingsIndexNode1->setNextNode(settingsIndexNode2);
-
-      SettingsIndexNode* settingsIndexNode3 = new SettingsIndexNode();
-      settingsIndexNode3->setData(&screenSettingsIndexScreen);
-      settingsIndexNode3->setBitmap(SCREEN_BMP);
-      settingsIndexNode2->setNextNode(settingsIndexNode3);
-
+      setSettingsIndexNode(settingsIndexNode, &mainSettingsIndexScreen, SETTINGS_BMP);
+      addSettingsIndexNode(settingsIndexNode, &keyboardSettingsIndexScreen, KEYBOARD_BMP);
+      addSettingsIndexNode(settingsIndexNode, &mouseSettingsIndexScreen, MOUSE_BMP);
+      addSettingsIndexNode(settingsIndexNode, &screenSettingsIndexScreen, SCREEN_BMP);
+      addSettingsIndexNode(settingsIndexNode, &batterySettingsIndexScreen, BATTERY_8_BMP);
+      addSettingsIndexNode(settingsIndexNode, &gamesSettingsIndexScreen, GAMEPAD_BMP);
       settingsScreen.setSettingsIndices(settingsIndexNode);
 
       SettingsEntryNode* settingsEntryNodeMain = new SettingsEntryNode();
-      settingsEntryNodeMain->setData(&modeSettingsEntry);
-
-      SettingsEntryNode* settingsEntryNodeMain1 = new SettingsEntryNode();
-      settingsEntryNodeMain1->setData(&saveSettingsEntry);
-      settingsEntryNodeMain->setNextNode(settingsEntryNodeMain1);
-
-      SettingsEntryNode* settingsEntryNodeMain2 = new SettingsEntryNode();
-      settingsEntryNodeMain2->setData(&resetSettingsEntry);
-      settingsEntryNodeMain1->setNextNode(settingsEntryNodeMain2);
-
+      setSettingsEntryNode(settingsEntryNodeMain, &modeSettingsEntry);
+      addSettingsEntryNode(settingsEntryNodeMain, &saveSettingsEntry);
+      addSettingsEntryNode(settingsEntryNodeMain, &resetSettingsEntry);
       mainSettingsIndexScreen.setSettingsEntries(settingsEntryNodeMain);
 
       modeSettingsEntry.setSettings(settings);
@@ -107,6 +92,8 @@ class Interface {
       keyboardSettingsIndexScreen.setNextScreen(&settingsScreen);
       mouseSettingsIndexScreen.setNextScreen(&settingsScreen);
       screenSettingsIndexScreen.setNextScreen(&settingsScreen);
+      batterySettingsIndexScreen.setNextScreen(&settingsScreen);
+      gamesSettingsIndexScreen.setNextScreen(&settingsScreen);
     }
 
     void loop() {
@@ -182,5 +169,44 @@ class Interface {
       screen->setTouchpad(touchpad);
       screen->setDisplay(display);
       screen->setEPROM(eprom);
+    }
+
+    void addSettingsIndexNode(SettingsIndexNode* indexNode, Screen* data, const uint8_t BMP[]) {
+      SettingsIndexNode* node = indexNode;
+      int i = 0;
+      while (true) {
+        if (!node->hasNext()) {
+          SettingsIndexNode* newNode = new SettingsIndexNode();
+          setSettingsIndexNode(newNode, data, BMP);
+          node->setNextNode(newNode);
+          break;
+        }
+        node = &(node->getNextNode());
+        i++;
+      }
+    }
+
+    void setSettingsIndexNode(SettingsIndexNode* indexNode, Screen* data, const uint8_t BMP[]) {
+      indexNode->setData(data);
+      indexNode->setBitmap(BMP);
+    }
+
+    void addSettingsEntryNode(SettingsEntryNode* entryNode, SettingsEntry* data) {
+      SettingsEntryNode* node = entryNode;
+      int i = 0;
+      while (true) {
+        if (!node->hasNext()) {
+          SettingsEntryNode* newNode = new SettingsEntryNode();
+          setSettingsEntryNode(newNode, data);
+          node->setNextNode(newNode);
+          break;
+        }
+        node = &(node->getNextNode());
+        i++;
+      }
+    }
+
+    void setSettingsEntryNode(SettingsEntryNode* entryNode, SettingsEntry* data) {
+      entryNode->setData(data);
     }
 };

@@ -1,4 +1,4 @@
-static const uint8_t PROGMEM USB_BMP[] ={ 
+static const uint8_t PROGMEM USB_BMP[] = {
   0b00000000, 0b00000000,
   0b00000111, 0b11100000,
   0b00001000, 0b00010000,
@@ -17,7 +17,7 @@ static const uint8_t PROGMEM USB_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BLE_BMP[] ={ 
+static const uint8_t PROGMEM BLE_BMP[] = {
   0b00000000, 0b00000000,
   0b00000001, 0b11000000,
   0b00000001, 0b11100000,
@@ -36,7 +36,7 @@ static const uint8_t PROGMEM BLE_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM NO_BLE_BMP[] ={ 
+static const uint8_t PROGMEM NO_BLE_BMP[] = {
   0b00000000, 0b00000000,
   0b00000001, 0b11000000,
   0b00000001, 0b11101100,
@@ -55,7 +55,7 @@ static const uint8_t PROGMEM NO_BLE_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_10_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_10_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -74,7 +74,7 @@ static const uint8_t PROGMEM BATTERY_10_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_9_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_9_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -93,7 +93,7 @@ static const uint8_t PROGMEM BATTERY_9_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_8_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_8_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -112,7 +112,7 @@ static const uint8_t PROGMEM BATTERY_8_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_7_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_7_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -131,7 +131,7 @@ static const uint8_t PROGMEM BATTERY_7_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_6_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_6_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -150,7 +150,7 @@ static const uint8_t PROGMEM BATTERY_6_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_5_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_5_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -169,7 +169,7 @@ static const uint8_t PROGMEM BATTERY_5_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_4_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_4_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -188,7 +188,7 @@ static const uint8_t PROGMEM BATTERY_4_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_3_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_3_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -207,7 +207,7 @@ static const uint8_t PROGMEM BATTERY_3_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_2_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_2_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -226,7 +226,7 @@ static const uint8_t PROGMEM BATTERY_2_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_1_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_1_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -245,7 +245,7 @@ static const uint8_t PROGMEM BATTERY_1_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_0_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_0_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
@@ -264,7 +264,7 @@ static const uint8_t PROGMEM BATTERY_0_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM BATTERY_UNKNOWN_BMP[] ={ 
+static const uint8_t PROGMEM BATTERY_UNKNOWN_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000011, 0b11000000,
@@ -283,7 +283,7 @@ static const uint8_t PROGMEM BATTERY_UNKNOWN_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM SETTINGS_BMP[] ={ 
+static const uint8_t PROGMEM SETTINGS_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00000001, 0b10000000,
@@ -302,7 +302,7 @@ static const uint8_t PROGMEM SETTINGS_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM KEYBOARD_BMP[] ={ 
+static const uint8_t PROGMEM KEYBOARD_BMP[] = {
   0b00000000, 0b00000000,
   0b00000001, 0b00000000,
   0b00000001, 0b00000000,
@@ -321,7 +321,7 @@ static const uint8_t PROGMEM KEYBOARD_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM MOUSE_BMP[] ={ 
+static const uint8_t PROGMEM MOUSE_BMP[] = {
   0b00000000, 0b00000000,
   0b00000001, 0b00000000,
   0b00000000, 0b10000000,
@@ -340,7 +340,7 @@ static const uint8_t PROGMEM MOUSE_BMP[] ={
   0b00000000, 0b00000000
 };
 
-static const uint8_t PROGMEM SCREEN_BMP[] ={ 
+static const uint8_t PROGMEM SCREEN_BMP[] = {
   0b00000000, 0b00000000,
   0b00000000, 0b00000000,
   0b00111111, 0b11111100,
@@ -356,5 +356,24 @@ static const uint8_t PROGMEM SCREEN_BMP[] ={
   0b00000010, 0b01000000,
   0b00000010, 0b01000000,
   0b00000011, 0b11000000,
+  0b00000000, 0b00000000
+};
+
+static const uint8_t PROGMEM GAMEPAD_BMP[] = {
+  0b00000000, 0b00000000,
+  0b00000001, 0b00000000,
+  0b00000001, 0b00000000,
+  0b00000000, 0b10000000,
+  0b00000000, 0b10000000,
+  0b00011111, 0b11111000,
+  0b00100000, 0b00000100,
+  0b00101100, 0b00110100,
+  0b00101100, 0b00110100,
+  0b00100000, 0b00000100,
+  0b00100011, 0b11000100,
+  0b00100100, 0b00100100,
+  0b00011100, 0b00111000,
+  0b00000000, 0b00000000,
+  0b00000000, 0b00000000,
   0b00000000, 0b00000000
 };

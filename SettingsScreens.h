@@ -65,6 +65,7 @@ class SettingsIndexScreen : public Screen {
     bool next = false;
 
     int selectedIndex = 0;
+    int selectedOffset = 0;
 
     SettingsEntryNode* settingsEntries;
     SettingsEntry* index;
@@ -75,24 +76,38 @@ class SettingsIndexScreen : public Screen {
       Screen::begin();
       previousMillis = millis();
       next = false;
+      selectedIndex = 0;
+      selectedOffset = 0;
       getSettings().setScreenFocus(true);
     }
 
     virtual void loop() override {
       unsigned long currentMillis = millis();
 
+      node = settingsEntries;
+      int i = 0;
+      while (true) {
+        if (!node->hasNext()) break;
+        node = &(node->getNextNode());
+        i++;
+      }
+      int max = i + 1;
+
       if (currentMillis - previousMillis > 25) {
         getDisplay().clear();
         getDisplay().textReset();
         node = settingsEntries;
-        int i = 0;
+        i = 0;
         while (true) {
           index = &node->getData();
 
+          int offset = i - selectedOffset;
           String s = index->getName();
           if (i == selectedIndex) s = ">" + s;
-          getDisplay().setTextPos(0, i * 8);
-          getDisplay().drawText(s);
+          if (offset >= 0 && offset <= 3) {
+            getDisplay().setTextPos(0, offset * 8);
+            getDisplay().drawText(s);
+          }
 
           if (!node->hasNext()) break;
           node = &(node->getNextNode());
@@ -104,28 +119,27 @@ class SettingsIndexScreen : public Screen {
       }
 
       node = settingsEntries;
-      int i = 0;
+      i = 0;
       while (true) {
         if (i == selectedIndex) {
           index = &node->getData();
           if (isLeftPress()) index->left();
-          if (isRightPress() || isEnterPress()) index->right();
+          if (isRightPress() || isEnterPress() || isSpacePress()) index->right();
         }
 
         if (!node->hasNext()) break;
         node = &(node->getNextNode());
         i++;
       }
-      int max = i + 1;
 
       if (isUpPress()) {
-        selectedIndex--;
-        if (selectedIndex < 0) selectedIndex = 0;
+        if (selectedIndex - 1 >= 0) selectedIndex--;
+        if (selectedOffset - 1 >= 0 && selectedIndex - selectedOffset < 1) selectedOffset--;
       }
 
       if (isDownPress()) {
-        selectedIndex++;
-        if (selectedIndex > max - 1) selectedIndex = max - 1;
+        if (selectedIndex + 1 < max) selectedIndex++;
+        if (selectedOffset + 4 < max && selectedIndex - selectedOffset > 2) selectedOffset++;
       }
 
       if (isEscPress()) next = true;
@@ -190,6 +204,7 @@ class SettingsScreen : public Screen {
     bool select = false;
 
     int selectedIndex = 0;
+    int selectedOffset = 0;
 
     SettingsIndexNode* settingsIndices;
     Screen* index;
@@ -207,22 +222,6 @@ class SettingsScreen : public Screen {
     virtual void loop() override {
       unsigned long currentMillis = millis();
 
-      if (currentMillis - previousMillis > 25) {
-        getDisplay().clear();
-        node = settingsIndices;
-        int i = 0;
-        while (true) {
-          drawIndex(6 + (i * 24), (i == selectedIndex) ? 2 : 6, node->getBitmap());
-
-          if (!node->hasNext()) break;
-          node = &(node->getNextNode());
-          i++;
-        }
-        getDisplay().update();
-
-        previousMillis = millis();
-      }
-      
       node = settingsIndices;
       int i = 0;
       while (true) {
@@ -232,17 +231,34 @@ class SettingsScreen : public Screen {
       }
       int max = i + 1;
 
+      if (currentMillis - previousMillis > 25) {
+        getDisplay().clear();
+        node = settingsIndices;
+        i = 0;
+        while (true) {
+          int offset = i - selectedOffset;
+          if (offset >= -1 && offset <= 6) drawIndex(6 + (offset * 24), (i == selectedIndex) ? 2 : 6, node->getBitmap());
+
+          if (!node->hasNext()) break;
+          node = &(node->getNextNode());
+          i++;
+        }
+        getDisplay().update();
+
+        previousMillis = millis();
+      }
+
       if (isLeftPress()) {
-        selectedIndex--;
-        if (selectedIndex < 0) selectedIndex = 0;
+        if (selectedIndex - 1 >= 0) selectedIndex--;
+        if (selectedOffset - 1 >= 0 && selectedIndex - selectedOffset < 0) selectedOffset--;
       }
 
       if (isRightPress()) {
-        selectedIndex++;
-        if (selectedIndex > max - 1) selectedIndex = max - 1;
+        if (selectedIndex + 1 < max) selectedIndex++;
+        if (selectedOffset + 5 < max && selectedIndex - selectedOffset > 4) selectedOffset++;
       }
 
-      if (isEnterPress()) select = true;
+      if (isEnterPress() || isSpacePress()) select = true;
 
       if (isEscPress()) next = true;
     }
@@ -303,8 +319,8 @@ class SaveSettingsEntry : public SettingsEntry {
       return "Save settings";
     }
 
-    virtual void left() override {
-      getSettings().setUSBMode(!getSettings().isUSBMode());
+    virtual void use() override {
+
     }
 };
 
@@ -315,6 +331,6 @@ class ResetSettingsEntry : public SettingsEntry {
     }
 
     virtual void use() override {
-      getSettings().setUSBMode(!getSettings().isUSBMode());
+      getSettings().reset();
     }
 };

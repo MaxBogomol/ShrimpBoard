@@ -125,6 +125,10 @@ class Screen {
       return getButtonMatrix().isPress(3, 13);
     }
 
+    bool isSpacePress() {
+      return isTwoLinkedButtonPress(5, 4, 5, 5);
+    }
+
     bool isLeftPress() {
       return getButtonMatrix().isPress(5, 10);
     }
