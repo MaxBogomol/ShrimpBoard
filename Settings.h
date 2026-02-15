@@ -15,10 +15,14 @@ class Settings {
     bool rightMouseLock = false;
     
     bool touchpadScroll = true;
+    bool touchpadRounded = true;
+    int touchpadRoundLimit = 5;
 
   public:
     void reset() {
-      
+      bool touchpadScroll = true;
+      bool touchpadRounded = true;
+      touchpadRoundLimit = 5;
     }
 
     void setUSBMode(bool value) {
@@ -27,10 +31,6 @@ class Settings {
 
     void setScreenFocus(bool value) {
       screenFocus = value;
-    }
-
-    void setTouchpadScroll(bool value) {
-      touchpadScroll = value;
     }
 
     void setNumLockUSB(bool value) {
@@ -65,16 +65,26 @@ class Settings {
       rightMouseLock = value;
     }
 
+    void setTouchpadScroll(bool value) {
+      touchpadScroll = value;
+    }
+
+    void setTouchpadRounded(bool value) {
+      touchpadRounded = value;
+    }
+
+    void setTouchpadRoundLimit(int value) {
+      if (value < 2) value = 2;
+      if (value > 10) value = 10;
+      touchpadRoundLimit = value;
+    }
+
     bool isUSBMode() {
       return usbMode;
     }
 
     bool isScreenFocus() {
       return screenFocus;
-    }
-
-    bool isTouchpadScroll() {
-      return touchpadScroll;
     }
 
     bool isNumLockUSB() {
@@ -107,5 +117,17 @@ class Settings {
 
     bool isRightMouseLock() {
       return rightMouseLock;
+    }
+
+    bool isTouchpadScroll() {
+      return touchpadScroll;
+    }
+
+    bool isTouchpadRounded() {
+      return touchpadRounded;
+    }
+
+    int getTouchpadRoundLimit() {
+      return touchpadRoundLimit;
     }
 };

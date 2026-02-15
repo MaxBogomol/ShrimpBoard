@@ -197,6 +197,8 @@ void setupSettings() {
   if (DEBUG) Serial.println("Setup settings.");
   settings = &eprom.getSettings();
 
+  buttonMatrix.setSettings(settings);
+  touchpad.setSettings(settings);
   interface.setSettings(settings);
 }
 
@@ -273,8 +275,10 @@ void loopMouse() {
     }
     float x = touchpad.getFirstXMoved();
     float y = touchpad.getFirstYMoved();
-    x = touchpad.getFirstXRounded();
-    y = touchpad.getFirstYRounded();
+    if (settings->isTouchpadRounded()) {
+      x = touchpad.getFirstXRounded();
+      y = touchpad.getFirstYRounded();
+    }
     if (!mouseScroll) {
       mouseMove((int) x, (int) y);
     } else {

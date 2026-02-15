@@ -2,6 +2,8 @@
 
 class ButtonMatrix {
   private:
+    Settings* settings;
+
     bool matrix[6][17] = {
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -75,6 +77,14 @@ class ButtonMatrix {
       matrix[3][row] = digitalRead(BUTTON_ROW_PIN_4);
       matrix[4][row] = digitalRead(BUTTON_ROW_PIN_5);
       matrix[5][row] = digitalRead(BUTTON_ROW_PIN_6);
+    }
+
+    void setSettings(Settings* settings) {
+      this->settings = settings;
+    }
+
+    Settings& getSettings() {
+      return *this->settings;
     }
 
     bool (*getMatrix())[17] {

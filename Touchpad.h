@@ -4,6 +4,8 @@ class Touchpad {
   private:
     PS4Touchpad* touchpad;
 
+    Settings* settings;
+
     bool firstTouch = false;
     int firstTouchX = 0;
     int firstTouchY = 0;
@@ -117,6 +119,14 @@ class Touchpad {
       return *this->touchpad;
     }
 
+    void setSettings(Settings* settings) {
+      this->settings = settings;
+    }
+
+    Settings& getSettings() {
+      return *this->settings;
+    }
+
     int getMaxX() {
       return touchpad->getMaxY();
     }
@@ -126,7 +136,7 @@ class Touchpad {
     }
 
     int getRoundLimit() {
-      return 5;
+      return settings->getTouchpadRoundLimit();
     }
 
     int normalizeValue(bool button, bool buttonOld) {

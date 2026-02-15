@@ -30,11 +30,17 @@ class Interface {
     SettingsIndexScreen mouseSettingsIndexScreen;
     SettingsIndexScreen screenSettingsIndexScreen;
     SettingsIndexScreen batterySettingsIndexScreen;
+    SettingsIndexScreen ledSettingsIndexScreen;
+    SettingsIndexScreen buzzerSettingsIndexScreen;
     SettingsIndexScreen gamesSettingsIndexScreen;
 
     ModeSettingsEntry modeSettingsEntry;
     SaveSettingsEntry saveSettingsEntry;
     ResetSettingsEntry resetSettingsEntry;
+
+    TouchpadScrollSettingsEntry touchpadScrollSettingsEntry;
+    TouchpadRoundedSettingsEntry touchpadRoundedSettingsEntry;
+    TouchpadRoundLimitSettingsEntry touchpadRoundLimitSettingsEntry;
 
   public:
     void setupScreens() {
@@ -60,24 +66,57 @@ class Interface {
       setScreenParameters(&batterySettingsIndexScreen);
       setScreenParameters(&gamesSettingsIndexScreen);
 
+      //Settings
       SettingsIndexNode* settingsIndexNode = new SettingsIndexNode();
       setSettingsIndexNode(settingsIndexNode, &mainSettingsIndexScreen, SETTINGS_BMP);
       addSettingsIndexNode(settingsIndexNode, &keyboardSettingsIndexScreen, KEYBOARD_BMP);
       addSettingsIndexNode(settingsIndexNode, &mouseSettingsIndexScreen, MOUSE_BMP);
       addSettingsIndexNode(settingsIndexNode, &screenSettingsIndexScreen, SCREEN_BMP);
       addSettingsIndexNode(settingsIndexNode, &batterySettingsIndexScreen, BATTERY_8_BMP);
+      addSettingsIndexNode(settingsIndexNode, &ledSettingsIndexScreen, LED_BMP);
+      addSettingsIndexNode(settingsIndexNode, &buzzerSettingsIndexScreen, BUZZER_BMP);
       addSettingsIndexNode(settingsIndexNode, &gamesSettingsIndexScreen, GAMEPAD_BMP);
       settingsScreen.setSettingsIndices(settingsIndexNode);
 
-      SettingsEntryNode* settingsEntryNodeMain = new SettingsEntryNode();
-      setSettingsEntryNode(settingsEntryNodeMain, &modeSettingsEntry);
-      addSettingsEntryNode(settingsEntryNodeMain, &saveSettingsEntry);
-      addSettingsEntryNode(settingsEntryNodeMain, &resetSettingsEntry);
-      mainSettingsIndexScreen.setSettingsEntries(settingsEntryNodeMain);
+      //Main
+      SettingsEntryNode* mainSettingsEntryNode = new SettingsEntryNode();
+      setSettingsEntryNode(mainSettingsEntryNode, &modeSettingsEntry);
+      addSettingsEntryNode(mainSettingsEntryNode, &saveSettingsEntry);
+      addSettingsEntryNode(mainSettingsEntryNode, &resetSettingsEntry);
+      mainSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
 
       modeSettingsEntry.setSettings(settings);
       saveSettingsEntry.setSettings(settings);
       resetSettingsEntry.setSettings(settings);
+
+      //Keyboard
+      keyboardSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+
+      //Mouse
+      SettingsEntryNode* mouseSettingsEntryNode = new SettingsEntryNode();
+      setSettingsEntryNode(mouseSettingsEntryNode, &touchpadScrollSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &touchpadRoundedSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &touchpadRoundLimitSettingsEntry);
+      mouseSettingsIndexScreen.setSettingsEntries(mouseSettingsEntryNode);
+
+      touchpadScrollSettingsEntry.setSettings(settings);
+      touchpadRoundedSettingsEntry.setSettings(settings);
+      touchpadRoundLimitSettingsEntry.setSettings(settings);
+
+      //Screen
+      screenSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+
+      //Battery
+      batterySettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+
+      //Led
+      ledSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+
+      //Buzzer
+      buzzerSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+
+      //Games
+      gamesSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
     }
 
     void setupScreensNexts() {
@@ -93,6 +132,8 @@ class Interface {
       mouseSettingsIndexScreen.setNextScreen(&settingsScreen);
       screenSettingsIndexScreen.setNextScreen(&settingsScreen);
       batterySettingsIndexScreen.setNextScreen(&settingsScreen);
+      ledSettingsIndexScreen.setNextScreen(&settingsScreen);
+      buzzerSettingsIndexScreen.setNextScreen(&settingsScreen);
       gamesSettingsIndexScreen.setNextScreen(&settingsScreen);
     }
 

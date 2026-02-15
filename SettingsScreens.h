@@ -68,8 +68,6 @@ class SettingsIndexScreen : public Screen {
     int selectedOffset = 0;
 
     SettingsEntryNode* settingsEntries;
-    SettingsEntry* index;
-    SettingsEntryNode* node;
 
   public:
     virtual void begin() override {
@@ -84,7 +82,7 @@ class SettingsIndexScreen : public Screen {
     virtual void loop() override {
       unsigned long currentMillis = millis();
 
-      node = settingsEntries;
+      SettingsEntryNode* node = settingsEntries;
       int i = 0;
       while (true) {
         if (!node->hasNext()) break;
@@ -99,7 +97,7 @@ class SettingsIndexScreen : public Screen {
         node = settingsEntries;
         i = 0;
         while (true) {
-          index = &node->getData();
+          SettingsEntry* index = &node->getData();
 
           int offset = i - selectedOffset;
           String s = index->getName();
@@ -122,9 +120,9 @@ class SettingsIndexScreen : public Screen {
       i = 0;
       while (true) {
         if (i == selectedIndex) {
-          index = &node->getData();
-          if (isLeftPress()) index->left();
-          if (isRightPress() || isEnterPress() || isSpacePress()) index->right();
+          SettingsEntry* index = &node->getData();
+          if (isLeftPress() || isAPress()) index->left();
+          if (isRightPress() || isDPress() || isEnterPress() || isSpacePress()) index->right();
         }
 
         if (!node->hasNext()) break;
@@ -132,12 +130,12 @@ class SettingsIndexScreen : public Screen {
         i++;
       }
 
-      if (isUpPress()) {
+      if (isUpPress() || isWPress()) {
         if (selectedIndex - 1 >= 0) selectedIndex--;
         if (selectedOffset - 1 >= 0 && selectedIndex - selectedOffset < 1) selectedOffset--;
       }
 
-      if (isDownPress()) {
+      if (isDownPress() || isSPress()) {
         if (selectedIndex + 1 < max) selectedIndex++;
         if (selectedOffset + 4 < max && selectedIndex - selectedOffset > 2) selectedOffset++;
       }
@@ -207,8 +205,6 @@ class SettingsScreen : public Screen {
     int selectedOffset = 0;
 
     SettingsIndexNode* settingsIndices;
-    Screen* index;
-    SettingsIndexNode* node;
 
   public:
     virtual void begin() override {
@@ -222,7 +218,7 @@ class SettingsScreen : public Screen {
     virtual void loop() override {
       unsigned long currentMillis = millis();
 
-      node = settingsIndices;
+      SettingsIndexNode* node = settingsIndices;
       int i = 0;
       while (true) {
         if (!node->hasNext()) break;
@@ -248,12 +244,12 @@ class SettingsScreen : public Screen {
         previousMillis = millis();
       }
 
-      if (isLeftPress()) {
+      if (isLeftPress() || isAPress()) {
         if (selectedIndex - 1 >= 0) selectedIndex--;
         if (selectedOffset - 1 >= 0 && selectedIndex - selectedOffset < 0) selectedOffset--;
       }
 
-      if (isRightPress()) {
+      if (isRightPress() || isDPress()) {
         if (selectedIndex + 1 < max) selectedIndex++;
         if (selectedOffset + 5 < max && selectedIndex - selectedOffset > 4) selectedOffset++;
       }
@@ -269,13 +265,13 @@ class SettingsScreen : public Screen {
 
     virtual Screen& getNextScreen() {
       if (select) {
-        node = settingsIndices;
+        SettingsIndexNode* node = settingsIndices;
         int i = 0;
         while (true) {
           if (i == selectedIndex) return node->getData();
 
           if (!node->hasNext()) break;
-          node = &(settingsIndices->getNextNode());
+          node = &(node->getNextNode());
           i++;
         }
       }
@@ -332,5 +328,62 @@ class ResetSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().reset();
+    }
+};
+
+class TouchpadScrollSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      String name = "Scroll: ";
+      if (getSettings().isTouchpadScroll()) {
+        name = name + "+";
+      } else {
+        name = name + "-";
+      }
+      return name;
+    }
+
+    virtual void use() override {
+      getSettings().setTouchpadScroll(!getSettings().isTouchpadScroll());
+    }
+};
+
+class TouchpadRoundedSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      String name = "Rounded: ";
+      if (getSettings().isTouchpadRounded()) {
+        name = name + "+";
+      } else {
+        name = name + "-";
+      }
+      return name;
+    }
+
+    virtual void use() override {
+      getSettings().setTouchpadRounded(!getSettings().isTouchpadRounded());
+    }
+};
+
+class TouchpadRoundLimitSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Round limit: " + String(getSettings().getTouchpadRoundLimit());
+    }
+
+    virtual void left() override {
+      int value = getSettings().getTouchpadRoundLimit();
+      if (value - 1 >= 2) {
+        value--;
+        getSettings().setTouchpadRoundLimit(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getTouchpadRoundLimit();
+      if (value + 1 <= 10) {
+        value++;
+        getSettings().setTouchpadRoundLimit(value);
+      }
     }
 };
