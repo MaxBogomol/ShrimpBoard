@@ -269,16 +269,27 @@ void loopKeyboard() {
 }
 
 void loopMouse() {
+  float x = 0;
+  float y = 0;
   if (touchpad.isFirstTouchPressed()) {
     if (settings->isTouchpadScroll() && touchpad.isSecondTouchPressed()) {
       if (!mouseScroll) mouseScroll = true;
     }
-    float x = touchpad.getFirstXMoved();
-    float y = touchpad.getFirstYMoved();
+    x = touchpad.getFirstXMoved();
+    y = touchpad.getFirstYMoved();
     if (settings->isTouchpadRounded()) {
       x = touchpad.getFirstXRounded();
       y = touchpad.getFirstYRounded();
     }
+  } else {
+    if (mouseScroll) mouseScroll = false;
+    if (settings->isTouchpadInertia()) {
+      x += touchpad.getFirstXInertial();
+      y += touchpad.getFirstYInertial();
+    }
+  }
+
+  if (x != 0 && y != 0) {
     if (!isMouseScroll()) {
       float speed = settings->getMouseSpeed();
       x = x * speed;
@@ -290,8 +301,6 @@ void loopMouse() {
       y = y * speed * 0.1;
       mouseMove(0, 0, round(-y), round(x));
     }
-  } else {
-    if (mouseScroll) mouseScroll = false;
   }
 
   if (settings->isScreenFocus() && !screenFocus) {

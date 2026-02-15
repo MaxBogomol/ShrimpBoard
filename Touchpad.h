@@ -33,6 +33,11 @@ class Touchpad {
     float secondTouchXRounded = 0;
     float secondTouchYRounded = 0;
 
+    float firstTouchXInertial = 0;
+    float firstTouchYInertial = 0;
+    float secondTouchXInertial = 0;
+    float secondTouchYInertial = 0;
+
     float firstRound[10][2] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
     float secondRound[10][2] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
 
@@ -113,6 +118,38 @@ class Touchpad {
       firstTouchYRounded = firstTouchYRounded / roundLimit;
       secondTouchXRounded = secondTouchXRounded / roundLimit;
       secondTouchYRounded = secondTouchYRounded / roundLimit;
+
+      int inertiaStresshold = getInertiaStresshold();
+      int inertiaStep = getInertiaStep();
+
+      if (getSettings().isTouchpadInertiaRounded()) {
+        if (firstTouchXRounded <= -inertiaStresshold || firstTouchXRounded >= inertiaStresshold ||
+            firstTouchYRounded <= -inertiaStresshold || firstTouchYRounded >= inertiaStresshold) {
+          firstTouchXInertial = firstTouchXRounded;
+          firstTouchYInertial = firstTouchYRounded;
+        }
+        if (secondTouchXRounded <= -inertiaStresshold || secondTouchXRounded >= inertiaStresshold ||
+            secondTouchYRounded <= -inertiaStresshold || secondTouchYRounded >= inertiaStresshold) {
+          firstTouchXInertial = firstTouchXRounded;
+          firstTouchYInertial = secondTouchYRounded;
+        }
+      } else {
+        if (firstTouchXMoved <= -inertiaStresshold || firstTouchXMoved >= inertiaStresshold ||
+            firstTouchYMoved <= -inertiaStresshold || firstTouchYMoved >= inertiaStresshold) {
+          firstTouchXInertial = firstTouchXMoved;
+          firstTouchYInertial = firstTouchYMoved;
+        }
+        if (secondTouchXMoved <= -inertiaStresshold || secondTouchXMoved >= inertiaStresshold ||
+            secondTouchYMoved <= -inertiaStresshold || secondTouchYMoved >= inertiaStresshold) {
+          firstTouchXInertial = firstTouchXMoved;
+          firstTouchYInertial = secondTouchYMoved;
+        }
+      }
+
+      firstTouchXInertial = inertiaValue(firstTouchXInertial, inertiaStep);
+      firstTouchYInertial = inertiaValue(firstTouchYInertial, inertiaStep);
+      secondTouchXInertial = inertiaValue(secondTouchXInertial, inertiaStep);
+      secondTouchYInertial = inertiaValue(secondTouchYInertial, inertiaStep);
     }
 
     PS4Touchpad& getTouchpad() {
@@ -139,11 +176,31 @@ class Touchpad {
       return settings->getTouchpadRoundLimit();
     }
 
+    int getInertiaStresshold() {
+      return settings->getTouchpadInertiaStresshold();
+    }
+
+    int getInertiaStep() {
+      return settings->getTouchpadInertiaStep();
+    }
+
     int normalizeValue(bool button, bool buttonOld) {
       int value = 0;
       if (button && !buttonOld) value = 1;
       if (button && buttonOld) value = 2;
       if (!button && buttonOld) value = 3;
+      return value;
+    }
+
+    int inertiaValue(int value, int inertiaStep) {
+      if (value > 0) {
+        value -= inertiaStep;
+        if (value < 0) value = 0;
+      }
+      if (value < 0) {
+        value += inertiaStep;
+        if (value > 0) value = 0;
+      }
       return value;
     }
 
@@ -209,6 +266,22 @@ class Touchpad {
 
     float getSecondYRounded() {
       return secondTouchYRounded;
+    }
+
+    float getFirstXInertial() {
+      return firstTouchXInertial;
+    }
+
+    float getFirstYInertial() {
+      return firstTouchYInertial;
+    }
+
+    float getSecondXInertial() {
+      return secondTouchXInertial;
+    }
+
+    float getSecondYInertial() {
+      return secondTouchYInertial;
     }
     
     int getFirstTouchValue() {

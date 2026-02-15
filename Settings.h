@@ -22,6 +22,10 @@ class Settings {
     float mouseScrollSpeed = 1;
     bool touchpadRounded = true;
     int touchpadRoundLimit = 5;
+    bool touchpadInertia = true;
+    bool touchpadInertiaRounded = true;
+    int touchpadInertiaStresshold = 50;
+    int touchpadInertiaStep = 5;
 
     int displayUpdateDelay = 25;
 
@@ -35,6 +39,10 @@ class Settings {
       mouseScrollSpeed = 1;
       touchpadRounded = true;
       touchpadRoundLimit = 5;
+      touchpadInertia = true;
+      touchpadInertiaRounded = true;
+      touchpadInertiaStresshold = 50;
+      touchpadInertiaStep = 5;
 
       displayUpdateDelay = 25;
     }
@@ -117,6 +125,26 @@ class Settings {
       touchpadRoundLimit = value;
     }
 
+    void setTouchpadInertia(bool value) {
+      touchpadInertia = value;
+    }
+
+    void setTouchpadInertiaRounded(bool value) {
+      touchpadInertiaRounded = value;
+    }
+
+    void setTouchpadInertiaStresshold(int value) {
+      if (value < 5) value = 5;
+      if (value > 300) value = 300;
+      touchpadInertiaStresshold = value;
+    }
+
+    void setTouchpadInertiaStep(int value) {
+      if (value < 1) value = 1;
+      if (value > 50) value = 50;
+      touchpadInertiaStep = value;
+    }
+
     void setDisplayUpdateDelay(int value) {
       if (value < 0) value = 0;
       if (value > 100) value = 100;
@@ -193,6 +221,22 @@ class Settings {
 
     int getTouchpadRoundLimit() {
       return touchpadRoundLimit;
+    }
+
+    bool isTouchpadInertia() {
+      return touchpadInertia;
+    }
+
+    bool isTouchpadInertiaRounded() {
+      return touchpadInertiaRounded;
+    }
+
+    int getTouchpadInertiaStresshold() {
+      return touchpadInertiaStresshold;
+    }
+
+    int getTouchpadInertiaStep() {
+      return touchpadInertiaStep;
     }
 
     int getDisplayUpdateDelay() {

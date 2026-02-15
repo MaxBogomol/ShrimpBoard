@@ -46,6 +46,10 @@ class Interface {
     MouseScrollSpeedSettingsEntry mouseScrollSpeedSettingsEntry;
     TouchpadRoundedSettingsEntry touchpadRoundedSettingsEntry;
     TouchpadRoundLimitSettingsEntry touchpadRoundLimitSettingsEntry;
+    TouchpadInertiaSettingsEntry touchpadInertiaSettingsEntry;
+    TouchpadInertiaRoundedSettingsEntry touchpadInertiaRoundedSettingsEntry;
+    TouchpadInertiaStressholdSettingsEntry touchpadInertiaStressholdSettingsEntry;
+    TouchpadInertiaStepSettingsEntry touchpadInertiaStepSettingsEntry;
 
     DisplayUpdateDelaySettingsEntry displayUpdateDelaySettingsEntry;
 
@@ -109,6 +113,10 @@ class Interface {
       addSettingsEntryNode(mouseSettingsEntryNode, &mouseScrollSpeedSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadRoundedSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadRoundLimitSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaRoundedSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaStressholdSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaStepSettingsEntry);
       mouseSettingsIndexScreen.setSettingsEntries(mouseSettingsEntryNode);
 
       mouseSpeedSettingsEntry.setSettings(settings);
@@ -119,6 +127,10 @@ class Interface {
       mouseScrollSpeedSettingsEntry.setSettings(settings);
       touchpadRoundedSettingsEntry.setSettings(settings);
       touchpadRoundLimitSettingsEntry.setSettings(settings);
+      touchpadInertiaSettingsEntry.setSettings(settings);
+      touchpadInertiaRoundedSettingsEntry.setSettings(settings);
+      touchpadInertiaStressholdSettingsEntry.setSettings(settings);
+      touchpadInertiaStepSettingsEntry.setSettings(settings);
 
       //Screen
       SettingsEntryNode* screenSettingsEntryNode = new SettingsEntryNode();

@@ -103,6 +103,7 @@ class SettingsIndexScreen : public Screen {
       if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
         getDisplay().clear();
         getDisplay().textReset();
+        getDisplay().setTextWrap(false);
         node = settingsEntries;
         i = 0;
         while (true) {
@@ -460,6 +461,74 @@ class TouchpadRoundLimitSettingsEntry : public SettingsEntry {
       if (value + 1 <= 10) {
         value++;
         getSettings().setTouchpadRoundLimit(value);
+      }
+    }
+};
+
+class TouchpadInertiaSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("Inertia: ", getSettings().isTouchpadInertia());
+    }
+
+    virtual void use() override {
+      getSettings().setTouchpadInertia(!getSettings().isTouchpadInertia());
+    }
+};
+
+class TouchpadInertiaRoundedSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("Inertia rounded: ", getSettings().isTouchpadInertiaRounded());
+    }
+
+    virtual void use() override {
+      getSettings().setTouchpadInertiaRounded(!getSettings().isTouchpadInertiaRounded());
+    }
+};
+
+class TouchpadInertiaStressholdSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Inertia stresshold: " + String(getSettings().getTouchpadInertiaStresshold());
+    }
+
+    virtual void left() override {
+      int value = getSettings().getTouchpadInertiaStresshold();
+      if (value - 5 >= 5) {
+        value -= 5;
+        getSettings().setTouchpadInertiaStresshold(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getTouchpadInertiaStresshold();
+      if (value + 5 <= 300) {
+        value += 5;
+        getSettings().setTouchpadInertiaStresshold(value);
+      }
+    }
+};
+
+class TouchpadInertiaStepSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Inertia step: " + String(getSettings().getTouchpadInertiaStep());
+    }
+
+    virtual void left() override {
+      int value = getSettings().getTouchpadInertiaStep();
+      if (value - 1 >= 1) {
+        value--;
+        getSettings().setTouchpadInertiaStep(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getTouchpadInertiaStep();
+      if (value + 1 <= 50) {
+        value++;
+        getSettings().setTouchpadInertiaStep(value);
       }
     }
 };
