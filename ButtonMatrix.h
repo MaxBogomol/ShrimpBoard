@@ -31,12 +31,22 @@ class ButtonMatrix {
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
     };
 
+    unsigned long matrixDebounce[6][17] = {
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+    };
+
   public:
     void setup() {
       digitalWrite(BUTTON_COLUMN_PIN_OE, HIGH);
     }
 
     void read() {
+      unsigned long currentMillis = millis();
       for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 17; j++) {
           matrixOld[i][j] = matrix[i][j];
@@ -65,7 +75,11 @@ class ButtonMatrix {
         for (int j = 0; j < 17; j++) {
           bool button = matrix[i][j];
           bool buttonOld = matrixOld[i][j];
-          matrixNormalized[i][j] = normalizeValue(button, buttonOld);
+          int value = 0;
+          if (button && !buttonOld) value = 1;
+          if (button && buttonOld) value = 2;
+          if (!button && buttonOld) value = 3;
+          matrixNormalized[i][j] = value;
         }
       }
     }
@@ -97,14 +111,6 @@ class ButtonMatrix {
 
     int (*getMatrixNormalized())[17] {
       return matrixNormalized;
-    }
-
-    int normalizeValue(bool button, bool buttonOld) {
-      int value = 0;
-      if (button && !buttonOld) value = 1;
-      if (button && buttonOld) value = 2;
-      if (!button && buttonOld) value = 3;
-      return value;
     }
 
     int getValue(int row, int collumn) {

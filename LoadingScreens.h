@@ -26,7 +26,7 @@ class LoadingLinesScreen : public Screen {
           }
           getDisplay().update();
 
-          previousMillis = millis();
+          previousMillis = currentMillis;
           line += step;
         }
       } else {
@@ -68,7 +68,7 @@ class LoadingShrimpBoardScreen : public Screen {
           getDisplay().drawText(text);
           getDisplay().update();
 
-          previousMillis = millis();
+          previousMillis = currentMillis;
           step += 2;
         }
       } else {

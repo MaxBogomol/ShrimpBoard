@@ -123,7 +123,7 @@ class SettingsIndexScreen : public Screen {
         }
         getDisplay().update();
 
-        previousMillis = millis();
+        previousMillis = currentMillis;
       }
 
       node = settingsEntries;
@@ -251,7 +251,7 @@ class SettingsScreen : public Screen {
         }
         getDisplay().update();
 
-        previousMillis = millis();
+        previousMillis = currentMillis;
       }
 
       if (isLeftPress() || isAPress()) {

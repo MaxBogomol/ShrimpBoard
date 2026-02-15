@@ -23,7 +23,7 @@ class MainScreen : public Screen {
         drawKeyboard(0, 0);
         getDisplay().update();
 
-        previousMillis = millis();
+        previousMillis = currentMillis;
       }
 
       if (isScreenFocus()) next = true;
