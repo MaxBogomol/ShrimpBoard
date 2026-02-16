@@ -1,3 +1,4 @@
+#include "soc/rtc_cntl_reg.h"
 #include <BleCompositeHID.h>
 #include <KeyboardDevice.h>
 #include <MouseDevice.h>
@@ -10,7 +11,6 @@
 #include "USB.h"
 #include <Wire.h>
 #include <SPI.h>
-#include "soc/rtc_cntl_reg.h"
 
 /*
 ESP32-S3
@@ -283,22 +283,14 @@ void loopKeyboard() {
           c = KEYBOARD_MATRIX_FN_SHIFT[i][j];
         } else {
           if (c == KEY_NONE) {
-            if (buttonMatrix.isPress(i, j)) {
-              mediaPress(i, j);
-            }
-            if (buttonMatrix.isRelease(i, j)) {
-              mediaRelease(i, j);
-            }
+            if (buttonMatrix.isPress(i, j)) mediaPress(i, j);
+            if (buttonMatrix.isRelease(i, j)) mediaRelease(i, j);
           }
         }
       }
       if (c != KEY_NONE) {
-        if (buttonMatrix.isPress(i, j)) {
-          keyboardPress(c);
-        }
-        if (buttonMatrix.isRelease(i, j)) {
-          keyboardRelease(c);
-        }
+        if (buttonMatrix.isPress(i, j)) keyboardPress(c);
+        if (buttonMatrix.isRelease(i, j)) keyboardRelease(c);
       }
     }
   }

@@ -80,17 +80,22 @@ class ButtonMatrix {
           if (button && buttonOld) value = 2;
           if (!button && buttonOld) value = 3;
           matrixNormalized[i][j] = value;
+
+          if (button != buttonOld) matrixDebounce[i][j] = currentMillis;
         }
       }
     }
 
     void readColumn(int row) {
-      matrix[0][row] = digitalRead(BUTTON_ROW_PIN_1);
-      matrix[1][row] = digitalRead(BUTTON_ROW_PIN_2);
-      matrix[2][row] = digitalRead(BUTTON_ROW_PIN_3);
-      matrix[3][row] = digitalRead(BUTTON_ROW_PIN_4);
-      matrix[4][row] = digitalRead(BUTTON_ROW_PIN_5);
-      matrix[5][row] = digitalRead(BUTTON_ROW_PIN_6);
+      unsigned long currentMillis = millis();
+      bool debounce = true;
+      bool debounceTime = 5;
+      if (currentMillis - matrixDebounce[0][row] >= debounceTime || !debounce) matrix[0][row] = digitalRead(BUTTON_ROW_PIN_1);
+      if (currentMillis - matrixDebounce[1][row] >= debounceTime || !debounce) matrix[1][row] = digitalRead(BUTTON_ROW_PIN_2);
+      if (currentMillis - matrixDebounce[2][row] >= debounceTime || !debounce) matrix[2][row] = digitalRead(BUTTON_ROW_PIN_3);
+      if (currentMillis - matrixDebounce[3][row] >= debounceTime || !debounce) matrix[3][row] = digitalRead(BUTTON_ROW_PIN_4);
+      if (currentMillis - matrixDebounce[4][row] >= debounceTime || !debounce) matrix[4][row] = digitalRead(BUTTON_ROW_PIN_5);
+      if (currentMillis - matrixDebounce[5][row] >= debounceTime || !debounce) matrix[5][row] = digitalRead(BUTTON_ROW_PIN_6);
     }
 
     void setSettings(Settings* settings) {
