@@ -14,6 +14,9 @@ class Settings {
     bool scrollLockBLE = false;
     bool leftMouseLock = false;
     bool rightMouseLock = false;
+
+    bool debounce = true;
+    int debounceTime = 5;
     
     float mouseSpeed = 1;
     bool touchpadScroll = true;
@@ -30,8 +33,14 @@ class Settings {
 
     int displayUpdateDelay = 25;
 
+    bool inactive = true;
+    int inactiveTime = 5;
+
   public:
     void reset() {
+      debounce = true;
+      debounceTime = 5;
+
       mouseSpeed = 1;
       touchpadScroll = true;
       mouseLockScroll = false;
@@ -46,6 +55,9 @@ class Settings {
       touchpadInertiaStep = 5;
 
       displayUpdateDelay = 25;
+
+      inactive = true;
+      inactiveTime = 5;
     }
 
     void setUSBMode(bool value) {
@@ -90,6 +102,16 @@ class Settings {
 
     void setRightMouseLock(bool value) {
       rightMouseLock = value;
+    }
+
+    void setDebounce(bool value) {
+      debounce = value;
+    }
+
+    void setDebounceTime(int value) {
+      if (value < 1) value = 1;
+      if (value > 100) value = 100;
+      debounceTime = value;
     }
 
     void setMouseSpeed(float value) {
@@ -156,6 +178,16 @@ class Settings {
       displayUpdateDelay = value;
     }
 
+    void setInactive(bool value) {
+      inactive = value;
+    }
+
+    void setInactiveTime(int value) {
+      if (value < 1) value = 1;
+      if (value > 60) value = 60;
+      inactiveTime = value;
+    }
+
     bool isUSBMode() {
       return usbMode;
     }
@@ -198,6 +230,14 @@ class Settings {
 
     bool isRightMouseLock() {
       return rightMouseLock;
+    }
+
+    bool isDebounce() {
+      return debounce;
+    }
+
+    int getDebounceTime() {
+      return debounceTime;
     }
 
     float getMouseSpeed() {
@@ -250,5 +290,13 @@ class Settings {
 
     int getDisplayUpdateDelay() {
       return displayUpdateDelay;
+    }
+
+    bool isInactive() {
+      return inactive;
+    }
+
+    int getInactiveTime() {
+      return inactiveTime;
     }
 };

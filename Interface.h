@@ -38,6 +38,9 @@ class Interface {
     SaveSettingsEntry saveSettingsEntry;
     ResetSettingsEntry resetSettingsEntry;
 
+    DebounceSettingsEntry debounceSettingsEntry;
+    DebounceTimeSettingsEntry debounceTimeSettingsEntry;
+
     MouseSpeedSettingsEntry mouseSpeedSettingsEntry;
     TouchpadScrollSettingsEntry touchpadScrollSettingsEntry;
     MouseLockScrollSettingsEntry mouseLockScrollSettingsEntry;
@@ -52,6 +55,9 @@ class Interface {
     TouchpadInertiaStepSettingsEntry touchpadInertiaStepSettingsEntry;
 
     DisplayUpdateDelaySettingsEntry displayUpdateDelaySettingsEntry;
+
+    InactiveSettingsEntry inactiveSettingsEntry;
+    InactiveTimeSettingsEntry inactiveTimeSettingsEntry;
 
   public:
     void setupScreens() {
@@ -75,6 +81,8 @@ class Interface {
       setScreenParameters(&mouseSettingsIndexScreen);
       setScreenParameters(&screenSettingsIndexScreen);
       setScreenParameters(&batterySettingsIndexScreen);
+      setScreenParameters(&ledSettingsIndexScreen);
+      setScreenParameters(&buzzerSettingsIndexScreen);
       setScreenParameters(&gamesSettingsIndexScreen);
 
       //Settings
@@ -101,7 +109,13 @@ class Interface {
       resetSettingsEntry.setSettings(settings);
 
       //Keyboard
-      keyboardSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+      SettingsEntryNode* keyboardSettingsEntryNode = new SettingsEntryNode();
+      setSettingsEntryNode(keyboardSettingsEntryNode, &debounceSettingsEntry);
+      addSettingsEntryNode(keyboardSettingsEntryNode, &debounceTimeSettingsEntry);
+      keyboardSettingsIndexScreen.setSettingsEntries(keyboardSettingsEntryNode);
+
+      debounceSettingsEntry.setSettings(settings);
+      debounceTimeSettingsEntry.setSettings(settings);
 
       //Mouse
       SettingsEntryNode* mouseSettingsEntryNode = new SettingsEntryNode();
@@ -140,7 +154,13 @@ class Interface {
       displayUpdateDelaySettingsEntry.setSettings(settings);
 
       //Battery
-      batterySettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+      SettingsEntryNode* batterySettingsEntryNode = new SettingsEntryNode();
+      setSettingsEntryNode(batterySettingsEntryNode, &inactiveSettingsEntry);
+      addSettingsEntryNode(batterySettingsEntryNode, &inactiveTimeSettingsEntry);
+      batterySettingsIndexScreen.setSettingsEntries(batterySettingsEntryNode);
+
+      inactiveSettingsEntry.setSettings(settings);
+      inactiveTimeSettingsEntry.setSettings(settings);
 
       //Led
       ledSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);

@@ -251,21 +251,23 @@ void loopSleep() {
   if (touchpad.isSecondTouchPressed()) active = true;
   if (active) settings->setActiveMillis(currentMillis);
 
-  if (awakeCount != sleepCount) {
-    awakeCount++;
-    uint32_t save = REG_READ(RTC_CNTL_USB_CONF_REG);
-    SET_PERI_REG_MASK(RTC_CNTL_USB_CONF_REG, RTC_CNTL_USB_PAD_PULL_OVERRIDE);
-    SET_PERI_REG_MASK(RTC_CNTL_USB_CONF_REG, RTC_CNTL_USB_DP_PULLDOWN);
-    vTaskDelay(5 / portTICK_PERIOD_MS);
-    REG_WRITE(RTC_CNTL_USB_CONF_REG, save);
-    settings->setActiveMillis(currentMillis);
-  }
+  if (settings->isInactive()) {
+    if (awakeCount != sleepCount) {
+      awakeCount++;
+      uint32_t save = REG_READ(RTC_CNTL_USB_CONF_REG);
+      SET_PERI_REG_MASK(RTC_CNTL_USB_CONF_REG, RTC_CNTL_USB_PAD_PULL_OVERRIDE);
+      SET_PERI_REG_MASK(RTC_CNTL_USB_CONF_REG, RTC_CNTL_USB_DP_PULLDOWN);
+      vTaskDelay(5 / portTICK_PERIOD_MS);
+      REG_WRITE(RTC_CNTL_USB_CONF_REG, save);
+      settings->setActiveMillis(currentMillis);
+    }
 
-  if (currentMillis - settings->getActiveMillis() >= 5 * 1000 * 60) {
-    sleepCount++;
-    display.clear();
-    display.update();
-    esp_light_sleep_start();
+    if (currentMillis - settings->getActiveMillis() >= settings->getInactiveTime() * 1000 * 60) {
+      sleepCount++;
+      display.clear();
+      display.update();
+      esp_light_sleep_start();
+    }
   }
 }
 

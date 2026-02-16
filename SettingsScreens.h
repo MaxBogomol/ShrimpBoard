@@ -341,6 +341,40 @@ class ResetSettingsEntry : public SettingsEntry {
     }
 };
 
+class DebounceSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("Debounce: ", getSettings().isDebounce());
+    }
+
+    virtual void use() override {
+      getSettings().setDebounce(!getSettings().isDebounce());
+    }
+};
+
+class DebounceTimeSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Debounce time: " + String(getSettings().getDebounceTime()) + " ms";
+    }
+
+    virtual void left() override {
+      int value = getSettings().getDebounceTime();
+      if (value - 1 >= 1) {
+        value--;
+        getSettings().setDebounceTime(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getDebounceTime();
+      if (value + 1 <= 100) {
+        value++;
+        getSettings().setDebounceTime(value);
+      }
+    }
+};
+
 class MouseSpeedSettingsEntry : public SettingsEntry {
   public:
     virtual String getName() override {
@@ -552,6 +586,40 @@ class DisplayUpdateDelaySettingsEntry : public SettingsEntry {
       if (value + 5 <= 100) {
         value += 5;
         getSettings().setDisplayUpdateDelay(value);
+      }
+    }
+};
+
+class InactiveSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("Inactive: ", getSettings().isInactive());
+    }
+
+    virtual void use() override {
+      getSettings().setInactive(!getSettings().isInactive());
+    }
+};
+
+class InactiveTimeSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Inactive time: " + String(getSettings().getInactiveTime()) + " min";
+    }
+
+    virtual void left() override {
+      int value = getSettings().getInactiveTime();
+      if (value - 1 >= 1) {
+        value--;
+        getSettings().setInactiveTime(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getInactiveTime();
+      if (value + 1 <= 60) {
+        value++;
+        getSettings().setInactiveTime(value);
       }
     }
 };

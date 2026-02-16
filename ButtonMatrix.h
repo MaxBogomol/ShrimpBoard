@@ -88,8 +88,8 @@ class ButtonMatrix {
 
     void readColumn(int row) {
       unsigned long currentMillis = millis();
-      bool debounce = true;
-      bool debounceTime = 5;
+      bool debounce = settings->isDebounce();
+      bool debounceTime = settings->getDebounceTime();
       if (currentMillis - matrixDebounce[0][row] >= debounceTime || !debounce) matrix[0][row] = digitalRead(BUTTON_ROW_PIN_1);
       if (currentMillis - matrixDebounce[1][row] >= debounceTime || !debounce) matrix[1][row] = digitalRead(BUTTON_ROW_PIN_2);
       if (currentMillis - matrixDebounce[2][row] >= debounceTime || !debounce) matrix[2][row] = digitalRead(BUTTON_ROW_PIN_3);
