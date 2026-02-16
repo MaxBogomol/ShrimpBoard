@@ -10,6 +10,7 @@
 #include "USB.h"
 #include <Wire.h>
 #include <SPI.h>
+#include "soc/rtc_cntl_reg.h"
 
 /*
 ESP32-S3
@@ -37,6 +38,13 @@ Touchpad cable
 #define BUTTON_ROW_PIN_4 6
 #define BUTTON_ROW_PIN_5 5
 #define BUTTON_ROW_PIN_6 4
+
+//Touch button
+#define TOUCH_BUTTON_PIN 17
+#define TOUCH_BUTTON_PIN_GPIO GPIO_NUM_17
+
+//Buzzer
+#define BUZZER_PIN 18
 
 //Touchpad
 #define TOUCHPAD_ADDRESS 0x64
@@ -80,6 +88,9 @@ Touchpad touchpad;
 Display display;
 EPROM eprom;
 Interface interface;
+
+int sleepCount = 0;
+int awakeCount = 0;
 
 bool screenFocus = false;
 bool mouseScroll = false;
@@ -132,6 +143,12 @@ void setupPins() {
   pinMode(BUTTON_ROW_PIN_4, INPUT_PULLDOWN);
   pinMode(BUTTON_ROW_PIN_5, INPUT_PULLDOWN);
   pinMode(BUTTON_ROW_PIN_6, INPUT_PULLDOWN);
+
+  pinMode(TOUCH_BUTTON_PIN, INPUT_PULLUP);
+
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  esp_sleep_enable_ext0_wakeup(TOUCH_BUTTON_PIN_GPIO, 1);
 }
 
 void setupBLE() {
@@ -211,6 +228,7 @@ void loop() {
   buttonMatrix.read();
   touchpad.read();
 
+  loopSleep();
   if (!screenFocus) {
     loopKeyboard();
     loopMouse();
@@ -219,6 +237,36 @@ void loop() {
 
   if (settings->isScreenFocus() && !screenFocus) screenFocus = true;
   if (!(settings->isScreenFocus()) && screenFocus) screenFocus = false;
+}
+
+void loopSleep() {
+  unsigned long currentMillis = millis();
+  bool active = false;
+  for (int i = 0; i < 6; i++) {
+    for (int j = 0; j < 17; j++) {
+      if (buttonMatrix.getValue(i, j) > 0) active = true;
+    }
+  }
+  if (touchpad.isFirstTouchPressed()) active = true;
+  if (touchpad.isSecondTouchPressed()) active = true;
+  if (active) settings->setActiveMillis(currentMillis);
+
+  if (awakeCount != sleepCount) {
+    awakeCount++;
+    uint32_t save = REG_READ(RTC_CNTL_USB_CONF_REG);
+    SET_PERI_REG_MASK(RTC_CNTL_USB_CONF_REG, RTC_CNTL_USB_PAD_PULL_OVERRIDE);
+    SET_PERI_REG_MASK(RTC_CNTL_USB_CONF_REG, RTC_CNTL_USB_DP_PULLDOWN);
+    vTaskDelay(5 / portTICK_PERIOD_MS);
+    REG_WRITE(RTC_CNTL_USB_CONF_REG, save);
+    settings->setActiveMillis(currentMillis);
+  }
+
+  if (currentMillis - settings->getActiveMillis() >= 5 * 1000 * 60) {
+    sleepCount++;
+    display.clear();
+    display.update();
+    esp_light_sleep_start();
+  }
 }
 
 void loopKeyboard() {

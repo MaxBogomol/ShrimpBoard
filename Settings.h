@@ -4,6 +4,7 @@ class Settings {
   private:
     bool usbMode = true;
     bool screenFocus = false;
+    unsigned long activeMillis = 0;
 
     bool numLockUSB = false;
     bool capsLockUSB = false;
@@ -53,6 +54,10 @@ class Settings {
 
     void setScreenFocus(bool value) {
       screenFocus = value;
+    }
+
+    void setActiveMillis(unsigned long value) {
+      activeMillis = value;
     }
 
     void setNumLockUSB(bool value) {
@@ -157,6 +162,10 @@ class Settings {
 
     bool isScreenFocus() {
       return screenFocus;
+    }
+
+    unsigned long getActiveMillis() {
+      return activeMillis;
     }
 
     bool isNumLockUSB() {
