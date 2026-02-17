@@ -5,7 +5,6 @@ class LoadingLinesScreen : public Screen {
     unsigned long previousMillis = 0;
     bool next = false;
     int line = 0;
-    int step = 2;
 
   public:
     virtual void begin() override {
@@ -13,11 +12,11 @@ class LoadingLinesScreen : public Screen {
       previousMillis = millis();
       next = false;
       line = 0;
-      step = 2;
     }
 
     virtual void loop() override {
       unsigned long currentMillis = millis();
+      int step = getSettings().getLoadingScreenSpeed();
 
       if (line < 80) {
         if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
@@ -32,6 +31,7 @@ class LoadingLinesScreen : public Screen {
       } else {
         next = true;
       }
+      if (isFNPress() ||isEscPress() || isEnterPress() || isSpacePress()) next = true;
     }
 
     virtual bool hasNextScreen() override {
@@ -69,11 +69,12 @@ class LoadingShrimpBoardScreen : public Screen {
           getDisplay().update();
 
           previousMillis = currentMillis;
-          step += 2;
+          step += getSettings().getLoadingScreenSpeed();
         }
       } else {
         next = true;
       }
+      if (isFNPress() ||isEscPress() || isEnterPress() || isSpacePress()) next = true;
     }
 
     virtual bool hasNextScreen() override {

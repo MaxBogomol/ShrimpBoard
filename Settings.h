@@ -4,6 +4,7 @@ class Settings {
   private:
     bool usbMode = true;
     bool screenFocus = false;
+    bool showLoadingScreen = false;
     unsigned long activeMillis = 0;
 
     bool numLockUSB = false;
@@ -32,6 +33,8 @@ class Settings {
     int touchpadInertiaStep = 5;
 
     int displayUpdateDelay = 25;
+    int loadingScreen = 0;
+    int loadingScreenSpeed = 2;
 
     bool inactive = true;
     int inactiveTime = 5;
@@ -66,6 +69,10 @@ class Settings {
 
     void setScreenFocus(bool value) {
       screenFocus = value;
+    }
+
+    void setShowLoadingScreen(bool value) {
+      showLoadingScreen = value;
     }
 
     void setActiveMillis(unsigned long value) {
@@ -178,6 +185,18 @@ class Settings {
       displayUpdateDelay = value;
     }
 
+    void setLoadingScreen(int value) {
+      if (value < 0) value = 0;
+      if (value > 1) value = 1;
+      loadingScreen = value;
+    }
+
+    void setLoadingScreenSpeed(int value) {
+      if (value < 1) value = 1;
+      if (value > 10) value = 10;
+      loadingScreenSpeed = value;
+    }
+
     void setInactive(bool value) {
       inactive = value;
     }
@@ -194,6 +213,10 @@ class Settings {
 
     bool isScreenFocus() {
       return screenFocus;
+    }
+
+    bool isShowLoadingScreen() {
+      return showLoadingScreen;
     }
 
     unsigned long getActiveMillis() {
@@ -290,6 +313,14 @@ class Settings {
 
     int getDisplayUpdateDelay() {
       return displayUpdateDelay;
+    }
+
+    int getLoadingScreen() {
+      return loadingScreen;
+    }
+
+    int getLoadingScreenSpeed() {
+      return loadingScreenSpeed;
     }
 
     bool isInactive() {

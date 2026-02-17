@@ -319,6 +319,28 @@ class ModeSettingsEntry : public SettingsEntry {
     }
 };
 
+class BLEStatusSettingsEntry : public SettingsEntry {
+  private:
+    BleCompositeHID* compositeHID;
+
+  public:
+    virtual String getName() override {
+      return getBoolName("BLE: ", isBLEConnected());
+    }
+
+    void setCompositeHID(BleCompositeHID* compositeHID) {
+      this->compositeHID = compositeHID;
+    }
+
+    BleCompositeHID& getCompositeHID() {
+      return *this->compositeHID;
+    }
+
+    bool isBLEConnected() {
+      return getCompositeHID().isConnected();
+    }
+};
+
 class SaveSettingsEntry : public SettingsEntry {
   public:
     virtual String getName() override {
@@ -587,6 +609,67 @@ class DisplayUpdateDelaySettingsEntry : public SettingsEntry {
         value += 5;
         getSettings().setDisplayUpdateDelay(value);
       }
+    }
+};
+
+class LoadingScreenSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      String name = "Loading: ";
+      int loading = getSettings().getLoadingScreen();
+      if (loading == 0) name = name + "Lines";
+      if (loading == 1) name = name + "Name";
+      return name;
+    }
+
+    virtual void left() override {
+      int value = getSettings().getLoadingScreen();
+      if (value - 1 >= 0) {
+        value--;
+        getSettings().setLoadingScreen(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getLoadingScreen();
+      if (value + 1 <= 1) {
+        value++;
+        getSettings().setLoadingScreen(value);
+      }
+    }
+};
+
+class LoadingScreenSpeedSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Loading speed: " + String(getSettings().getLoadingScreenSpeed());
+    }
+
+    virtual void left() override {
+      int value = getSettings().getLoadingScreenSpeed();
+      if (value - 1 >= 1) {
+        value--;
+        getSettings().setLoadingScreenSpeed(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getLoadingScreenSpeed();
+      if (value + 1 <= 10) {
+        value++;
+        getSettings().setLoadingScreenSpeed(value);
+      }
+    }
+};
+
+class ShowLoadingDelaySettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Show loading";
+    }
+
+    virtual void use() override {
+      getSettings().setShowLoadingScreen(true);
     }
 };
 

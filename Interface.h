@@ -35,6 +35,7 @@ class Interface {
     SettingsIndexScreen gamesSettingsIndexScreen;
 
     ModeSettingsEntry modeSettingsEntry;
+    BLEStatusSettingsEntry bleStatusSettingsEntry;
     SaveSettingsEntry saveSettingsEntry;
     ResetSettingsEntry resetSettingsEntry;
 
@@ -55,6 +56,9 @@ class Interface {
     TouchpadInertiaStepSettingsEntry touchpadInertiaStepSettingsEntry;
 
     DisplayUpdateDelaySettingsEntry displayUpdateDelaySettingsEntry;
+    LoadingScreenSettingsEntry loadingScreenSettingsEntry;
+    LoadingScreenSpeedSettingsEntry loadingScreenSpeedSettingsEntry;
+    ShowLoadingDelaySettingsEntry showLoadingDelaySettingsEntry;
 
     InactiveSettingsEntry inactiveSettingsEntry;
     InactiveTimeSettingsEntry inactiveTimeSettingsEntry;
@@ -64,7 +68,7 @@ class Interface {
       setupScreensParameters();
       setupScreensNexts();
 
-      setScreen(&loadingLinesScreen);
+      setScreen(&getLoadingScreen());
       getScreen().begin();
     }
 
@@ -100,11 +104,14 @@ class Interface {
       //Main
       SettingsEntryNode* mainSettingsEntryNode = new SettingsEntryNode();
       setSettingsEntryNode(mainSettingsEntryNode, &modeSettingsEntry);
+      addSettingsEntryNode(mainSettingsEntryNode, &bleStatusSettingsEntry);
       addSettingsEntryNode(mainSettingsEntryNode, &saveSettingsEntry);
       addSettingsEntryNode(mainSettingsEntryNode, &resetSettingsEntry);
       mainSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
 
       modeSettingsEntry.setSettings(settings);
+      bleStatusSettingsEntry.setSettings(settings);
+      bleStatusSettingsEntry.setCompositeHID(compositeHID);
       saveSettingsEntry.setSettings(settings);
       resetSettingsEntry.setSettings(settings);
 
@@ -149,9 +156,15 @@ class Interface {
       //Screen
       SettingsEntryNode* screenSettingsEntryNode = new SettingsEntryNode();
       setSettingsEntryNode(screenSettingsEntryNode, &displayUpdateDelaySettingsEntry);
+      addSettingsEntryNode(screenSettingsEntryNode, &loadingScreenSettingsEntry);
+      addSettingsEntryNode(screenSettingsEntryNode, &loadingScreenSpeedSettingsEntry);
+      addSettingsEntryNode(screenSettingsEntryNode, &showLoadingDelaySettingsEntry);
       screenSettingsIndexScreen.setSettingsEntries(screenSettingsEntryNode);
 
       displayUpdateDelaySettingsEntry.setSettings(settings);
+      loadingScreenSettingsEntry.setSettings(settings);
+      loadingScreenSpeedSettingsEntry.setSettings(settings);
+      showLoadingDelaySettingsEntry.setSettings(settings);
 
       //Battery
       SettingsEntryNode* batterySettingsEntryNode = new SettingsEntryNode();
@@ -197,6 +210,13 @@ class Interface {
         getScreen().end();
         setScreen(&(getScreen().getNextScreen()));
         getScreen().begin();
+      }
+
+      if (getSettings().isShowLoadingScreen()) {
+        getScreen().end();
+        setScreen(&(getLoadingScreen()));
+        getScreen().begin();
+        getSettings().setShowLoadingScreen(false);
       }
     }
 
@@ -302,5 +322,12 @@ class Interface {
 
     void setSettingsEntryNode(SettingsEntryNode* entryNode, SettingsEntry* data) {
       entryNode->setData(data);
+    }
+
+    Screen& getLoadingScreen() {
+      int loading = getSettings().getLoadingScreen();
+      if (loading == 0) return loadingLinesScreen;
+      if (loading == 1) return loadingShrimpBoardScreen;
+      return loadingLinesScreen;
     }
 };
