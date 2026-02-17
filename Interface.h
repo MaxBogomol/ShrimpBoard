@@ -57,6 +57,7 @@ class Interface {
 
     DisplayUpdateDelaySettingsEntry displayUpdateDelaySettingsEntry;
     LoadingScreenSettingsEntry loadingScreenSettingsEntry;
+    LoadingScreenTypeSettingsEntry loadingScreenTypeSettingsEntry;
     LoadingScreenSpeedSettingsEntry loadingScreenSpeedSettingsEntry;
     ShowLoadingDelaySettingsEntry showLoadingDelaySettingsEntry;
 
@@ -157,12 +158,14 @@ class Interface {
       SettingsEntryNode* screenSettingsEntryNode = new SettingsEntryNode();
       setSettingsEntryNode(screenSettingsEntryNode, &displayUpdateDelaySettingsEntry);
       addSettingsEntryNode(screenSettingsEntryNode, &loadingScreenSettingsEntry);
+      addSettingsEntryNode(screenSettingsEntryNode, &loadingScreenTypeSettingsEntry);
       addSettingsEntryNode(screenSettingsEntryNode, &loadingScreenSpeedSettingsEntry);
       addSettingsEntryNode(screenSettingsEntryNode, &showLoadingDelaySettingsEntry);
       screenSettingsIndexScreen.setSettingsEntries(screenSettingsEntryNode);
 
       displayUpdateDelaySettingsEntry.setSettings(settings);
       loadingScreenSettingsEntry.setSettings(settings);
+      loadingScreenTypeSettingsEntry.setSettings(settings);
       loadingScreenSpeedSettingsEntry.setSettings(settings);
       showLoadingDelaySettingsEntry.setSettings(settings);
 

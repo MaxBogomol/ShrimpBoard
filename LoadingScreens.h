@@ -17,11 +17,24 @@ class LoadingLinesScreen : public Screen {
     virtual void loop() override {
       unsigned long currentMillis = millis();
       int step = getSettings().getLoadingScreenSpeed();
+      int type = getSettings().getLoadingScreenType();
 
       if (line < 80) {
         if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
           for (int i = 0; i < step; i++) {
-            getDisplay().drawLine(-32 + ((line + i) * 2), 32, ((line + i) * 2), 0, getDisplay().white());
+            int x1 = -32;
+            int x2 = 0;
+            if (type == 2 || type == 3) {
+              x1 = 0;
+              x2 = -32;
+            }
+            x1 = x1 + ((line + i) * 2);
+            x2 = x2 + ((line + i) * 2);
+            if (type == 1 || type == 3) {
+              x1 = 128 - x1;
+              x2 = 128 - x2;
+            }
+            getDisplay().drawLine(x1, 32, x2, 0, getDisplay().white());
           }
           getDisplay().update();
 
@@ -56,13 +69,17 @@ class LoadingShrimpBoardScreen : public Screen {
 
     virtual void loop() override {
       unsigned long currentMillis = millis();
+      int type = getSettings().getLoadingScreenType();
 
       if (step < 288) {
         if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
+          int x = step - 144;
+          if (type == 1) x = 144 - step;
+
           getDisplay().clear();
           getDisplay().textReset();
           getDisplay().setTextSize(2);
-          getDisplay().setTextPos(step - 144, 8);
+          getDisplay().setTextPos(x, 8);
           getDisplay().setTextWrap(false);
           getDisplay().setTextColor(getDisplay().white());
           getDisplay().drawText(text);

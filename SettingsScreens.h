@@ -113,7 +113,17 @@ class SettingsIndexScreen : public Screen {
           String s = index->getName();
           if (i == selectedIndex) s = ">" + s;
           if (offset >= 0 && offset <= 3) {
-            getDisplay().setTextPos(0, offset * 8);
+            int x = 0;
+            int l = s.length() * 6;
+            float speed = 10;
+            if (l > 128) {
+              double t = (double) fmod((currentMillis / (l / 128.0)) * (1 / speed), 360);
+              double xOffset = sin(t * (PI / 180.0));
+              x = (int) (xOffset * (l - 128 + 2));
+              x = -abs(x);
+            }
+
+            getDisplay().setTextPos(x, offset * 8);
             getDisplay().drawText(s);
           }
 
@@ -627,6 +637,7 @@ class LoadingScreenSettingsEntry : public SettingsEntry {
       if (value - 1 >= 0) {
         value--;
         getSettings().setLoadingScreen(value);
+        getSettings().setLoadingScreenType(0);
       }
     }
 
@@ -635,6 +646,46 @@ class LoadingScreenSettingsEntry : public SettingsEntry {
       if (value + 1 <= 1) {
         value++;
         getSettings().setLoadingScreen(value);
+        getSettings().setLoadingScreenType(0);
+      }
+    }
+};
+
+class LoadingScreenTypeSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      String name = "Loading type: ";
+      int value = getSettings().getLoadingScreenType();
+      int loading = getSettings().getLoadingScreen();
+      if (loading == 0) {
+        if (value == 0) name = name + "Up Right";
+        if (value == 1) name = name + "Up Left";
+        if (value == 2) name = name + "Down Right";
+        if (value == 3) name = name + "Down Left";
+      }
+      if (loading == 1) {
+        if (value == 0) name = name + "Right";
+        if (value == 1) name = name + "Left";
+      }
+      return name;
+    }
+
+    virtual void left() override {
+      int value = getSettings().getLoadingScreenType();
+      int loading = getSettings().getLoadingScreen();
+      if (value - 1 >= 0) {
+        value--;
+        getSettings().setLoadingScreenType(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getLoadingScreenType();
+      int loading = getSettings().getLoadingScreen();
+      if ((value + 1 <= 3 && loading == 0) ||
+          (value + 1 <= 1 && loading == 1)) {
+        value++;
+        getSettings().setLoadingScreenType(value);
       }
     }
 };

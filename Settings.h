@@ -34,6 +34,7 @@ class Settings {
 
     int displayUpdateDelay = 25;
     int loadingScreen = 0;
+    int loadingScreenType = 0;
     int loadingScreenSpeed = 2;
 
     bool inactive = true;
@@ -58,6 +59,9 @@ class Settings {
       touchpadInertiaStep = 5;
 
       displayUpdateDelay = 25;
+      loadingScreen = 0;
+      loadingScreenType = 0;
+      loadingScreenSpeed = 2;
 
       inactive = true;
       inactiveTime = 5;
@@ -191,6 +195,13 @@ class Settings {
       loadingScreen = value;
     }
 
+    void setLoadingScreenType(int value) {
+      if (value < 0) value = 0;
+      if (value > 3 && loadingScreen == 0) value = 3;
+      if (value > 1 && loadingScreen == 1) value = 1;
+      loadingScreenType = value;
+    }
+
     void setLoadingScreenSpeed(int value) {
       if (value < 1) value = 1;
       if (value > 10) value = 10;
@@ -317,6 +328,10 @@ class Settings {
 
     int getLoadingScreen() {
       return loadingScreen;
+    }
+
+    int getLoadingScreenType() {
+      return loadingScreenType;
     }
 
     int getLoadingScreenSpeed() {
