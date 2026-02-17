@@ -76,6 +76,15 @@ class SettingsIndexScreen : public Screen {
     int selectedIndex = 0;
     int selectedOffset = 0;
 
+    bool leftPress = false;
+    bool rightPress = false;
+    bool upPress = false;
+    bool downPress = false;
+    unsigned long leftPressMillis = 0;
+    unsigned long rightPressMillis = 0;
+    unsigned long upPressMillis = 0;
+    unsigned long downPressMillis = 0;
+
     SettingsEntryNode* settingsEntries;
 
   public:
@@ -90,6 +99,9 @@ class SettingsIndexScreen : public Screen {
 
     virtual void loop() override {
       unsigned long currentMillis = millis();
+      bool scroll = getSettings().isButtonScroll();
+      int scrollDelay = getSettings().getButtonScrollDelay();
+      int scrollTime = getSettings().getButtonScrollTime();
 
       SettingsEntryNode* node = settingsEntries;
       int i = 0;
@@ -136,13 +148,48 @@ class SettingsIndexScreen : public Screen {
         previousMillis = currentMillis;
       }
 
+      bool left = false;
+      bool right = false;
+      if (isLeftPress() || isAPress()) {
+        left = true;
+        leftPressMillis = millis();
+        leftPress = false;
+      }
+      if (scroll && (isLeftPressed() || isAPressed())) {
+        if (!leftPress && currentMillis - leftPressMillis >= scrollDelay) {
+          left = true;
+          leftPressMillis = millis();
+          leftPress = true;
+        }
+        if (leftPress && currentMillis - leftPressMillis >= scrollTime) {
+          left = true;
+          leftPressMillis = millis();
+        }
+      }
+      if (isRightPress() || isDPress() || isEnterPress() || isSpacePress()) {
+        right = true;
+        rightPressMillis = millis();
+        rightPress = false;
+      }
+      if (scroll && (isRightPressed() || isDPressed())) {
+        if (!rightPress && currentMillis - rightPressMillis >= scrollDelay) {
+          right = true;
+          rightPressMillis = millis();
+          rightPress = true;
+        }
+        if (rightPress && currentMillis - rightPressMillis >= scrollTime) {
+          right = true;
+          rightPressMillis = millis();
+        }
+      }
+
       node = settingsEntries;
       i = 0;
       while (true) {
         if (i == selectedIndex) {
           SettingsEntry* index = &node->getData();
-          if (isLeftPress() || isAPress()) index->left();
-          if (isRightPress() || isDPress() || isEnterPress() || isSpacePress()) index->right();
+          if (left) index->left();
+          if (right) index->right();
         }
 
         if (!node->hasNext()) break;
@@ -150,12 +197,46 @@ class SettingsIndexScreen : public Screen {
         i++;
       }
 
+      bool up = false;
+      bool down = false;
       if (isUpPress() || isWPress()) {
+        up = true;
+        upPressMillis = millis();
+        upPress = false;
+      }
+      if (scroll && (isUpPressed() || isWPressed())) {
+        if (!upPress && currentMillis - upPressMillis >= scrollDelay) {
+          up = true;
+          upPressMillis = millis();
+          upPress = true;
+        }
+        if (upPress && currentMillis - upPressMillis >= scrollTime) {
+          up = true;
+          upPressMillis = millis();
+        }
+      }
+      if (isDownPress() || isSPress()) {
+        down = true;
+        downPressMillis = millis();
+        downPress = false;
+      }
+      if (scroll && (isDownPressed() || isSPressed())) {
+        if (!downPress && currentMillis - downPressMillis >= scrollDelay) {
+          down = true;
+          downPressMillis = millis();
+          downPress = true;
+        }
+        if (downPress && currentMillis - downPressMillis >= scrollTime) {
+          down = true;
+          downPressMillis = millis();
+        }
+      }
+
+      if (up) {
         if (selectedIndex - 1 >= 0) selectedIndex--;
         if (selectedOffset - 1 >= 0 && selectedIndex - selectedOffset < 1) selectedOffset--;
       }
-
-      if (isDownPress() || isSPress()) {
+      if (down) {
         if (selectedIndex + 1 < max) selectedIndex++;
         if (selectedOffset + 4 < max && selectedIndex - selectedOffset > 2) selectedOffset++;
       }
@@ -224,6 +305,11 @@ class SettingsScreen : public Screen {
     int selectedIndex = 0;
     int selectedOffset = 0;
 
+    bool leftPress = false;
+    bool rightPress = false;
+    unsigned long leftPressMillis = 0;
+    unsigned long rightPressMillis = 0;
+
     SettingsIndexNode* settingsIndices;
 
   public:
@@ -237,6 +323,9 @@ class SettingsScreen : public Screen {
 
     virtual void loop() override {
       unsigned long currentMillis = millis();
+      bool scroll = getSettings().isButtonScroll();
+      int scrollDelay = getSettings().getButtonScrollDelay();
+      int scrollTime = getSettings().getButtonScrollTime();
 
       SettingsIndexNode* node = settingsIndices;
       int i = 0;
@@ -264,12 +353,46 @@ class SettingsScreen : public Screen {
         previousMillis = currentMillis;
       }
 
+      bool left = false;
+      bool right = false;
       if (isLeftPress() || isAPress()) {
+        left = true;
+        leftPressMillis = millis();
+        leftPress = false;
+      }
+      if (scroll && (isLeftPressed() || isAPressed())) {
+        if (!leftPress && currentMillis - leftPressMillis >= scrollDelay) {
+          left = true;
+          leftPressMillis = millis();
+          leftPress = true;
+        }
+        if (leftPress && currentMillis - leftPressMillis >= scrollTime) {
+          left = true;
+          leftPressMillis = millis();
+        }
+      }
+      if (isRightPress() || isDPress()) {
+        right = true;
+        rightPressMillis = millis();
+        rightPress = false;
+      }
+      if (scroll && (isRightPressed() || isDPressed())) {
+        if (!rightPress && currentMillis - rightPressMillis >= scrollDelay) {
+          right = true;
+          rightPressMillis = millis();
+          rightPress = true;
+        }
+        if (rightPress && currentMillis - rightPressMillis >= scrollTime) {
+          right = true;
+          rightPressMillis = millis();
+        }
+      }
+
+      if (left) {
         if (selectedIndex - 1 >= 0) selectedIndex--;
         if (selectedOffset - 1 >= 0 && selectedIndex - selectedOffset < 0) selectedOffset--;
       }
-
-      if (isRightPress() || isDPress()) {
+      if (right) {
         if (selectedIndex + 1 < max) selectedIndex++;
         if (selectedOffset + 5 < max && selectedIndex - selectedOffset > 4) selectedOffset++;
       }
@@ -407,6 +530,63 @@ class DebounceTimeSettingsEntry : public SettingsEntry {
     }
 };
 
+class ButtonScrollSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("Scroll: ", getSettings().isButtonScroll());
+    }
+
+    virtual void use() override {
+      getSettings().setButtonScroll(!getSettings().isButtonScroll());
+    }
+};
+
+class ButtonScrollDelaySettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Scroll delay: " + String(getSettings().getButtonScrollDelay()) + " ms";
+    }
+
+    virtual void left() override {
+      int value = getSettings().getButtonScrollDelay();
+      if (value - 10 >= 10) {
+        value -=10;
+        getSettings().setButtonScrollDelay(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getButtonScrollDelay();
+      if (value + 10 <= 1000) {
+        value += 10;
+        getSettings().setButtonScrollDelay(value);
+      }
+    }
+};
+
+class ButtonScrollTimeSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Scroll time: " + String(getSettings().getButtonScrollTime()) + " ms";
+    }
+
+    virtual void left() override {
+      int value = getSettings().getButtonScrollTime();
+      if (value - 10 >= 10) {
+        value -=10;
+        getSettings().setButtonScrollTime(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getButtonScrollTime();
+      if (value + 10 <= 1000) {
+        value += 10;
+        getSettings().setButtonScrollTime(value);
+      }
+    }
+};
+
 class MouseSpeedSettingsEntry : public SettingsEntry {
   public:
     virtual String getName() override {
@@ -493,6 +673,29 @@ class MouseScrollSpeedSettingsEntry : public SettingsEntry {
       if (value + 0.1 <= 2.01) {
         value += 0.1;
         getSettings().setMouseScrollSpeed(value);
+      }
+    }
+};
+
+class MouseButtonScrollTimeSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Button scroll time: " + String(getSettings().getMouseButtonScrollTime()) + " ms";
+    }
+
+    virtual void left() override {
+      int value = getSettings().getMouseButtonScrollTime();
+      if (value - 1 >= 1) {
+        value--;
+        getSettings().setMouseButtonScrollTime(value);
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getButtonScrollTime();
+      if (value + 1 <= 100) {
+        value++;
+        getSettings().setMouseButtonScrollTime(value);
       }
     }
 };

@@ -95,6 +95,15 @@ int awakeCount = 0;
 bool screenFocus = false;
 bool mouseScroll = false;
 
+bool leftMouseUp = false;
+bool leftMouseDown = false;
+bool rightMouseUp = false;
+bool rightMouseDown = false;
+unsigned long leftMouseUpMillis = 0;
+unsigned long leftMouseDownMillis = 0;
+unsigned long rightMouseUpMillis = 0;
+unsigned long rightMouseDownMillis = 0;
+
 void keyboardBLEOnLEDEvent(KeyboardOutputReport data) {
     settings->setNumLockBLE(data.numLockActive);
     settings->setCapsLockBLE(data.capsLockActive);
@@ -369,6 +378,11 @@ void loopMouse() {
   if (isTwoLinkedButtonPress(3, 0, 5, 14)) mousePress(MOUSE_RIGHT);
   if (isTwoLinkedButtonRelease(3, 0, 5, 14)) mouseRelease(MOUSE_RIGHT);
 
+  unsigned long currentMillis = millis();
+  bool scroll = settings->isButtonScroll();
+  int scrollDelay = settings->getButtonScrollDelay();
+  int scrollTime = settings->getMouseButtonScrollTime();
+
   if (!isLeftMouseLock() && !isRightMouseLock()) {
     if (isTwoLinkedButtonPress(4, 0, 5, 15)) mousePress(MOUSE_FORWARD);
     if (isTwoLinkedButtonRelease(4, 0, 5, 15)) mouseRelease(MOUSE_FORWARD);
@@ -377,8 +391,40 @@ void loopMouse() {
     if (isTwoLinkedButtonRelease(5, 0, 5, 16)) mouseRelease(MOUSE_BACKWARD);
   } else {
     if (isLeftMouseLock()) {
-      if (buttonMatrix.isPress(4, 0)) mouseMove(0, 0, 1);
-      if (buttonMatrix.isPress(5, 0)) mouseMove(0, 0, -1);
+      if (buttonMatrix.isPress(4, 0)) {
+        mouseMove(0, 0, 1);
+        leftMouseUpMillis = millis();
+        leftMouseUp = false;
+      }
+      if (buttonMatrix.isPress(5, 0)) {
+        mouseMove(0, 0, -1);
+        leftMouseDownMillis = millis();
+        leftMouseDown = false;
+      }
+
+      if (scroll && buttonMatrix.isPressed(4, 0)) {
+        if (!leftMouseUp && currentMillis - leftMouseUpMillis >= scrollDelay) {
+          mouseMove(0, 0, 1);
+          leftMouseUpMillis = millis();
+          leftMouseUp = true;
+        }
+        if (leftMouseUp && currentMillis - leftMouseUpMillis >= scrollTime) {
+          mouseMove(0, 0, 1);
+          leftMouseUpMillis = millis();
+        }
+      }
+
+      if (scroll && buttonMatrix.isPressed(5, 0)) {
+        if (!leftMouseDown && currentMillis - leftMouseDownMillis >= scrollDelay) {
+          mouseMove(0, 0, -1);
+          leftMouseDownMillis = millis();
+          leftMouseDown = true;
+        }
+        if (leftMouseDown && currentMillis - leftMouseDownMillis >= scrollTime) {
+          mouseMove(0, 0, -1);
+          leftMouseDownMillis = millis();
+        }
+      }
     } else {
       if (buttonMatrix.isPress(4, 0)) mousePress(MOUSE_FORWARD);
       if (buttonMatrix.isRelease(4, 0)) mouseRelease(MOUSE_FORWARD);
@@ -387,8 +433,40 @@ void loopMouse() {
       if (buttonMatrix.isRelease(5, 0)) mouseRelease(MOUSE_BACKWARD);
     }
     if (isRightMouseLock()) {
-      if (buttonMatrix.isPress(5, 15)) mouseMove(0, 0, 1);
-      if (buttonMatrix.isPress(5, 16)) mouseMove(0, 0, -1);
+      if (buttonMatrix.isPress(5, 15)) {
+        mouseMove(0, 0, 1);
+        rightMouseUpMillis = millis();
+        rightMouseUp = false;
+      }
+      if (buttonMatrix.isPress(5, 16)) {
+        mouseMove(0, 0, -1);
+        rightMouseDownMillis = millis();
+        rightMouseDown = false;
+      }
+
+      if (scroll && buttonMatrix.isPressed(5, 15)) {
+        if (!rightMouseUp && currentMillis - rightMouseUpMillis >= scrollDelay) {
+          mouseMove(0, 0, 1);
+          rightMouseUpMillis = millis();
+          rightMouseUp = true;
+        }
+        if (rightMouseUp && currentMillis - rightMouseUpMillis >= scrollTime) {
+          mouseMove(0, 0, 1);
+          rightMouseUpMillis = millis();
+        }
+      }
+
+      if (scroll && buttonMatrix.isPressed(5, 16)) {
+        if (!rightMouseDown && currentMillis - rightMouseDownMillis >= scrollDelay) {
+          mouseMove(0, 0, -1);
+          rightMouseDownMillis = millis();
+          rightMouseDown = true;
+        }
+        if (rightMouseDown && currentMillis - rightMouseDownMillis >= scrollTime) {
+          mouseMove(0, 0, -1);
+          rightMouseDownMillis = millis();
+        }
+      }
     } else {
       if (buttonMatrix.isPress(5, 15)) mousePress(MOUSE_FORWARD);
       if (buttonMatrix.isRelease(5, 15)) mouseRelease(MOUSE_FORWARD);

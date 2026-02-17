@@ -161,6 +161,50 @@ class Screen {
       return getButtonMatrix().isPress(3, 4);
     }
 
+    bool isEscPressed() {
+      return getButtonMatrix().isPressed(0, 1);
+    }
+
+    bool isEnterPressed() {
+      return getButtonMatrix().isPressed(3, 13);
+    }
+
+    bool isSpacePressed() {
+      return isTwoLinkedButtonPressed(5, 4, 5, 5);
+    }
+
+    bool isLeftPressed() {
+      return getButtonMatrix().isPressed(5, 10);
+    }
+
+    bool isRightPressed() {
+      return getButtonMatrix().isPressed(5, 12);
+    }
+
+    bool isUpPressed() {
+      return getButtonMatrix().isPressed(4, 13);
+    }
+
+    bool isDownPressed() {
+      return getButtonMatrix().isPressed(5, 11);
+    }
+
+    bool isWPressed() {
+      return getButtonMatrix().isPressed(2, 3);
+    }
+
+    bool isAPressed() {
+      return getButtonMatrix().isPressed(3, 2);
+    }
+
+    bool isSPressed() {
+      return getButtonMatrix().isPressed(3, 3);
+    }
+
+    bool isDPressed() {
+      return getButtonMatrix().isPressed(3, 4);
+    }
+
     bool isFNPress() {
       return getButtonMatrix().isPress(5, 8);
     }

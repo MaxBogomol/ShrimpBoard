@@ -18,6 +18,9 @@ class Settings {
 
     bool debounce = true;
     int debounceTime = 5;
+    bool buttonScroll = true;
+    int buttonScrollDelay = 500;
+    int buttonScrollTime = 100;
     
     float mouseSpeed = 1;
     bool touchpadScroll = true;
@@ -25,6 +28,7 @@ class Settings {
     bool leftMouseLockScroll = false;
     bool rightMouseLockScroll = false;
     float mouseScrollSpeed = 1;
+    int mouseButtonScrollTime = 10;
     bool touchpadRounded = true;
     int touchpadRoundLimit = 5;
     bool touchpadInertia = true;
@@ -44,6 +48,9 @@ class Settings {
     void reset() {
       debounce = true;
       debounceTime = 5;
+      buttonScroll = true;
+      buttonScrollDelay = 500;
+      buttonScrollTime = 100;
 
       mouseSpeed = 1;
       touchpadScroll = true;
@@ -51,6 +58,7 @@ class Settings {
       leftMouseLockScroll = false;
       rightMouseLockScroll = false;
       mouseScrollSpeed = 1;
+      mouseButtonScrollTime = 10;
       touchpadRounded = true;
       touchpadRoundLimit = 5;
       touchpadInertia = true;
@@ -125,6 +133,22 @@ class Settings {
       debounceTime = value;
     }
 
+    void setButtonScroll(bool value) {
+      buttonScroll = value;
+    }
+
+    void setButtonScrollDelay(int value) {
+      if (value < 10) value = 10;
+      if (value > 1000) value = 1000;
+      buttonScrollDelay = value;
+    }
+
+    void setButtonScrollTime(int value) {
+      if (value < 10) value = 10;
+      if (value > 1000) value = 1000;
+      buttonScrollTime = value;
+    }
+
     void setMouseSpeed(float value) {
       if (value < 0.1) value = 0.1;
       if (value > 3) value = 3;
@@ -151,6 +175,12 @@ class Settings {
       if (value < 0.1) value = 0.1;
       if (value > 2) value = 2;
       mouseScrollSpeed = value;
+    }
+
+    void setMouseButtonScrollTime(int value) {
+      if (value < 1) value = 1;
+      if (value > 100) value = 100;
+      mouseButtonScrollTime = value;
     }
 
     void setTouchpadRounded(bool value) {
@@ -274,6 +304,18 @@ class Settings {
       return debounceTime;
     }
 
+    bool isButtonScroll() {
+      return buttonScroll;
+    }
+
+    int getButtonScrollDelay() {
+      return buttonScrollDelay;
+    }
+
+    int getButtonScrollTime() {
+      return buttonScrollTime;
+    }
+
     float getMouseSpeed() {
       return mouseSpeed;
     }
@@ -296,6 +338,10 @@ class Settings {
 
     float getMouseScrollSpeed() {
       return mouseScrollSpeed;
+    }
+
+    int getMouseButtonScrollTime() {
+      return mouseButtonScrollTime;
     }
 
     bool isTouchpadRounded() {

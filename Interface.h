@@ -41,6 +41,9 @@ class Interface {
 
     DebounceSettingsEntry debounceSettingsEntry;
     DebounceTimeSettingsEntry debounceTimeSettingsEntry;
+    ButtonScrollSettingsEntry buttonScrollSettingsEntry;
+    ButtonScrollDelaySettingsEntry buttonScrollDelaySettingsEntry;
+    ButtonScrollTimeSettingsEntry buttonScrollTimeSettingsEntry;
 
     MouseSpeedSettingsEntry mouseSpeedSettingsEntry;
     TouchpadScrollSettingsEntry touchpadScrollSettingsEntry;
@@ -48,6 +51,7 @@ class Interface {
     LeftMouseLockScrollSettingsEntry leftMouseLockScrollSettingsEntry;
     RightMouseLockScrollSettingsEntry rightMouseLockScrollSettingsEntry;
     MouseScrollSpeedSettingsEntry mouseScrollSpeedSettingsEntry;
+    MouseButtonScrollTimeSettingsEntry mouseButtonScrollTimeSettingsEntry;
     TouchpadRoundedSettingsEntry touchpadRoundedSettingsEntry;
     TouchpadRoundLimitSettingsEntry touchpadRoundLimitSettingsEntry;
     TouchpadInertiaSettingsEntry touchpadInertiaSettingsEntry;
@@ -120,10 +124,16 @@ class Interface {
       SettingsEntryNode* keyboardSettingsEntryNode = new SettingsEntryNode();
       setSettingsEntryNode(keyboardSettingsEntryNode, &debounceSettingsEntry);
       addSettingsEntryNode(keyboardSettingsEntryNode, &debounceTimeSettingsEntry);
+      addSettingsEntryNode(keyboardSettingsEntryNode, &buttonScrollSettingsEntry);
+      addSettingsEntryNode(keyboardSettingsEntryNode, &buttonScrollDelaySettingsEntry);
+      addSettingsEntryNode(keyboardSettingsEntryNode, &buttonScrollTimeSettingsEntry);
       keyboardSettingsIndexScreen.setSettingsEntries(keyboardSettingsEntryNode);
 
       debounceSettingsEntry.setSettings(settings);
       debounceTimeSettingsEntry.setSettings(settings);
+      buttonScrollSettingsEntry.setSettings(settings);
+      buttonScrollDelaySettingsEntry.setSettings(settings);
+      buttonScrollTimeSettingsEntry.setSettings(settings);
 
       //Mouse
       SettingsEntryNode* mouseSettingsEntryNode = new SettingsEntryNode();
@@ -133,6 +143,7 @@ class Interface {
       addSettingsEntryNode(mouseSettingsEntryNode, &leftMouseLockScrollSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &rightMouseLockScrollSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &mouseScrollSpeedSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &mouseButtonScrollTimeSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadRoundedSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadRoundLimitSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaSettingsEntry);
@@ -147,6 +158,7 @@ class Interface {
       leftMouseLockScrollSettingsEntry.setSettings(settings);
       rightMouseLockScrollSettingsEntry.setSettings(settings);
       mouseScrollSpeedSettingsEntry.setSettings(settings);
+      mouseButtonScrollTimeSettingsEntry.setSettings(settings);
       touchpadRoundedSettingsEntry.setSettings(settings);
       touchpadRoundLimitSettingsEntry.setSettings(settings);
       touchpadInertiaSettingsEntry.setSettings(settings);
