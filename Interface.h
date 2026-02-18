@@ -12,6 +12,8 @@ class Interface {
     BleCompositeHID* compositeHID;
 
     ButtonMatrix* buttonMatrix;
+    Leds* leds;
+    Buzzer* buzzer;
     Touchpad* touchpad;
     Display* display;
     EPROM* eprom;
@@ -68,6 +70,8 @@ class Interface {
     InactiveSettingsEntry inactiveSettingsEntry;
     InactiveTimeSettingsEntry inactiveTimeSettingsEntry;
 
+    PressSoundSettingsEntry pressSoundSettingsEntry;
+
   public:
     void setupScreens() {
       setupScreensParameters();
@@ -114,11 +118,11 @@ class Interface {
       addSettingsEntryNode(mainSettingsEntryNode, &resetSettingsEntry);
       mainSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
 
-      modeSettingsEntry.setSettings(settings);
-      bleStatusSettingsEntry.setSettings(settings);
+      setSettingsEntryParameters(&modeSettingsEntry);
+      setSettingsEntryParameters(&bleStatusSettingsEntry);
       bleStatusSettingsEntry.setCompositeHID(compositeHID);
-      saveSettingsEntry.setSettings(settings);
-      resetSettingsEntry.setSettings(settings);
+      setSettingsEntryParameters(&saveSettingsEntry);
+      setSettingsEntryParameters(&resetSettingsEntry);
 
       //Keyboard
       SettingsEntryNode* keyboardSettingsEntryNode = new SettingsEntryNode();
@@ -129,11 +133,11 @@ class Interface {
       addSettingsEntryNode(keyboardSettingsEntryNode, &buttonScrollTimeSettingsEntry);
       keyboardSettingsIndexScreen.setSettingsEntries(keyboardSettingsEntryNode);
 
-      debounceSettingsEntry.setSettings(settings);
-      debounceTimeSettingsEntry.setSettings(settings);
-      buttonScrollSettingsEntry.setSettings(settings);
-      buttonScrollDelaySettingsEntry.setSettings(settings);
-      buttonScrollTimeSettingsEntry.setSettings(settings);
+      setSettingsEntryParameters(&debounceSettingsEntry);
+      setSettingsEntryParameters(&debounceTimeSettingsEntry);
+      setSettingsEntryParameters(&buttonScrollSettingsEntry);
+      setSettingsEntryParameters(&buttonScrollDelaySettingsEntry);
+      setSettingsEntryParameters(&buttonScrollTimeSettingsEntry);
 
       //Mouse
       SettingsEntryNode* mouseSettingsEntryNode = new SettingsEntryNode();
@@ -152,19 +156,19 @@ class Interface {
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaStepSettingsEntry);
       mouseSettingsIndexScreen.setSettingsEntries(mouseSettingsEntryNode);
 
-      mouseSpeedSettingsEntry.setSettings(settings);
-      touchpadScrollSettingsEntry.setSettings(settings);
-      mouseLockScrollSettingsEntry.setSettings(settings);
-      leftMouseLockScrollSettingsEntry.setSettings(settings);
-      rightMouseLockScrollSettingsEntry.setSettings(settings);
-      mouseScrollSpeedSettingsEntry.setSettings(settings);
-      mouseButtonScrollTimeSettingsEntry.setSettings(settings);
-      touchpadRoundedSettingsEntry.setSettings(settings);
-      touchpadRoundLimitSettingsEntry.setSettings(settings);
-      touchpadInertiaSettingsEntry.setSettings(settings);
-      touchpadInertiaRoundedSettingsEntry.setSettings(settings);
-      touchpadInertiaStressholdSettingsEntry.setSettings(settings);
-      touchpadInertiaStepSettingsEntry.setSettings(settings);
+      setSettingsEntryParameters(&mouseSpeedSettingsEntry);
+      setSettingsEntryParameters(&touchpadScrollSettingsEntry);
+      setSettingsEntryParameters(&mouseLockScrollSettingsEntry);
+      setSettingsEntryParameters(&leftMouseLockScrollSettingsEntry);
+      setSettingsEntryParameters(&rightMouseLockScrollSettingsEntry);
+      setSettingsEntryParameters(&mouseScrollSpeedSettingsEntry);
+      setSettingsEntryParameters(&mouseButtonScrollTimeSettingsEntry);
+      setSettingsEntryParameters(&touchpadRoundedSettingsEntry);
+      setSettingsEntryParameters(&touchpadRoundLimitSettingsEntry);
+      setSettingsEntryParameters(&touchpadInertiaSettingsEntry);
+      setSettingsEntryParameters(&touchpadInertiaRoundedSettingsEntry);
+      setSettingsEntryParameters(&touchpadInertiaStressholdSettingsEntry);
+      setSettingsEntryParameters(&touchpadInertiaStepSettingsEntry);
 
       //Screen
       SettingsEntryNode* screenSettingsEntryNode = new SettingsEntryNode();
@@ -175,11 +179,11 @@ class Interface {
       addSettingsEntryNode(screenSettingsEntryNode, &showLoadingDelaySettingsEntry);
       screenSettingsIndexScreen.setSettingsEntries(screenSettingsEntryNode);
 
-      displayUpdateDelaySettingsEntry.setSettings(settings);
-      loadingScreenSettingsEntry.setSettings(settings);
-      loadingScreenTypeSettingsEntry.setSettings(settings);
-      loadingScreenSpeedSettingsEntry.setSettings(settings);
-      showLoadingDelaySettingsEntry.setSettings(settings);
+      setSettingsEntryParameters(&displayUpdateDelaySettingsEntry);
+      setSettingsEntryParameters(&loadingScreenSettingsEntry);
+      setSettingsEntryParameters(&loadingScreenTypeSettingsEntry);
+      setSettingsEntryParameters(&loadingScreenSpeedSettingsEntry);
+      setSettingsEntryParameters(&showLoadingDelaySettingsEntry);
 
       //Battery
       SettingsEntryNode* batterySettingsEntryNode = new SettingsEntryNode();
@@ -187,14 +191,18 @@ class Interface {
       addSettingsEntryNode(batterySettingsEntryNode, &inactiveTimeSettingsEntry);
       batterySettingsIndexScreen.setSettingsEntries(batterySettingsEntryNode);
 
-      inactiveSettingsEntry.setSettings(settings);
-      inactiveTimeSettingsEntry.setSettings(settings);
+      setSettingsEntryParameters(&inactiveSettingsEntry);
+      setSettingsEntryParameters(&inactiveTimeSettingsEntry);
 
       //Led
       ledSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
 
       //Buzzer
-      buzzerSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+      SettingsEntryNode* buzzerSettingsEntryNode = new SettingsEntryNode();
+      setSettingsEntryNode(buzzerSettingsEntryNode, &pressSoundSettingsEntry);
+      buzzerSettingsIndexScreen.setSettingsEntries(buzzerSettingsEntryNode);
+
+      setSettingsEntryParameters(&pressSoundSettingsEntry);
 
       //Games
       gamesSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
@@ -247,6 +255,14 @@ class Interface {
       this->buttonMatrix = buttonMatrix;
     }
 
+    void setLeds(Leds* leds) {
+      this->leds = leds;
+    }
+
+    void setBuzzer(Buzzer* buzzer) {
+      this->buzzer = buzzer;
+    }
+
     void setTouchpad(Touchpad* touchpad) {
       this->touchpad = touchpad;
     }
@@ -275,6 +291,14 @@ class Interface {
       return *this->buttonMatrix;
     }
 
+    Leds& getLeds() {
+      return *this->leds;
+    }
+
+    Buzzer& getBuzzer() {
+      return *this->buzzer;
+    }
+
     Touchpad& getTouchpad() {
       return *this->touchpad;
     }
@@ -298,6 +322,11 @@ class Interface {
       screen->setTouchpad(touchpad);
       screen->setDisplay(display);
       screen->setEPROM(eprom);
+    }
+
+    void setSettingsEntryParameters(SettingsEntry* entry) {
+      entry->setSettings(settings);
+      entry->setBuzzer(buzzer);
     }
 
     void addSettingsIndexNode(SettingsIndexNode* indexNode, Screen* data, const uint8_t BMP[]) {

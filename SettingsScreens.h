@@ -4,6 +4,8 @@ class SettingsEntry {
   private:
     Settings* settings;
 
+    Buzzer* buzzer;
+
   public:
     virtual String getName() {
       return "Entry";
@@ -30,12 +32,24 @@ class SettingsEntry {
       use();
     }
 
+    void playTone() {
+      getBuzzer().playTone(1000, 25);
+    }
+
     void setSettings(Settings* settings) {
       this->settings = settings;
     }
 
+    void setBuzzer(Buzzer* buzzer) {
+      this->buzzer = buzzer;
+    }
+
     Settings& getSettings() {
       return *this->settings;
+    }
+
+    Buzzer& getBuzzer() {
+      return *this->buzzer;
     }
 };
 
@@ -199,6 +213,7 @@ class SettingsIndexScreen : public Screen {
 
       bool up = false;
       bool down = false;
+      bool sound = false;
       if (isUpPress() || isWPress()) {
         up = true;
         upPressMillis = millis();
@@ -233,12 +248,21 @@ class SettingsIndexScreen : public Screen {
       }
 
       if (up) {
-        if (selectedIndex - 1 >= 0) selectedIndex--;
+        if (selectedIndex - 1 >= 0) {
+          selectedIndex--;
+          sound = true;
+        }
         if (selectedOffset - 1 >= 0 && selectedIndex - selectedOffset < 1) selectedOffset--;
       }
       if (down) {
-        if (selectedIndex + 1 < max) selectedIndex++;
+        if (selectedIndex + 1 < max) {
+          selectedIndex++;
+          sound = true;
+        }
         if (selectedOffset + 4 < max && selectedIndex - selectedOffset > 2) selectedOffset++;
+      }
+      if (sound && getSettings().isPressSound()) {
+        getBuzzer().playTone(1000, 25);
       }
 
       if (isEscPress()) next = true;
@@ -355,6 +379,7 @@ class SettingsScreen : public Screen {
 
       bool left = false;
       bool right = false;
+      bool sound = false;
       if (isLeftPress() || isAPress()) {
         left = true;
         leftPressMillis = millis();
@@ -389,12 +414,21 @@ class SettingsScreen : public Screen {
       }
 
       if (left) {
-        if (selectedIndex - 1 >= 0) selectedIndex--;
+        if (selectedIndex - 1 >= 0) {
+          selectedIndex--;
+          sound = true;
+        }
         if (selectedOffset - 1 >= 0 && selectedIndex - selectedOffset < 0) selectedOffset--;
       }
       if (right) {
-        if (selectedIndex + 1 < max) selectedIndex++;
+        if (selectedIndex + 1 < max) {
+          selectedIndex++;
+          sound = true;
+        }
         if (selectedOffset + 5 < max && selectedIndex - selectedOffset > 4) selectedOffset++;
+      }
+      if (sound && getSettings().isPressSound()) {
+        getBuzzer().playTone(2000, 50);
       }
 
       if (isEnterPress() || isSpacePress()) select = true;
@@ -449,6 +483,7 @@ class ModeSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setUSBMode(!getSettings().isUSBMode());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -493,6 +528,7 @@ class ResetSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().reset();
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -504,6 +540,7 @@ class DebounceSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setDebounce(!getSettings().isDebounce());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -518,6 +555,7 @@ class DebounceTimeSettingsEntry : public SettingsEntry {
       if (value - 1 >= 1) {
         value--;
         getSettings().setDebounceTime(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -526,6 +564,7 @@ class DebounceTimeSettingsEntry : public SettingsEntry {
       if (value + 1 <= 100) {
         value++;
         getSettings().setDebounceTime(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -538,6 +577,7 @@ class ButtonScrollSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setButtonScroll(!getSettings().isButtonScroll());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -552,6 +592,7 @@ class ButtonScrollDelaySettingsEntry : public SettingsEntry {
       if (value - 10 >= 10) {
         value -=10;
         getSettings().setButtonScrollDelay(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -560,6 +601,7 @@ class ButtonScrollDelaySettingsEntry : public SettingsEntry {
       if (value + 10 <= 1000) {
         value += 10;
         getSettings().setButtonScrollDelay(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -575,6 +617,7 @@ class ButtonScrollTimeSettingsEntry : public SettingsEntry {
       if (value - 10 >= 10) {
         value -=10;
         getSettings().setButtonScrollTime(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -583,6 +626,7 @@ class ButtonScrollTimeSettingsEntry : public SettingsEntry {
       if (value + 10 <= 1000) {
         value += 10;
         getSettings().setButtonScrollTime(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -598,6 +642,7 @@ class MouseSpeedSettingsEntry : public SettingsEntry {
       if (value - 0.1 >= 0.09) {
         value -= 0.1;
         getSettings().setMouseSpeed(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -606,6 +651,7 @@ class MouseSpeedSettingsEntry : public SettingsEntry {
       if (value + 0.1 <= 3.01) {
         value += 0.1;
         getSettings().setMouseSpeed(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -618,6 +664,7 @@ class TouchpadScrollSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setTouchpadScroll(!getSettings().isTouchpadScroll());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -629,6 +676,7 @@ class MouseLockScrollSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setMouseLockScroll(!getSettings().isMouseLockScroll());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -640,6 +688,7 @@ class LeftMouseLockScrollSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setLeftMouseLockScroll(!getSettings().isLeftMouseLockScroll());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -651,6 +700,7 @@ class RightMouseLockScrollSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setRightMouseLockScroll(!getSettings().isRightMouseLockScroll());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -665,6 +715,7 @@ class MouseScrollSpeedSettingsEntry : public SettingsEntry {
       if (value - 0.1 >= 0.09) {
         value -= 0.1;
         getSettings().setMouseScrollSpeed(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -673,6 +724,7 @@ class MouseScrollSpeedSettingsEntry : public SettingsEntry {
       if (value + 0.1 <= 2.01) {
         value += 0.1;
         getSettings().setMouseScrollSpeed(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -688,6 +740,7 @@ class MouseButtonScrollTimeSettingsEntry : public SettingsEntry {
       if (value - 1 >= 1) {
         value--;
         getSettings().setMouseButtonScrollTime(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -696,6 +749,7 @@ class MouseButtonScrollTimeSettingsEntry : public SettingsEntry {
       if (value + 1 <= 100) {
         value++;
         getSettings().setMouseButtonScrollTime(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -708,6 +762,7 @@ class TouchpadRoundedSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setTouchpadRounded(!getSettings().isTouchpadRounded());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -722,6 +777,7 @@ class TouchpadRoundLimitSettingsEntry : public SettingsEntry {
       if (value - 1 >= 2) {
         value--;
         getSettings().setTouchpadRoundLimit(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -730,6 +786,7 @@ class TouchpadRoundLimitSettingsEntry : public SettingsEntry {
       if (value + 1 <= 10) {
         value++;
         getSettings().setTouchpadRoundLimit(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -742,6 +799,7 @@ class TouchpadInertiaSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setTouchpadInertia(!getSettings().isTouchpadInertia());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -753,6 +811,7 @@ class TouchpadInertiaRoundedSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setTouchpadInertiaRounded(!getSettings().isTouchpadInertiaRounded());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -767,6 +826,7 @@ class TouchpadInertiaStressholdSettingsEntry : public SettingsEntry {
       if (value - 5 >= 5) {
         value -= 5;
         getSettings().setTouchpadInertiaStresshold(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -775,6 +835,7 @@ class TouchpadInertiaStressholdSettingsEntry : public SettingsEntry {
       if (value + 5 <= 300) {
         value += 5;
         getSettings().setTouchpadInertiaStresshold(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -790,6 +851,7 @@ class TouchpadInertiaStepSettingsEntry : public SettingsEntry {
       if (value - 1 >= 1) {
         value--;
         getSettings().setTouchpadInertiaStep(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -798,6 +860,7 @@ class TouchpadInertiaStepSettingsEntry : public SettingsEntry {
       if (value + 1 <= 50) {
         value++;
         getSettings().setTouchpadInertiaStep(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -813,6 +876,7 @@ class DisplayUpdateDelaySettingsEntry : public SettingsEntry {
       if (value - 5 >= 0) {
         value -=5;
         getSettings().setDisplayUpdateDelay(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -821,6 +885,7 @@ class DisplayUpdateDelaySettingsEntry : public SettingsEntry {
       if (value + 5 <= 100) {
         value += 5;
         getSettings().setDisplayUpdateDelay(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -841,6 +906,7 @@ class LoadingScreenSettingsEntry : public SettingsEntry {
         value--;
         getSettings().setLoadingScreen(value);
         getSettings().setLoadingScreenType(0);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -850,6 +916,7 @@ class LoadingScreenSettingsEntry : public SettingsEntry {
         value++;
         getSettings().setLoadingScreen(value);
         getSettings().setLoadingScreenType(0);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -879,6 +946,7 @@ class LoadingScreenTypeSettingsEntry : public SettingsEntry {
       if (value - 1 >= 0) {
         value--;
         getSettings().setLoadingScreenType(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -889,6 +957,7 @@ class LoadingScreenTypeSettingsEntry : public SettingsEntry {
           (value + 1 <= 1 && loading == 1)) {
         value++;
         getSettings().setLoadingScreenType(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -904,6 +973,7 @@ class LoadingScreenSpeedSettingsEntry : public SettingsEntry {
       if (value - 1 >= 1) {
         value--;
         getSettings().setLoadingScreenSpeed(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -912,6 +982,7 @@ class LoadingScreenSpeedSettingsEntry : public SettingsEntry {
       if (value + 1 <= 10) {
         value++;
         getSettings().setLoadingScreenSpeed(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 };
@@ -924,6 +995,7 @@ class ShowLoadingDelaySettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setShowLoadingScreen(true);
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -935,6 +1007,7 @@ class InactiveSettingsEntry : public SettingsEntry {
 
     virtual void use() override {
       getSettings().setInactive(!getSettings().isInactive());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 
@@ -949,6 +1022,7 @@ class InactiveTimeSettingsEntry : public SettingsEntry {
       if (value - 1 >= 1) {
         value--;
         getSettings().setInactiveTime(value);
+        if (getSettings().isPressSound()) playTone();
       }
     }
 
@@ -957,6 +1031,19 @@ class InactiveTimeSettingsEntry : public SettingsEntry {
       if (value + 1 <= 60) {
         value++;
         getSettings().setInactiveTime(value);
+        if (getSettings().isPressSound()) playTone();
       }
+    }
+};
+
+class PressSoundSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("Press sound: ", getSettings().isPressSound());
+    }
+
+    virtual void use() override {
+      getSettings().setPressSound(!getSettings().isPressSound());
+      if (getSettings().isPressSound()) playTone();
     }
 };

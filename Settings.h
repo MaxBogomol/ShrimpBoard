@@ -44,6 +44,8 @@ class Settings {
     bool inactive = true;
     int inactiveTime = 5;
 
+    bool pressSound = false;
+
   public:
     void reset() {
       debounce = true;
@@ -73,6 +75,8 @@ class Settings {
 
       inactive = true;
       inactiveTime = 5;
+
+      pressSound = false;
     }
 
     void setUSBMode(bool value) {
@@ -248,6 +252,10 @@ class Settings {
       inactiveTime = value;
     }
 
+    void setPressSound(bool value) {
+      pressSound = value;
+    }
+
     bool isUSBMode() {
       return usbMode;
     }
@@ -390,5 +398,9 @@ class Settings {
 
     int getInactiveTime() {
       return inactiveTime;
+    }
+
+    bool isPressSound() {
+      return pressSound;
     }
 };

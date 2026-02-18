@@ -32,16 +32,24 @@ Touchpad cable
 #define BUTTON_COLUMN_PIN_OE 13
 #define BUTTON_COLUMN_PIN_17 14
 
-#define BUTTON_ROW_PIN_1 16
-#define BUTTON_ROW_PIN_2 15
-#define BUTTON_ROW_PIN_3 7
-#define BUTTON_ROW_PIN_4 6
-#define BUTTON_ROW_PIN_5 5
-#define BUTTON_ROW_PIN_6 4
+#define BUTTON_ROW_PIN_1 39
+#define BUTTON_ROW_PIN_2 40
+#define BUTTON_ROW_PIN_3 41
+#define BUTTON_ROW_PIN_4 42
+#define BUTTON_ROW_PIN_5 2
+#define BUTTON_ROW_PIN_6 1
 
 //Touch button
 #define TOUCH_BUTTON_PIN 17
 #define TOUCH_BUTTON_PIN_GPIO GPIO_NUM_17
+
+//Leds
+#define LED_SCROLL_LOCK_PIN 6
+#define LED_CAPS_LOCK_PIN 7
+#define LED_NUM_LOCK_PIN 15
+#define LED_LEFT_MOUSE_LOCK_PIN 4
+#define LED_RIGHT_MOUSE_LOCK_PIN 16
+#define LED_SPECIAL_PIN 5
 
 //Buzzer
 #define BUZZER_PIN 18
@@ -68,6 +76,8 @@ Touchpad cable
 #include <PS4Touchpad.h>
 #include <Settings.h>
 #include <ButtonMatrix.h>
+#include <Leds.h>
+#include <Buzzer.h>
 #include <Touchpad.h>
 #include <Display.h>
 #include <EPROM.h>
@@ -84,6 +94,8 @@ USBHIDMouse mouseUSB;
 USBHIDConsumerControl consumerControl;
 Settings* settings;
 ButtonMatrix buttonMatrix;
+Leds leds;
+Buzzer buzzer;
 Touchpad touchpad;
 Display display;
 EPROM eprom;
@@ -155,6 +167,27 @@ void setupPins() {
 
   pinMode(TOUCH_BUTTON_PIN, INPUT_PULLUP);
 
+  pinMode(LED_SCROLL_LOCK_PIN, OUTPUT);
+  pinMode(LED_CAPS_LOCK_PIN, OUTPUT);
+  pinMode(LED_NUM_LOCK_PIN, OUTPUT);
+  pinMode(LED_LEFT_MOUSE_LOCK_PIN, OUTPUT);
+  pinMode(LED_RIGHT_MOUSE_LOCK_PIN, OUTPUT);
+  pinMode(LED_SPECIAL_PIN, OUTPUT);
+
+  analogWriteResolution(LED_SCROLL_LOCK_PIN, 12);
+  analogWriteResolution(LED_CAPS_LOCK_PIN, 12);
+  analogWriteResolution(LED_NUM_LOCK_PIN, 12);
+  analogWriteResolution(LED_LEFT_MOUSE_LOCK_PIN, 12);
+  analogWriteResolution(LED_RIGHT_MOUSE_LOCK_PIN, 12);
+  analogWriteResolution(LED_SPECIAL_PIN, 12);
+
+  analogSetPinAttenuation(LED_SCROLL_LOCK_PIN, ADC_11db);
+  analogSetPinAttenuation(LED_CAPS_LOCK_PIN, ADC_11db);
+  analogSetPinAttenuation(LED_NUM_LOCK_PIN, ADC_11db);
+  analogSetPinAttenuation(LED_LEFT_MOUSE_LOCK_PIN, ADC_11db);
+  analogSetPinAttenuation(LED_RIGHT_MOUSE_LOCK_PIN, ADC_11db);
+  analogSetPinAttenuation(LED_SPECIAL_PIN, ADC_11db);
+
   pinMode(BUZZER_PIN, OUTPUT);
 
   esp_sleep_enable_ext0_wakeup(TOUCH_BUTTON_PIN_GPIO, 1);
@@ -214,6 +247,8 @@ void setupInterface() {
   if (DEBUG) Serial.println("Setup interface.");
   interface.setCompositeHID(compositeHID);
   interface.setButtonMatrix(&buttonMatrix);
+  interface.setLeds(&leds);
+  interface.setBuzzer(&buzzer);
   interface.setTouchpad(&touchpad);
   interface.setDisplay(&display);
   interface.setEPROM(&eprom);
@@ -224,6 +259,8 @@ void setupSettings() {
   settings = &eprom.getSettings();
 
   buttonMatrix.setSettings(settings);
+  leds.setSettings(settings);
+  buzzer.setSettings(settings);
   touchpad.setSettings(settings);
   interface.setSettings(settings);
 }
@@ -238,6 +275,7 @@ void loop() {
   touchpad.read();
 
   loopSleep();
+  loopLeds();
   if (!screenFocus) {
     loopKeyboard();
     loopMouse();
@@ -280,6 +318,10 @@ void loopSleep() {
   }
 }
 
+void loopLeds() {
+  
+}
+
 void loopKeyboard() {
   if (isFNPress() || isFNReleased() || (settings->isScreenFocus() && !screenFocus)) {
     keyboardReleaseAll();
@@ -302,6 +344,9 @@ void loopKeyboard() {
       if (c != KEY_NONE) {
         if (buttonMatrix.isPress(i, j)) keyboardPress(c);
         if (buttonMatrix.isRelease(i, j)) keyboardRelease(c);
+      }
+      if (settings->isPressSound() && buttonMatrix.isPress(i, j)) {
+        buzzer.playTone(1000, 25);
       }
     }
   }
@@ -345,7 +390,7 @@ void loopMouse() {
       float speed = settings->getMouseSpeed();
       x = x * speed;
       y = y * speed;
-      mouseMove((int) x, (int) y);
+      mouseMove(round(x), round(y));
     } else {
       float speed = settings->getMouseScrollSpeed();
       x = x * speed * 0.1;
