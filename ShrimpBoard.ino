@@ -44,9 +44,9 @@ Touchpad cable
 #define TOUCH_BUTTON_PIN_GPIO GPIO_NUM_17
 
 //Leds
-#define LED_SCROLL_LOCK_PIN 6
+#define LED_NUM_LOCK_PIN 6
 #define LED_CAPS_LOCK_PIN 7
-#define LED_NUM_LOCK_PIN 15
+#define LED_SCROLL_LOCK_PIN 15
 #define LED_LEFT_MOUSE_LOCK_PIN 4
 #define LED_RIGHT_MOUSE_LOCK_PIN 16
 #define LED_SPECIAL_PIN 5
@@ -167,23 +167,23 @@ void setupPins() {
 
   pinMode(TOUCH_BUTTON_PIN, INPUT_PULLUP);
 
+  pinMode(LED_NUM_LOCK_PIN, OUTPUT);
   pinMode(LED_SCROLL_LOCK_PIN, OUTPUT);
   pinMode(LED_CAPS_LOCK_PIN, OUTPUT);
-  pinMode(LED_NUM_LOCK_PIN, OUTPUT);
   pinMode(LED_LEFT_MOUSE_LOCK_PIN, OUTPUT);
   pinMode(LED_RIGHT_MOUSE_LOCK_PIN, OUTPUT);
   pinMode(LED_SPECIAL_PIN, OUTPUT);
 
+  analogWriteResolution(LED_NUM_LOCK_PIN, 12);
   analogWriteResolution(LED_SCROLL_LOCK_PIN, 12);
   analogWriteResolution(LED_CAPS_LOCK_PIN, 12);
-  analogWriteResolution(LED_NUM_LOCK_PIN, 12);
   analogWriteResolution(LED_LEFT_MOUSE_LOCK_PIN, 12);
   analogWriteResolution(LED_RIGHT_MOUSE_LOCK_PIN, 12);
   analogWriteResolution(LED_SPECIAL_PIN, 12);
 
+  analogSetPinAttenuation(LED_NUM_LOCK_PIN, ADC_11db);
   analogSetPinAttenuation(LED_SCROLL_LOCK_PIN, ADC_11db);
   analogSetPinAttenuation(LED_CAPS_LOCK_PIN, ADC_11db);
-  analogSetPinAttenuation(LED_NUM_LOCK_PIN, ADC_11db);
   analogSetPinAttenuation(LED_LEFT_MOUSE_LOCK_PIN, ADC_11db);
   analogSetPinAttenuation(LED_RIGHT_MOUSE_LOCK_PIN, ADC_11db);
   analogSetPinAttenuation(LED_SPECIAL_PIN, ADC_11db);
@@ -319,7 +319,51 @@ void loopSleep() {
 }
 
 void loopLeds() {
-  
+  if (isUseUSB()) {
+    if (settings->isNumLockUSB()) {
+      analogWrite(LED_NUM_LOCK_PIN, 4095);
+    } else {
+      analogWrite(LED_NUM_LOCK_PIN, 0);
+    }
+    if (settings->isCapsLockUSB()) {
+      analogWrite(LED_CAPS_LOCK_PIN, 4095);
+    } else {
+      analogWrite(LED_CAPS_LOCK_PIN, 0);
+    }
+    if (settings->isScrollLockUSB()) {
+      analogWrite(LED_SCROLL_LOCK_PIN, 4095);
+    } else {
+      analogWrite(LED_SCROLL_LOCK_PIN, 0);
+    }
+  }
+  if (isUseBLE()) {
+    if (settings->isNumLockBLE()) {
+      analogWrite(LED_NUM_LOCK_PIN, 4095);
+    } else {
+      analogWrite(LED_NUM_LOCK_PIN, 0);
+    }
+    if (settings->isCapsLockBLE()) {
+      analogWrite(LED_CAPS_LOCK_PIN, 4095);
+    } else {
+      analogWrite(LED_CAPS_LOCK_PIN, 0);
+    }
+    if (settings->isScrollLockBLE()) {
+      analogWrite(LED_SCROLL_LOCK_PIN, 4095);
+    } else {
+      analogWrite(LED_SCROLL_LOCK_PIN, 0);
+    }
+  }
+
+  if (settings->isLeftMouseLock()) {
+    analogWrite(LED_LEFT_MOUSE_LOCK_PIN, 4095);
+  } else {
+    analogWrite(LED_LEFT_MOUSE_LOCK_PIN, 0);
+  }
+  if (settings->isRightMouseLock()) {
+    analogWrite(LED_RIGHT_MOUSE_LOCK_PIN, 4095);
+  } else {
+    analogWrite(LED_RIGHT_MOUSE_LOCK_PIN, 0);
+  }
 }
 
 void loopKeyboard() {
