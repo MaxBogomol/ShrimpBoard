@@ -323,13 +323,13 @@ void loopSleep() {
 
 void loopLeds() {
   bool numLock = ((isUseUSB() && settings->isNumLockUSB()) || (isUseBLE() && settings->isNumLockBLE()));
-  bool capsLock = ((isUseUSB() && settings->isCapsLockUSB()) || (isUseBLE() && settings->isCapsSLockBLE()));
+  bool capsLock = ((isUseUSB() && settings->isCapsLockUSB()) || (isUseBLE() && settings->isCapsLockBLE()));
   bool scrollLock = ((isUseUSB() && settings->isScrollLockUSB()) || (isUseBLE() && settings->isScrollLockBLE()));
-  leds->setNumLockBrightness(numLock ? 100 : 0);
-  leds->setCapsLockBrightness(capsLock ? 100 : 0);
-  leds->setScrollLockBrightness(scrollLock ? 100 : 0);
-  leds->setLeftMouseLockBrightness(settings->isLeftMouseLock() ? 100 : 0);
-  leds->setRightMouseLockBrightness(settings->isRightMouseLock() ? 100 : 0);
+  leds.setNumLockBrightness(numLock ? 100 : 0);
+  leds.setCapsLockBrightness(capsLock ? 100 : 0);
+  leds.setScrollLockBrightness(scrollLock ? 100 : 0);
+  leds.setLeftMouseLockBrightness(settings->isLeftMouseLock() ? 100 : 0);
+  leds.setRightMouseLockBrightness(settings->isRightMouseLock() ? 100 : 0);
 }
 
 void loopKeyboard() {

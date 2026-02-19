@@ -100,7 +100,7 @@ class SettingsIndexScreen : public Screen {
   private:
     unsigned long previousMillis = 0;
     bool next = false;
-    bool next = false;
+    bool select = false;
 
     int selectedIndex = 0;
     int selectedOffset = 0;
@@ -212,7 +212,6 @@ class SettingsIndexScreen : public Screen {
           rightPressMillis = millis();
         }
       }
-      select = left || right;
 
       node = settingsEntries;
       i = 0;
@@ -221,6 +220,7 @@ class SettingsIndexScreen : public Screen {
           SettingsEntry* index = &node->getData();
           if (left) index->left();
           if (right) index->right();
+          if (left || right) select = index->hasNextScreen();
         }
 
         if (!node->hasNext()) break;
@@ -300,7 +300,8 @@ class SettingsIndexScreen : public Screen {
         int i = 0;
         while (true) {
           if (i == selectedIndex) {
-            if (node->hasNext()) return node->getNextScreen();
+            SettingsEntry* entry = &node->getData();
+            if (entry->hasNextScreen()) return entry->getNextScreen();
           }
 
           if (!node->hasNext()) break;
@@ -981,7 +982,7 @@ class LoadingScreenTypeSettingsEntry : public SettingsEntry {
             case 0: name = name + "Up Right"; break;
             case 1: name = name + "Up Left"; break;
             case 2: name = name + "Down Right"; break;
-            case 2: name = name + "Down Left"; break;
+            case 3: name = name + "Down Left"; break;
           }
           break;
         case 1:
@@ -1110,8 +1111,8 @@ class LedsBrightnessSettingsEntry : public SettingsEntry {
 
     virtual void left() override {
       int value = getSettings().getLedBrightness();
-      if (value - 1 >= 0) {
-        value--;
+      if (value - 5 >= 0) {
+        value -= 5;
         getSettings().setLedBrightness(value);
         if (getSettings().isPressSound()) playTone();
       }
@@ -1119,8 +1120,8 @@ class LedsBrightnessSettingsEntry : public SettingsEntry {
 
     virtual void right() override {
       int value = getSettings().getLedBrightness();
-      if (value + 1 <= `100) {
-        value++;
+      if (value + 5 <= 100) {
+        value += 5;
         getSettings().setLedBrightness(value);
         if (getSettings().isPressSound()) playTone();
       }

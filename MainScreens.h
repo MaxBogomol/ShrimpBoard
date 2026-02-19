@@ -51,7 +51,7 @@ class MainScreen : public Screen {
       getDisplay().drawRectangle(x + 58, y + 24, 9, 2, getDisplay().white());
 
       bool numLock = ((isUseUSB() && getSettings().isNumLockUSB()) || (isUseBLE() && getSettings().isNumLockBLE()));
-      bool capsLock = ((isUseUSB() && getSettings().isCapsLockUSB()) || (isUseBLE() && getSettings().isCapsSLockBLE()));
+      bool capsLock = ((isUseUSB() && getSettings().isCapsLockUSB()) || (isUseBLE() && getSettings().isCapsLockBLE()));
       bool scrollLock = ((isUseUSB() && getSettings().isScrollLockUSB()) || (isUseBLE() && getSettings().isScrollLockBLE()));
       if (numLock) getDisplay().drawRectangle(x + 49, y + 24, 2, 2, getDisplay().white());
       if (capsLock) getDisplay().drawRectangle(x + 52, y + 24, 2, 2, getDisplay().white());

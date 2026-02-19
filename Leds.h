@@ -43,7 +43,7 @@ class Leds {
     }
   
     void setLedWriteRaw(int pin, int value) {
-      if (getSettings().isLeds()) value = 0;
+      if (!getSettings().isLeds()) value = 0;
       analogWrite(pin, value);
     }
   

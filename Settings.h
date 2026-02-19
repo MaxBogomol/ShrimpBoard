@@ -426,7 +426,7 @@ class Settings {
       return leds;
     }
 
-    bool getLedBrightness() {
+    int getLedBrightness() {
       return ledBrightness;
     }
 

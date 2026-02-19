@@ -200,11 +200,11 @@ class Interface {
 
       //Leds
       SettingsEntryNode* ledsSettingsEntryNode = new SettingsEntryNode();
-      setSettingsEntryNode(ledsSettingsEntryNode, &inactiveSettingsEntry);
+      setSettingsEntryNode(ledsSettingsEntryNode, &ledsSettingsEntry);
       addSettingsEntryNode(ledsSettingsEntryNode, &ledsBrightnessSettingsEntry);
       ledsSettingsIndexScreen.setSettingsEntries(ledsSettingsEntryNode);
 
-      setSettingsEntryParameters(&ledsSettingsEntryNode);
+      setSettingsEntryParameters(&ledsSettingsEntry);
       setSettingsEntryParameters(&ledsBrightnessSettingsEntry);
 
       //Buzzer
