@@ -4,6 +4,7 @@
 #include <LoadingScreens.h>
 #include <MainScreens.h>
 #include <SettingsScreens.h>
+#include <BadApple.h>
 
 class Interface {
   private:
@@ -34,7 +35,7 @@ class Interface {
     SettingsIndexScreen batterySettingsIndexScreen;
     SettingsIndexScreen ledsSettingsIndexScreen;
     SettingsIndexScreen buzzerSettingsIndexScreen;
-    SettingsIndexScreen gamesSettingsIndexScreen;
+    SettingsScreen gamesSettingsIndexScreen;
 
     ModeSettingsEntry modeSettingsEntry;
     BLEStatusSettingsEntry bleStatusSettingsEntry;
@@ -77,6 +78,8 @@ class Interface {
     SoundSettingsEntry soundSettingsEntry;
     PressSoundSettingsEntry pressSoundSettingsEntry;
 
+    BadAppleScreen badAppleScreen;
+
   public:
     void setupScreens() {
       setupScreensParameters();
@@ -102,6 +105,8 @@ class Interface {
       setScreenParameters(&ledsSettingsIndexScreen);
       setScreenParameters(&buzzerSettingsIndexScreen);
       setScreenParameters(&gamesSettingsIndexScreen);
+
+      setScreenParameters(&badAppleScreen);
 
       //Settings
       SettingsIndexNode* settingsIndexNode = new SettingsIndexNode();
@@ -222,7 +227,9 @@ class Interface {
       setSettingsEntryParameters(&pressSoundSettingsEntry);
 
       //Games
-      gamesSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+      SettingsIndexNode* gamesSettingsIndexNode = new SettingsIndexNode();
+      setSettingsIndexNode(gamesSettingsIndexNode, &badAppleScreen, BAD_APPLE_BMP);
+      gamesSettingsIndexScreen.setSettingsIndices(gamesSettingsIndexNode);
     }
 
     void setupScreensNexts() {
@@ -241,6 +248,8 @@ class Interface {
       ledsSettingsIndexScreen.setNextScreen(&settingsScreen);
       buzzerSettingsIndexScreen.setNextScreen(&settingsScreen);
       gamesSettingsIndexScreen.setNextScreen(&settingsScreen);
+
+      badAppleScreen.setNextScreen(&gamesSettingsIndexScreen);
     }
 
     void loop() {

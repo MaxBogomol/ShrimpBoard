@@ -87,6 +87,7 @@ Touchpad cable
 #include <ScanCodes.h>
 #include <ScanMatrix.h>
 #include <Images.h>
+#include "Pitches.h"
 #include <Interface.h>
 
 KeyboardDevice* keyboardBLE;
