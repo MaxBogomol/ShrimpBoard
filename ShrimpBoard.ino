@@ -259,6 +259,8 @@ void setupInterface() {
 
 void setupSettings() {
   if (DEBUG) Serial.println("Setup settings.");
+  eprom.load();
+
   settings = &eprom.getSettings();
 
   buttonMatrix.setSettings(settings);

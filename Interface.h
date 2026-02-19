@@ -40,6 +40,7 @@ class Interface {
     BLEStatusSettingsEntry bleStatusSettingsEntry;
     SaveSettingsEntry saveSettingsEntry;
     ResetSettingsEntry resetSettingsEntry;
+    ResetEPROMSettingsEntry resetEPROMSettingsEntry;
 
     DebounceSettingsEntry debounceSettingsEntry;
     DebounceTimeSettingsEntry debounceTimeSettingsEntry;
@@ -119,7 +120,10 @@ class Interface {
       setSettingsEntryNode(mainSettingsEntryNode, &modeSettingsEntry);
       addSettingsEntryNode(mainSettingsEntryNode, &bleStatusSettingsEntry);
       addSettingsEntryNode(mainSettingsEntryNode, &saveSettingsEntry);
+      saveSettingsEntry.setEPROM(eprom);
       addSettingsEntryNode(mainSettingsEntryNode, &resetSettingsEntry);
+      addSettingsEntryNode(mainSettingsEntryNode, &resetEPROMSettingsEntry);
+      resetEPROMSettingsEntry.setEPROM(eprom);
       mainSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
 
       setSettingsEntryParameters(&modeSettingsEntry);
@@ -127,6 +131,7 @@ class Interface {
       bleStatusSettingsEntry.setCompositeHID(compositeHID);
       setSettingsEntryParameters(&saveSettingsEntry);
       setSettingsEntryParameters(&resetSettingsEntry);
+      setSettingsEntryParameters(&resetEPROMSettingsEntry);
 
       //Keyboard
       SettingsEntryNode* keyboardSettingsEntryNode = new SettingsEntryNode();
@@ -331,6 +336,8 @@ class Interface {
       screen->setSettings(settings);
       screen->setCompositeHID(compositeHID);
       screen->setButtonMatrix(buttonMatrix);
+      screen->setLeds(leds);
+      screen->setBuzzer(buzzer);
       screen->setTouchpad(touchpad);
       screen->setDisplay(display);
       screen->setEPROM(eprom);

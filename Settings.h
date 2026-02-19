@@ -87,6 +87,42 @@ class Settings {
       pressSound = false;
     }
 
+    void copy(Settings* otherSettings) {
+      debounce = otherSettings->isDebounce();
+      debounceTime = otherSettings->getDebounceTime();
+      buttonScroll = otherSettings->isButtonScroll();
+      buttonScrollDelay = otherSettings->getButtonScrollDelay();
+      buttonScrollTime = otherSettings->getButtonScrollTime();
+
+      mouseSpeed = otherSettings->getMouseSpeed();
+      touchpadScroll = otherSettings->isTouchpadScroll();
+      mouseLockScroll = otherSettings->isMouseLockScroll();
+      leftMouseLockScroll = otherSettings->isLeftMouseLockScroll();
+      rightMouseLockScroll = otherSettings->isRightMouseLockScroll();
+      mouseScrollSpeed = otherSettings->getMouseScrollSpeed();
+      mouseButtonScrollTime = otherSettings->getButtonScrollTime();
+      touchpadRounded = otherSettings->isTouchpadRounded();
+      touchpadRoundLimit = otherSettings->getTouchpadRoundLimit();
+      touchpadInertia = otherSettings->isTouchpadInertia();
+      touchpadInertiaRounded = otherSettings->isTouchpadInertiaRounded();
+      touchpadInertiaStresshold = otherSettings->getTouchpadInertiaStresshold();
+      touchpadInertiaStep = otherSettings->getTouchpadInertiaStep();
+
+      displayUpdateDelay = otherSettings->getDisplayUpdateDelay();
+      loadingScreen = otherSettings->getLoadingScreen();
+      loadingScreenType = otherSettings->getLoadingScreenType();
+      loadingScreenSpeed = otherSettings->getLoadingScreenSpeed();
+
+      leds = otherSettings->isLeds();
+      ledBrightness = otherSettings->getLedBrightness();
+
+      inactive = otherSettings->isInactive();
+      inactiveTime = otherSettings->getInactiveTime();
+
+      sound = otherSettings->isSound();
+      pressSound = otherSettings->isPressSound();
+    }
+
     void setUSBMode(bool value) {
       usbMode = value;
     }
@@ -150,7 +186,7 @@ class Settings {
     }
 
     void setButtonScrollDelay(int value) {
-      if (value < 10) value = 10;
+      if (value < 100) value = 100;
       if (value > 1000) value = 1000;
       buttonScrollDelay = value;
     }

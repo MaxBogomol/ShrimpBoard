@@ -557,13 +557,25 @@ class BLEStatusSettingsEntry : public SettingsEntry {
 };
 
 class SaveSettingsEntry : public SettingsEntry {
+  private:
+    EPROM* eprom;
+    
   public:
     virtual String getName() override {
       return "Save settings";
     }
 
     virtual void use() override {
+      if (getSettings().isPressSound()) playTone();
+      getEPROM().save();
+    }
 
+    void setEPROM(EPROM* eprom) {
+      this->eprom = eprom;
+    }
+
+    EPROM& getEPROM() {
+      return *this->eprom;
     }
 };
 
@@ -574,10 +586,34 @@ class ResetSettingsEntry : public SettingsEntry {
     }
 
     virtual void use() override {
-      getSettings().reset();
       if (getSettings().isPressSound()) playTone();
+      getSettings().reset();
     }
 };
+
+class ResetEPROMSettingsEntry : public SettingsEntry {
+  private:
+    EPROM* eprom;
+    
+  public:
+    virtual String getName() override {
+      return "Reset EPROM";
+    }
+
+    virtual void use() override {
+      if (getSettings().isPressSound()) playTone();
+      getEPROM().reset();
+    }
+
+    void setEPROM(EPROM* eprom) {
+      this->eprom = eprom;
+    }
+
+    EPROM& getEPROM() {
+      return *this->eprom;
+    }
+};
+
 
 class DebounceSettingsEntry : public SettingsEntry {
   public:
@@ -636,7 +672,7 @@ class ButtonScrollDelaySettingsEntry : public SettingsEntry {
 
     virtual void left() override {
       int value = getSettings().getButtonScrollDelay();
-      if (value - 10 >= 10) {
+      if (value - 10 >= 100) {
         value -=10;
         getSettings().setButtonScrollDelay(value);
         if (getSettings().isPressSound()) playTone();
