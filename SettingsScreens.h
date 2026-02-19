@@ -649,7 +649,7 @@ class ButtonScrollTimeSettingsEntry : public SettingsEntry {
     virtual void left() override {
       int value = getSettings().getButtonScrollTime();
       if (value - 10 >= 10) {
-        value -=10;
+        value -= 10;
         getSettings().setButtonScrollTime(value);
         if (getSettings().isPressSound()) playTone();
       }
@@ -779,7 +779,7 @@ class MouseButtonScrollTimeSettingsEntry : public SettingsEntry {
     }
 
     virtual void right() override {
-      int value = getSettings().getButtonScrollTime();
+      int value = getSettings().getMouseButtonScrollTime();
       if (value + 1 <= 100) {
         value++;
         getSettings().setMouseButtonScrollTime(value);
@@ -1073,6 +1073,43 @@ class InactiveTimeSettingsEntry : public SettingsEntry {
       if (value + 1 <= 60) {
         value++;
         getSettings().setInactiveTime(value);
+        if (getSettings().isPressSound()) playTone();
+      }
+    }
+};
+
+class LedsSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("LEDs: ", getSettings().isLeds());
+    }
+
+    virtual void use() override {
+      getSettings().setLeds(!getSettings().isLeds());
+      if (getSettings().isPressSound()) playTone();
+    }
+};
+
+class LedsBrightnessSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Brightness: " + String(getSettings().getLedBrightness()) + "%";
+    }
+
+    virtual void left() override {
+      int value = getSettings().getLedBrightness();
+      if (value - 1 >= 0) {
+        value--;
+        getSettings().setLedBrightness(value);
+        if (getSettings().isPressSound()) playTone();
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getLedBrightness();
+      if (value + 1 <= `100) {
+        value++;
+        getSettings().setLedBrightness(value);
         if (getSettings().isPressSound()) playTone();
       }
     }

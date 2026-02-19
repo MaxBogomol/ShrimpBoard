@@ -44,6 +44,9 @@ class Settings {
     bool inactive = true;
     int inactiveTime = 5;
 
+    bool leds = true;
+    int ledBrightness = 100;
+
     bool sound = true;
     bool pressSound = false;
 
@@ -73,6 +76,9 @@ class Settings {
       loadingScreen = 0;
       loadingScreenType = 0;
       loadingScreenSpeed = 2;
+
+      leds = true;
+      ledBrightness = 100;
 
       inactive = true;
       inactiveTime = 5;
@@ -254,6 +260,16 @@ class Settings {
       inactiveTime = value;
     }
 
+    void setLeds(bool value) {
+      leds = value;
+    }
+
+    void setLedBrightness(int value) {
+      if (value < 0) value = 0;
+      if (value > 100) value = 100;
+      ledBrightness = value;
+    }
+
     void setSound(bool value) {
       sound = value;
     }
@@ -404,6 +420,14 @@ class Settings {
 
     int getInactiveTime() {
       return inactiveTime;
+    }
+
+    bool isLeds() {
+      return leds;
+    }
+
+    bool getLedBrightness() {
+      return ledBrightness;
     }
 
     bool isSound() {

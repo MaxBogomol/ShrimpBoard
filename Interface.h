@@ -32,7 +32,7 @@ class Interface {
     SettingsIndexScreen mouseSettingsIndexScreen;
     SettingsIndexScreen screenSettingsIndexScreen;
     SettingsIndexScreen batterySettingsIndexScreen;
-    SettingsIndexScreen ledSettingsIndexScreen;
+    SettingsIndexScreen ledsSettingsIndexScreen;
     SettingsIndexScreen buzzerSettingsIndexScreen;
     SettingsIndexScreen gamesSettingsIndexScreen;
 
@@ -70,6 +70,9 @@ class Interface {
     InactiveSettingsEntry inactiveSettingsEntry;
     InactiveTimeSettingsEntry inactiveTimeSettingsEntry;
 
+    LedsSettingsEntry ledsSettingsEntry;
+    LedsBrightnessSettingsEntry ledsBrightnessSettingsEntry;
+
     SoundSettingsEntry soundSettingsEntry;
     PressSoundSettingsEntry pressSoundSettingsEntry;
 
@@ -95,7 +98,7 @@ class Interface {
       setScreenParameters(&mouseSettingsIndexScreen);
       setScreenParameters(&screenSettingsIndexScreen);
       setScreenParameters(&batterySettingsIndexScreen);
-      setScreenParameters(&ledSettingsIndexScreen);
+      setScreenParameters(&ledsSettingsIndexScreen);
       setScreenParameters(&buzzerSettingsIndexScreen);
       setScreenParameters(&gamesSettingsIndexScreen);
 
@@ -106,7 +109,7 @@ class Interface {
       addSettingsIndexNode(settingsIndexNode, &mouseSettingsIndexScreen, MOUSE_BMP);
       addSettingsIndexNode(settingsIndexNode, &screenSettingsIndexScreen, SCREEN_BMP);
       addSettingsIndexNode(settingsIndexNode, &batterySettingsIndexScreen, BATTERY_8_BMP);
-      addSettingsIndexNode(settingsIndexNode, &ledSettingsIndexScreen, LED_BMP);
+      addSettingsIndexNode(settingsIndexNode, &ledsSettingsIndexScreen, LED_BMP);
       addSettingsIndexNode(settingsIndexNode, &buzzerSettingsIndexScreen, BUZZER_BMP);
       addSettingsIndexNode(settingsIndexNode, &gamesSettingsIndexScreen, GAMEPAD_BMP);
       settingsScreen.setSettingsIndices(settingsIndexNode);
@@ -195,8 +198,14 @@ class Interface {
       setSettingsEntryParameters(&inactiveSettingsEntry);
       setSettingsEntryParameters(&inactiveTimeSettingsEntry);
 
-      //Led
-      ledSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
+      //Leds
+      SettingsEntryNode* ledsSettingsEntryNode = new SettingsEntryNode();
+      setSettingsEntryNode(ledsSettingsEntryNode, &inactiveSettingsEntry);
+      addSettingsEntryNode(ledsSettingsEntryNode, &ledsBrightnessSettingsEntry);
+      ledsSettingsIndexScreen.setSettingsEntries(ledsSettingsEntryNode);
+
+      setSettingsEntryParameters(&ledsSettingsEntryNode);
+      setSettingsEntryParameters(&ledsBrightnessSettingsEntry);
 
       //Buzzer
       SettingsEntryNode* buzzerSettingsEntryNode = new SettingsEntryNode();
@@ -224,7 +233,7 @@ class Interface {
       mouseSettingsIndexScreen.setNextScreen(&settingsScreen);
       screenSettingsIndexScreen.setNextScreen(&settingsScreen);
       batterySettingsIndexScreen.setNextScreen(&settingsScreen);
-      ledSettingsIndexScreen.setNextScreen(&settingsScreen);
+      ledsSettingsIndexScreen.setNextScreen(&settingsScreen);
       buzzerSettingsIndexScreen.setNextScreen(&settingsScreen);
       gamesSettingsIndexScreen.setNextScreen(&settingsScreen);
     }

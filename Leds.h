@@ -38,11 +38,12 @@ class Leds {
     }
 
     void setLedWrite(int pin, int value) {
-      int brightness = 100;
+      int brightness = getSettings().getLedBrightness();
       setLedWriteRaw(pin, (int) (value * (brightness / 100.0)));
     }
   
     void setLedWriteRaw(int pin, int value) {
+      if (getSettings().isLeds()) value = 0;
       analogWrite(pin, value);
     }
   
