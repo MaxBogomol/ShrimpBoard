@@ -25,6 +25,9 @@ Touchpad cable
 5 - SCL
 */
 
+//Pins
+#define MAX_ANALOG_VALUE 4095
+
 //Button matrix
 #define BUTTON_COLUMN_PIN_SS 10
 #define BUTTON_COLUMN_PIN_MOSI 11
@@ -319,51 +322,14 @@ void loopSleep() {
 }
 
 void loopLeds() {
-  if (isUseUSB()) {
-    if (settings->isNumLockUSB()) {
-      analogWrite(LED_NUM_LOCK_PIN, 4095);
-    } else {
-      analogWrite(LED_NUM_LOCK_PIN, 0);
-    }
-    if (settings->isCapsLockUSB()) {
-      analogWrite(LED_CAPS_LOCK_PIN, 4095);
-    } else {
-      analogWrite(LED_CAPS_LOCK_PIN, 0);
-    }
-    if (settings->isScrollLockUSB()) {
-      analogWrite(LED_SCROLL_LOCK_PIN, 4095);
-    } else {
-      analogWrite(LED_SCROLL_LOCK_PIN, 0);
-    }
-  }
-  if (isUseBLE()) {
-    if (settings->isNumLockBLE()) {
-      analogWrite(LED_NUM_LOCK_PIN, 4095);
-    } else {
-      analogWrite(LED_NUM_LOCK_PIN, 0);
-    }
-    if (settings->isCapsLockBLE()) {
-      analogWrite(LED_CAPS_LOCK_PIN, 4095);
-    } else {
-      analogWrite(LED_CAPS_LOCK_PIN, 0);
-    }
-    if (settings->isScrollLockBLE()) {
-      analogWrite(LED_SCROLL_LOCK_PIN, 4095);
-    } else {
-      analogWrite(LED_SCROLL_LOCK_PIN, 0);
-    }
-  }
-
-  if (settings->isLeftMouseLock()) {
-    analogWrite(LED_LEFT_MOUSE_LOCK_PIN, 4095);
-  } else {
-    analogWrite(LED_LEFT_MOUSE_LOCK_PIN, 0);
-  }
-  if (settings->isRightMouseLock()) {
-    analogWrite(LED_RIGHT_MOUSE_LOCK_PIN, 4095);
-  } else {
-    analogWrite(LED_RIGHT_MOUSE_LOCK_PIN, 0);
-  }
+  bool numLock = ((isUseUSB() && settings->isNumLockUSB()) || (isUseBLE() && settings->isNumLockBLE()));
+  bool capsLock = ((isUseUSB() && settings->isCapsLockUSB()) || (isUseBLE() && settings->isCapsSLockBLE()));
+  bool scrollLock = ((isUseUSB() && settings->isScrollLockUSB()) || (isUseBLE() && settings->isScrollLockBLE()));
+  leds->setNumLockBrightness(numLock ? 100 : 0);
+  leds->setCapsLockBrightness(capsLock ? 100 : 0);
+  leds->setScrollLockBrightness(scrollLock ? 100 : 0);
+  leds->setLeftMouseLockBrightness(settings->isLeftMouseLock() ? 100 : 0);
+  leds->setRightMouseLockBrightness(settings->isRightMouseLock() ? 100 : 0);
 }
 
 void loopKeyboard() {

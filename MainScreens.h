@@ -49,19 +49,15 @@ class MainScreen : public Screen {
 
       getDisplay().drawRectangle(x + 7, y + 24, 41, 2, getDisplay().white());
       getDisplay().drawRectangle(x + 58, y + 24, 9, 2, getDisplay().white());
+
+      bool numLock = ((isUseUSB() && getSettings().isNumLockUSB()) || (isUseBLE() && getSettings().isNumLockBLE()));
+      bool capsLock = ((isUseUSB() && getSettings().isCapsLockUSB()) || (isUseBLE() && getSettings().isCapsSLockBLE()));
+      bool scrollLock = ((isUseUSB() && getSettings().isScrollLockUSB()) || (isUseBLE() && getSettings().isScrollLockBLE()));
+      if (numLock) getDisplay().drawRectangle(x + 49, y + 24, 2, 2, getDisplay().white());
+      if (capsLock) getDisplay().drawRectangle(x + 52, y + 24, 2, 2, getDisplay().white());
+      if (scrollLock) getDisplay().drawRectangle(x + 55, y + 24, 2, 2, getDisplay().white());
       if (getSettings().isLeftMouseLock()) getDisplay().drawRectangle(x + 4, y + 24, 2, 2, getDisplay().white());
       if (getSettings().isRightMouseLock()) getDisplay().drawRectangle(x + 68, y + 24, 2, 2, getDisplay().white());
-
-      if (isUseUSB()) {
-        if (getSettings().isNumLockUSB()) getDisplay().drawRectangle(x + 49, y + 24, 2, 2, getDisplay().white());
-        if (getSettings().isCapsLockUSB()) getDisplay().drawRectangle(x + 52, y + 24, 2, 2, getDisplay().white());
-        if (getSettings().isScrollLockUSB()) getDisplay().drawRectangle(x + 55, y + 24, 2, 2, getDisplay().white());
-      }
-      if (isUseBLE()) {
-        if (getSettings().isNumLockBLE()) getDisplay().drawRectangle(x + 49, y + 24, 2, 2, getDisplay().white());
-        if (getSettings().isCapsLockBLE()) getDisplay().drawRectangle(x + 52, y + 24, 2, 2, getDisplay().white());
-        if (getSettings().isScrollLockBLE()) getDisplay().drawRectangle(x + 55, y + 24, 2, 2, getDisplay().white());
-      }
 
       if (getTouchpad().isFirstTouchPressed()) {
         int tx = map(getTouchpad().getFirstX(), 0, getTouchpad().getMaxX(), 0, 7);
