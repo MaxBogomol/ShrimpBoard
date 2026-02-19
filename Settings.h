@@ -44,6 +44,7 @@ class Settings {
     bool inactive = true;
     int inactiveTime = 5;
 
+    bool sound = true;
     bool pressSound = false;
 
   public:
@@ -76,6 +77,7 @@ class Settings {
       inactive = true;
       inactiveTime = 5;
 
+      sound = true;
       pressSound = false;
     }
 
@@ -252,6 +254,10 @@ class Settings {
       inactiveTime = value;
     }
 
+    void setSound(bool value) {
+      sound = value;
+    }
+
     void setPressSound(bool value) {
       pressSound = value;
     }
@@ -398,6 +404,10 @@ class Settings {
 
     int getInactiveTime() {
       return inactiveTime;
+    }
+
+    bool isSound() {
+      return sound;
     }
 
     bool isPressSound() {

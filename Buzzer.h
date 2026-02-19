@@ -6,11 +6,11 @@ class Buzzer {
 
   public:
     void playTone(unsigned int frequency, unsigned int duration) {
-      tone(BUZZER_PIN, frequency, duration);
+      if (getSettings.isSound()) tone(BUZZER_PIN, frequency, duration);
     }
 
     void playTone(unsigned int frequency) {
-      tone(BUZZER_PIN, frequency);
+      if (getSettings.isSound()) tone(BUZZER_PIN, frequency);
     }
 
     void playNoTone() {

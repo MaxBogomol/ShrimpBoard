@@ -6,6 +6,8 @@ class SettingsEntry {
 
     Buzzer* buzzer;
 
+    Screen* nextScreen;
+
   public:
     virtual String getName() {
       return "Entry";
@@ -51,6 +53,18 @@ class SettingsEntry {
     Buzzer& getBuzzer() {
       return *this->buzzer;
     }
+
+    virtual bool hasNextScreen() {
+      return false;
+    }
+
+    virtual void setNextScreen(Screen* nextScreen) {
+      this->nextScreen = nextScreen;
+    }
+
+    virtual Screen& getNextScreen() {
+      return *this->nextScreen;
+    }
 };
 
 class SettingsEntryNode {
@@ -86,6 +100,7 @@ class SettingsIndexScreen : public Screen {
   private:
     unsigned long previousMillis = 0;
     bool next = false;
+    bool next = false;
 
     int selectedIndex = 0;
     int selectedOffset = 0;
@@ -106,6 +121,7 @@ class SettingsIndexScreen : public Screen {
       Screen::begin();
       previousMillis = millis();
       next = false;
+      select = false;
       selectedIndex = 0;
       selectedOffset = 0;
       getSettings().setScreenFocus(true);
@@ -196,6 +212,7 @@ class SettingsIndexScreen : public Screen {
           rightPressMillis = millis();
         }
       }
+      select = left || right;
 
       node = settingsEntries;
       i = 0;
@@ -269,7 +286,24 @@ class SettingsIndexScreen : public Screen {
     }
 
     virtual bool hasNextScreen() override {
-      return next;
+      return next || select;
+    }
+
+    virtual Screen& getNextScreen() override {
+      if (select) {
+        SettingsEntryNode* node = settingsEntries;
+        int i = 0;
+        while (true) {
+          if (i == selectedIndex) {
+            if (node->hasNext()) return node->getNextScreen();
+          }
+
+          if (!node->hasNext()) break;
+          node = &(node->getNextNode());
+          i++;
+        }
+      }
+      return Screen::getNextScreen();
     }
 
     void setSettingsEntries(SettingsEntryNode* settingsEntries) {
@@ -440,7 +474,7 @@ class SettingsScreen : public Screen {
       return next || select;
     }
 
-    virtual Screen& getNextScreen() {
+    virtual Screen& getNextScreen() override {
       if (select) {
         SettingsIndexNode* node = settingsIndices;
         int i = 0;
@@ -895,8 +929,10 @@ class LoadingScreenSettingsEntry : public SettingsEntry {
     virtual String getName() override {
       String name = "Loading: ";
       int loading = getSettings().getLoadingScreen();
-      if (loading == 0) name = name + "Lines";
-      if (loading == 1) name = name + "Name";
+      switch(loading) {
+        case 0: name = name + "Lines"; break;
+        case 1: name = name + "Name"; break;
+      }
       return name;
     }
 
@@ -927,15 +963,21 @@ class LoadingScreenTypeSettingsEntry : public SettingsEntry {
       String name = "Loading type: ";
       int value = getSettings().getLoadingScreenType();
       int loading = getSettings().getLoadingScreen();
-      if (loading == 0) {
-        if (value == 0) name = name + "Up Right";
-        if (value == 1) name = name + "Up Left";
-        if (value == 2) name = name + "Down Right";
-        if (value == 3) name = name + "Down Left";
-      }
-      if (loading == 1) {
-        if (value == 0) name = name + "Right";
-        if (value == 1) name = name + "Left";
+      switch (loading) {
+        case 0:
+          switch (value) {
+            case 0: name = name + "Up Right"; break;
+            case 1: name = name + "Up Left"; break;
+            case 2: name = name + "Down Right"; break;
+            case 2: name = name + "Down Left"; break;
+          }
+          break;
+        case 1:
+          switch (value) {
+            case 0: name = name + "Right"; break;
+            case 1: name = name + "Left"; break;
+          }
+          break;
       }
       return name;
     }
@@ -1033,6 +1075,18 @@ class InactiveTimeSettingsEntry : public SettingsEntry {
         getSettings().setInactiveTime(value);
         if (getSettings().isPressSound()) playTone();
       }
+    }
+};
+
+class SoundSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("Sound: ", getSettings().isSound());
+    }
+
+    virtual void use() override {
+      getSettings().setSound(!getSettings().isSound());
+      if (getSettings().isPressSound()) playTone();
     }
 };
 

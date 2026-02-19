@@ -70,6 +70,7 @@ class Interface {
     InactiveSettingsEntry inactiveSettingsEntry;
     InactiveTimeSettingsEntry inactiveTimeSettingsEntry;
 
+    SoundSettingsEntry soundSettingsEntry;
     PressSoundSettingsEntry pressSoundSettingsEntry;
 
   public:
@@ -199,9 +200,11 @@ class Interface {
 
       //Buzzer
       SettingsEntryNode* buzzerSettingsEntryNode = new SettingsEntryNode();
-      setSettingsEntryNode(buzzerSettingsEntryNode, &pressSoundSettingsEntry);
+      setSettingsEntryNode(buzzerSettingsEntryNode, &soundSettingsEntry);
+      addSettingsEntryNode(buzzerSettingsEntryNode, &pressSoundSettingsEntry);
       buzzerSettingsIndexScreen.setSettingsEntries(buzzerSettingsEntryNode);
 
+      setSettingsEntryParameters(&soundSettingsEntry);
       setSettingsEntryParameters(&pressSoundSettingsEntry);
 
       //Games

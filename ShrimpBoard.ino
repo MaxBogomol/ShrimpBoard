@@ -434,7 +434,7 @@ void loopMouse() {
       float speed = settings->getMouseSpeed();
       x = x * speed;
       y = y * speed;
-      mouseMove(round(x), round(y));
+      mouseMove((int) x, (int) y);
     } else {
       float speed = settings->getMouseScrollSpeed();
       x = x * speed * 0.1;
