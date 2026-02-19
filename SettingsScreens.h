@@ -282,7 +282,12 @@ class SettingsIndexScreen : public Screen {
         getBuzzer().playTone(1000, 25);
       }
 
-      if (isEscPress()) next = true;
+      if (isEscPress()) {
+        next = true;
+        if (getSettings().isPressSound()) {
+          getBuzzer().playTone(2000, 50);
+        }
+      }
     }
 
     virtual bool hasNextScreen() override {
@@ -461,13 +466,20 @@ class SettingsScreen : public Screen {
         }
         if (selectedOffset + 5 < max && selectedIndex - selectedOffset > 4) selectedOffset++;
       }
+
+      if (isEnterPress() || isSpacePress()) {
+        select = true;
+        sound = true;
+      }
+
+      if (isEscPress()) {
+        next = true;
+        sound = true;
+      }
+
       if (sound && getSettings().isPressSound()) {
         getBuzzer().playTone(2000, 50);
       }
-
-      if (isEnterPress() || isSpacePress()) select = true;
-
-      if (isEscPress()) next = true;
     }
 
     virtual bool hasNextScreen() override {
