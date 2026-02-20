@@ -57,7 +57,7 @@ class LoadingShrimpBoardScreen : public Screen {
     unsigned long previousMillis = 0;
     bool next = false;
     int step = 0;
-    String text = "Shrimpboard";
+    String text = "ShrimpBoard";
 
   public:
     virtual void begin() override {

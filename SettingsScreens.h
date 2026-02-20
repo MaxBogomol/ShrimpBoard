@@ -1022,7 +1022,7 @@ class LoadingScreenTypeSettingsEntry : public SettingsEntry {
       int value = getSettings().getLoadingScreenType();
       int loading = getSettings().getLoadingScreen();
       switch (loading) {
-        case 0:
+        case 0: {
           switch (value) {
             case 0: name = name + "Up Right"; break;
             case 1: name = name + "Up Left"; break;
@@ -1030,12 +1030,14 @@ class LoadingScreenTypeSettingsEntry : public SettingsEntry {
             case 3: name = name + "Down Left"; break;
           }
           break;
-        case 1:
+        }
+        case 1: {
           switch (value) {
             case 0: name = name + "Right"; break;
             case 1: name = name + "Left"; break;
           }
           break;
+        }
       }
       return name;
     }

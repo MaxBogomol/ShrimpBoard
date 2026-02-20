@@ -36,7 +36,7 @@ class MainScreen : public Screen {
     void drawStats(int x, int y) {
       getDisplay().setTextPos(x, y + isUSBMode() ? 4 : 20);
       getDisplay().drawText(">");
-      getDisplay().drawBitmap(USB_BMP, x + 8, y, 16, 16, getDisplay().white());
+      getDisplay().drawBitmap(getSettings().isUSB() ? USB_BMP : NO_USB_BMP, x + 8, y, 16, 16, getDisplay().white());
       getDisplay().drawBitmap(isBLEConnected() ? BLE_BMP : NO_BLE_BMP, x + 8, y + 16, 16, 16, getDisplay().white());
       getDisplay().drawBitmap(BATTERY_10_BMP, x + 24, y, 16, 16, getDisplay().white());
       getDisplay().setTextPos(x + 24, y + 20);

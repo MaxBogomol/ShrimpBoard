@@ -3,6 +3,7 @@
 class Settings {
   private:
     bool usbMode = true;
+    bool usb = false;
     bool screenFocus = false;
     bool showLoadingScreen = false;
     unsigned long activeMillis = 0;
@@ -131,6 +132,10 @@ class Settings {
 
     void setUSBMode(bool value) {
       usbMode = value;
+    }
+
+    void setUSB(bool value) {
+      usb = value;
     }
 
     void setScreenFocus(bool value) {
@@ -334,6 +339,10 @@ class Settings {
 
     bool isUSBMode() {
       return usbMode;
+    }
+
+    bool isUSB() {
+      return usb;
     }
 
     bool isScreenFocus() {
