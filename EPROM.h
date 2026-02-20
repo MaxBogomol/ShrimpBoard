@@ -55,6 +55,8 @@ class EPROM {
       index = 500;
       settings->setSound(readBool());
       settings->setPressSound(readBool());
+      settings->setPressSoundFrequency(readIntLimit(10, 5000, 1000));
+      settings->setPressSoundDuration(readIntLimit(10, 250, 50));
 
       settingsSaved->copy(settings);
     }
@@ -99,6 +101,8 @@ class EPROM {
       index = 500;
       writeBoolIf(settings->isSound() != settingsSaved->isSound(), settings->isSound());
       writeBoolIf(settings->isPressSound() != settingsSaved->isPressSound(), settings->isPressSound());
+      writeIntIf(settings->getPressSoundFrequency() != settingsSaved->getPressSoundFrequency(), settings->getPressSoundFrequency());
+      writeIntIf(settings->getPressSoundDuration() != settingsSaved->getPressSoundDuration(), settings->getPressSoundDuration());
 
       settingsSaved->copy(settings);
     }

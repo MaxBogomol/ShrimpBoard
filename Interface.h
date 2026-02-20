@@ -77,6 +77,8 @@ class Interface {
 
     SoundSettingsEntry soundSettingsEntry;
     PressSoundSettingsEntry pressSoundSettingsEntry;
+    PressSoundFrequencySettingsEntry pressSoundFrequencySettingsEntry;
+    PressSoundDurationSettingsEntry pressSoundDurationSettingsEntry;
 
     BadAppleScreen badAppleScreen;
 
@@ -221,10 +223,14 @@ class Interface {
       SettingsEntryNode* buzzerSettingsEntryNode = new SettingsEntryNode();
       setSettingsEntryNode(buzzerSettingsEntryNode, &soundSettingsEntry);
       addSettingsEntryNode(buzzerSettingsEntryNode, &pressSoundSettingsEntry);
+      addSettingsEntryNode(buzzerSettingsEntryNode, &pressSoundFrequencySettingsEntry);
+      addSettingsEntryNode(buzzerSettingsEntryNode, &pressSoundDurationSettingsEntry);
       buzzerSettingsIndexScreen.setSettingsEntries(buzzerSettingsEntryNode);
 
       setSettingsEntryParameters(&soundSettingsEntry);
       setSettingsEntryParameters(&pressSoundSettingsEntry);
+      setSettingsEntryParameters(&pressSoundFrequencySettingsEntry);
+      setSettingsEntryParameters(&pressSoundDurationSettingsEntry);
 
       //Games
       SettingsIndexNode* gamesSettingsIndexNode = new SettingsIndexNode();

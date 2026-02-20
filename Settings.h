@@ -49,6 +49,8 @@ class Settings {
 
     bool sound = true;
     bool pressSound = false;
+    int pressSoundFrequency = 1000;
+    int pressSoundDuration = 50;
 
   public:
     void reset() {
@@ -85,6 +87,8 @@ class Settings {
 
       sound = true;
       pressSound = false;
+      pressSoundFrequency = 1000;
+      pressSoundDuration = 50;
     }
 
     void copy(Settings* otherSettings) {
@@ -121,6 +125,8 @@ class Settings {
 
       sound = otherSettings->isSound();
       pressSound = otherSettings->isPressSound();
+      pressSoundFrequency = otherSettings->getPressSoundFrequency();
+      pressSoundDuration = otherSettings->getPressSoundDuration();
     }
 
     void setUSBMode(bool value) {
@@ -314,6 +320,18 @@ class Settings {
       pressSound = value;
     }
 
+    void setPressSoundFrequency(int value) {
+      if (value < 10) value = 10;
+      if (value > 5000) value = 5000;
+      pressSoundFrequency = value;
+    }
+
+    void setPressSoundDuration(int value) {
+      if (value < 10) value = 10;
+      if (value > 250) value = 250;
+      pressSoundDuration = value;
+    }
+
     bool isUSBMode() {
       return usbMode;
     }
@@ -472,5 +490,13 @@ class Settings {
 
     bool isPressSound() {
       return pressSound;
+    }
+
+    int getPressSoundFrequency() {
+      return pressSoundFrequency;
+    }
+
+    int getPressSoundDuration() {
+      return pressSoundDuration;
     }
 };

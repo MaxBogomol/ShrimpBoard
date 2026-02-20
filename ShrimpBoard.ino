@@ -361,7 +361,9 @@ void loopKeyboard() {
         if (buttonMatrix.isRelease(i, j)) keyboardRelease(c);
       }
       if (settings->isPressSound() && buttonMatrix.isPress(i, j)) {
-        buzzer.playTone(1000, 25);
+        int frequency = settings->getPressSoundFrequency();
+        int duration = settings->getPressSoundDuration();
+        buzzer.playTone(frequency, duration);
       }
     }
   }

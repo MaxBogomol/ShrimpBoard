@@ -35,7 +35,10 @@ class SettingsEntry {
     }
 
     void playTone() {
-      getBuzzer().playTone(1000, 25);
+      int frequency = getSettings().getPressSoundFrequency();
+      int duration = getSettings().getPressSoundDuration();
+      getBuzzer().playNoTone();
+      getBuzzer().playTone(frequency, duration);
     }
 
     void setSettings(Settings* settings) {
@@ -279,13 +282,17 @@ class SettingsIndexScreen : public Screen {
         if (selectedOffset + 4 < max && selectedIndex - selectedOffset > 2) selectedOffset++;
       }
       if (sound && getSettings().isPressSound()) {
-        getBuzzer().playTone(1000, 25);
+        int frequency = getSettings().getPressSoundFrequency();
+        int duration = getSettings().getPressSoundDuration();
+        getBuzzer().playTone(frequency, duration);
       }
 
       if (isEscPress()) {
         next = true;
         if (getSettings().isPressSound()) {
-          getBuzzer().playTone(2000, 50);
+          int frequency = getSettings().getPressSoundFrequency();
+          int duration = getSettings().getPressSoundDuration();
+          getBuzzer().playTone(frequency / 2, duration);
         }
       }
     }
@@ -479,7 +486,9 @@ class SettingsScreen : public Screen {
       }
 
       if (sound && getSettings().isPressSound()) {
-        getBuzzer().playTone(2000, 50);
+        int frequency = getSettings().getPressSoundFrequency();
+        int duration = getSettings().getPressSoundDuration();
+        getBuzzer().playTone(frequency / 2, duration);
       }
     }
 
@@ -566,7 +575,7 @@ class SaveSettingsEntry : public SettingsEntry {
     }
 
     virtual void use() override {
-      if (getSettings().isPressSound()) playTone();
+      if (getSettings().isPressSound()) getBuzzer().playTone(2000, 50);
       getEPROM().save();
     }
 
@@ -586,7 +595,7 @@ class ResetSettingsEntry : public SettingsEntry {
     }
 
     virtual void use() override {
-      if (getSettings().isPressSound()) playTone();
+      if (getSettings().isPressSound()) getBuzzer().playTone(3000, 500);
       getSettings().reset();
     }
 };
@@ -601,7 +610,7 @@ class ResetEPROMSettingsEntry : public SettingsEntry {
     }
 
     virtual void use() override {
-      if (getSettings().isPressSound()) playTone();
+      if (getSettings().isPressSound()) getBuzzer().playTone(3000, 1000);
       getEPROM().reset();
     }
 
@@ -1185,5 +1194,55 @@ class PressSoundSettingsEntry : public SettingsEntry {
     virtual void use() override {
       getSettings().setPressSound(!getSettings().isPressSound());
       if (getSettings().isPressSound()) playTone();
+    }
+};
+
+class PressSoundFrequencySettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Frequency: " + String(getSettings().getPressSoundFrequency()) + " Hz";
+    }
+
+    virtual void left() override {
+      int value = getSettings().getPressSoundFrequency();
+      if (value - 10 >= 10) {
+        value -= 10;
+        getSettings().setPressSoundFrequency(value);
+        if (getSettings().isPressSound()) playTone();
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getPressSoundFrequency();
+      if (value + 10 <= 5000) {
+        value += 10;
+        getSettings().setPressSoundFrequency(value);
+        if (getSettings().isPressSound()) playTone();
+      }
+    }
+};
+
+class PressSoundDurationSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Duration: " + String(getSettings().getPressSoundDuration()) + " ms";
+    }
+
+    virtual void left() override {
+      int value = getSettings().getPressSoundDuration();
+      if (value - 10 >= 10) {
+        value -= 10;
+        getSettings().setPressSoundDuration(value);
+        if (getSettings().isPressSound()) playTone();
+      }
+    }
+
+    virtual void right() override {
+      int value = getSettings().getPressSoundDuration();
+      if (value + 10 <= 250) {
+        value += 10;
+        getSettings().setPressSoundDuration(value);
+        if (getSettings().isPressSound()) playTone();
+      }
     }
 };
