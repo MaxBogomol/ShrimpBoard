@@ -29,6 +29,15 @@ class Leds {
       setLedBrightness(LED_SPECIAL_PIN, brightness);
     }
 
+    void disableAll() {
+      setNumLockBrightness(0);
+      setCapsLockBrightness(0);
+      setScrollLockBrightness(0);
+      setLeftMouseLockBrightness(0);
+      setRightMouseLockBrightness(0);
+      setSpecialBrightness(0);
+    }
+
     void setLedBrightness(int pin, int brightness) {
       setLedWrite(pin, (int) (MAX_ANALOG_VALUE * (brightness / 100.0)));
     }

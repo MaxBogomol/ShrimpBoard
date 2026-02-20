@@ -317,6 +317,8 @@ void loopSleep() {
 
     if (currentMillis - settings->getActiveMillis() >= settings->getInactiveTime() * 1000 * 60) {
       sleepCount++;
+      leds.disableAll();
+      buzzer.playNoTone();
       display.clear();
       display.update();
       esp_light_sleep_start();
