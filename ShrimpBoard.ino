@@ -119,14 +119,14 @@ unsigned long rightMouseUpMillis = 0;
 unsigned long rightMouseDownMillis = 0;
 
 void keyboardBLEOnLEDEvent(KeyboardOutputReport data) {
-    settings->setNumLockBLE(data.numLockActive);
-    settings->setCapsLockBLE(data.capsLockActive);
-    settings->setScrollLockBLE(data.scrollLockActive);
+  settings->setNumLockBLE(data.numLockActive);
+  settings->setCapsLockBLE(data.capsLockActive);
+  settings->setScrollLockBLE(data.scrollLockActive);
 }
 
 void usbEventCallback(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
   if (event_base == ARDUINO_USB_EVENTS) {
-    arduino_usb_event_data_t *data = (arduino_usb_event_data_t *)event_data;
+    arduino_usb_event_data_t* data = (arduino_usb_event_data_t*) event_data;
     switch (event_id) {
       case ARDUINO_USB_STARTED_EVENT: settings->setUSB(true); break;
       case ARDUINO_USB_STOPPED_EVENT: settings->setUSB(false); break;
@@ -138,7 +138,7 @@ void usbEventCallback(void* arg, esp_event_base_t event_base, int32_t event_id, 
 
 void keyboardUSBEventCallback(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
   if (event_base == ARDUINO_USB_HID_KEYBOARD_EVENTS) {
-    arduino_usb_hid_keyboard_event_data_t* data = (arduino_usb_hid_keyboard_event_data_t*)event_data;
+    arduino_usb_hid_keyboard_event_data_t* data = (arduino_usb_hid_keyboard_event_data_t*) event_data;
     switch (event_id) {
       case ARDUINO_USB_HID_KEYBOARD_LED_EVENT: {
         settings->setNumLockUSB(data->numlock);
@@ -164,6 +164,8 @@ void setup() {
   setupInterface();
   setupSettings();
   setupScreens();
+
+  USB.begin();
 }
 
 void setupPins() {
@@ -236,7 +238,6 @@ void setupUSB() {
   USB.productName(DEVICE_NAME);
   USB.manufacturerName(DEVICE_MANUFACTURER);
   USB.onEvent(usbEventCallback);
-  USB.begin();
 
   keyboardUSB.onEvent(keyboardUSBEventCallback);
   keyboardUSB.begin();

@@ -543,6 +543,13 @@ class ModeSettingsEntry : public SettingsEntry {
     }
 };
 
+class USBStatusSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return getBoolName("USB: ", getSettings().isUSB());
+    }
+};
+
 class BLEStatusSettingsEntry : public SettingsEntry {
   private:
     BleCompositeHID* compositeHID;

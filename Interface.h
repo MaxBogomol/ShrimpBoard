@@ -38,6 +38,7 @@ class Interface {
     SettingsScreen gamesSettingsIndexScreen;
 
     ModeSettingsEntry modeSettingsEntry;
+    USBStatusSettingsEntry usbStatusSettingsEntry;
     BLEStatusSettingsEntry bleStatusSettingsEntry;
     SaveSettingsEntry saveSettingsEntry;
     ResetSettingsEntry resetSettingsEntry;
@@ -125,6 +126,7 @@ class Interface {
       //Main
       SettingsEntryNode* mainSettingsEntryNode = new SettingsEntryNode();
       setSettingsEntryNode(mainSettingsEntryNode, &modeSettingsEntry);
+      addSettingsEntryNode(mainSettingsEntryNode, &usbStatusSettingsEntry);
       addSettingsEntryNode(mainSettingsEntryNode, &bleStatusSettingsEntry);
       addSettingsEntryNode(mainSettingsEntryNode, &saveSettingsEntry);
       saveSettingsEntry.setEPROM(eprom);
@@ -134,6 +136,7 @@ class Interface {
       mainSettingsIndexScreen.setSettingsEntries(mainSettingsEntryNode);
 
       setSettingsEntryParameters(&modeSettingsEntry);
+      setSettingsEntryParameters(&usbStatusSettingsEntry);
       setSettingsEntryParameters(&bleStatusSettingsEntry);
       bleStatusSettingsEntry.setCompositeHID(compositeHID);
       setSettingsEntryParameters(&saveSettingsEntry);
