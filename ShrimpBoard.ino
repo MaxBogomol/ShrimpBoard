@@ -18,6 +18,8 @@ Flash Size: "16MB (128Mb)"
 Partition Scheme: "16M Flash (3MB APP/9.9MB FATFS)"
 PSRAM: "OPI PSRAM"
 
+esp32 - 3.3.0v
+
 Touchpad cable
 1 - GND
 2 - VDD
