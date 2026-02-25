@@ -7,6 +7,7 @@ class Settings {
     bool screenFocus = false;
     bool showLoadingScreen = false;
     unsigned long activeMillis = 0;
+    bool showSleep = false;
 
     bool numLockUSB = false;
     bool capsLockUSB = false;
@@ -148,6 +149,10 @@ class Settings {
 
     void setActiveMillis(unsigned long value) {
       activeMillis = value;
+    }
+
+    void setShowSleep(bool value) {
+      showSleep = value;
     }
 
     void setNumLockUSB(bool value) {
@@ -355,6 +360,10 @@ class Settings {
 
     unsigned long getActiveMillis() {
       return activeMillis;
+    }
+
+    bool isShowSleep() {
+      return showSleep;
     }
 
     bool isNumLockUSB() {

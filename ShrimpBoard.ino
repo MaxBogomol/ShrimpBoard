@@ -309,7 +309,7 @@ void loopSleep() {
   if (touchpad.isSecondTouchPressed()) active = true;
   if (active) settings->setActiveMillis(currentMillis);
 
-  if (settings->isInactive()) {
+  if (settings->isInactive() || settings->isShowSleep()) {
     if (awakeCount != sleepCount) {
       awakeCount++;
       uint32_t save = REG_READ(RTC_CNTL_USB_CONF_REG);
@@ -318,9 +318,10 @@ void loopSleep() {
       vTaskDelay(5 / portTICK_PERIOD_MS);
       REG_WRITE(RTC_CNTL_USB_CONF_REG, save);
       settings->setActiveMillis(currentMillis);
+      settings->setShowSleep(false);
     }
 
-    if (currentMillis - settings->getActiveMillis() >= settings->getInactiveTime() * 1000 * 60) {
+    if (currentMillis - settings->getActiveMillis() >= settings->getInactiveTime() * 1000 * 60 || settings->isShowSleep()) {
       sleepCount++;
       leds.disableAll();
       buzzer.playNoTone();

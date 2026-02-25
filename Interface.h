@@ -68,10 +68,11 @@ class Interface {
     LoadingScreenSettingsEntry loadingScreenSettingsEntry;
     LoadingScreenTypeSettingsEntry loadingScreenTypeSettingsEntry;
     LoadingScreenSpeedSettingsEntry loadingScreenSpeedSettingsEntry;
-    ShowLoadingDelaySettingsEntry showLoadingDelaySettingsEntry;
+    ShowLoadingScreenSettingsEntry showLoadingScreenSettingsEntry;
 
     InactiveSettingsEntry inactiveSettingsEntry;
     InactiveTimeSettingsEntry inactiveTimeSettingsEntry;
+    ShowSleepSettingsEntry showSleepSettingsEntry;
 
     LedsSettingsEntry ledsSettingsEntry;
     LedsBrightnessSettingsEntry ledsBrightnessSettingsEntry;
@@ -195,23 +196,25 @@ class Interface {
       addSettingsEntryNode(screenSettingsEntryNode, &loadingScreenSettingsEntry);
       addSettingsEntryNode(screenSettingsEntryNode, &loadingScreenTypeSettingsEntry);
       addSettingsEntryNode(screenSettingsEntryNode, &loadingScreenSpeedSettingsEntry);
-      addSettingsEntryNode(screenSettingsEntryNode, &showLoadingDelaySettingsEntry);
+      addSettingsEntryNode(screenSettingsEntryNode, &showLoadingScreenSettingsEntry);
       screenSettingsIndexScreen.setSettingsEntries(screenSettingsEntryNode);
 
       setSettingsEntryParameters(&displayUpdateDelaySettingsEntry);
       setSettingsEntryParameters(&loadingScreenSettingsEntry);
       setSettingsEntryParameters(&loadingScreenTypeSettingsEntry);
       setSettingsEntryParameters(&loadingScreenSpeedSettingsEntry);
-      setSettingsEntryParameters(&showLoadingDelaySettingsEntry);
+      setSettingsEntryParameters(&showLoadingScreenSettingsEntry);
 
       //Battery
       SettingsEntryNode* batterySettingsEntryNode = new SettingsEntryNode();
       setSettingsEntryNode(batterySettingsEntryNode, &inactiveSettingsEntry);
       addSettingsEntryNode(batterySettingsEntryNode, &inactiveTimeSettingsEntry);
+      addSettingsEntryNode(batterySettingsEntryNode, &showSleepSettingsEntry);
       batterySettingsIndexScreen.setSettingsEntries(batterySettingsEntryNode);
 
       setSettingsEntryParameters(&inactiveSettingsEntry);
       setSettingsEntryParameters(&inactiveTimeSettingsEntry);
+      setSettingsEntryParameters(&showSleepSettingsEntry);
 
       //Leds
       SettingsEntryNode* ledsSettingsEntryNode = new SettingsEntryNode();

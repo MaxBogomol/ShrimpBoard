@@ -1096,7 +1096,7 @@ class LoadingScreenSpeedSettingsEntry : public SettingsEntry {
     }
 };
 
-class ShowLoadingDelaySettingsEntry : public SettingsEntry {
+class ShowLoadingScreenSettingsEntry : public SettingsEntry {
   public:
     virtual String getName() override {
       return "Show loading";
@@ -1142,6 +1142,17 @@ class InactiveTimeSettingsEntry : public SettingsEntry {
         getSettings().setInactiveTime(value);
         if (getSettings().isPressSound()) playTone();
       }
+    }
+};
+
+class ShowSleepSettingsEntry : public SettingsEntry {
+  public:
+    virtual String getName() override {
+      return "Show sleep";
+    }
+
+    virtual void use() override {
+      getSettings().setShowSleep(true);
     }
 };
 
