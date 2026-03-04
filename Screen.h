@@ -7,6 +7,7 @@ class Screen {
     BleCompositeHID* compositeHID;
     
     ButtonMatrix* buttonMatrix;
+    Battery* battery;
     Leds* leds;
     Buzzer* buzzer;
     Touchpad* touchpad;
@@ -41,6 +42,10 @@ class Screen {
       this->buttonMatrix = buttonMatrix;
     }
 
+    void setBattery(Battery* battery) {
+      this->battery = battery;
+    }
+
     void setLeds(Leds* leds) {
       this->leds = leds;
     }
@@ -71,6 +76,10 @@ class Screen {
 
     ButtonMatrix& getButtonMatrix() {
       return *this->buttonMatrix;
+    }
+
+    Battery& getBattery() {
+      return *this->battery;
     }
 
     Leds& getLeds() {

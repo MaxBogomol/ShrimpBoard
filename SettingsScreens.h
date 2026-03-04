@@ -1148,11 +1148,33 @@ class InactiveTimeSettingsEntry : public SettingsEntry {
 class ShowSleepSettingsEntry : public SettingsEntry {
   public:
     virtual String getName() override {
-      return "Show sleep";
+      return "Sleep";
     }
 
     virtual void use() override {
       getSettings().setShowSleep(true);
+    }
+};
+
+class ReloadSettingsEntry : public SettingsEntry {
+  private:
+    Battery* battery;
+
+  public:
+    virtual String getName() override {
+      return "Reload";
+    }
+
+    virtual void use() override {
+      getSettings().setInactive(!getSettings().isInactive());
+    }
+
+    void setBattery(Battery* battery) {
+      this->battery = battery;
+    }
+
+    Battery& getBattery() {
+      return *this->battery;
     }
 };
 

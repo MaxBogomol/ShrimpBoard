@@ -20,7 +20,7 @@
 #define BUTTON_COLUMN_PIN_MOSI 11
 #define BUTTON_COLUMN_PIN_SCK 12
 #define BUTTON_COLUMN_PIN_OE 13
-#define BUTTON_COLUMN_PIN_17 14
+#define BUTTON_COLUMN_PIN_17 21
 
 #define BUTTON_ROW_PIN_1 39
 #define BUTTON_ROW_PIN_2 40
@@ -32,6 +32,10 @@
 //Touch button
 #define TOUCH_BUTTON_PIN 17
 #define TOUCH_BUTTON_PIN_GPIO GPIO_NUM_17
+
+//Battery
+#define BATTERY_PIN 14
+#define RESET_PIN 47
 
 //Leds
 #define LED_NUM_LOCK_PIN 6
@@ -64,6 +68,7 @@
 #include <PS4Touchpad.h>
 #include <Settings.h>
 #include <ButtonMatrix.h>
+#include <Battery.h>
 #include <Leds.h>
 #include <Buzzer.h>
 #include <Touchpad.h>
@@ -83,6 +88,7 @@ USBHIDMouse mouseUSB;
 USBHIDConsumerControl consumerControl;
 Settings* settings;
 ButtonMatrix buttonMatrix;
+Battery battery;
 Leds leds;
 Buzzer buzzer;
 Touchpad touchpad;
@@ -171,6 +177,13 @@ void setupPins() {
   pinMode(BUTTON_ROW_PIN_6, INPUT_PULLDOWN);
 
   pinMode(TOUCH_BUTTON_PIN, INPUT_PULLUP);
+  esp_sleep_enable_ext0_wakeup(TOUCH_BUTTON_PIN_GPIO, 1);
+
+  pinMode(BATTERY_PIN, OUTPUT);
+  analogWriteResolution(BATTERY_PIN, 12);
+  analogSetPinAttenuation(BATTERY_PIN, ADC_11db);
+
+  pinMode(RESET_PIN, OUTPUT);
 
   pinMode(LED_NUM_LOCK_PIN, OUTPUT);
   pinMode(LED_SCROLL_LOCK_PIN, OUTPUT);
@@ -194,8 +207,6 @@ void setupPins() {
   analogSetPinAttenuation(LED_SPECIAL_PIN, ADC_11db);
 
   pinMode(BUZZER_PIN, OUTPUT);
-
-  esp_sleep_enable_ext0_wakeup(TOUCH_BUTTON_PIN_GPIO, 1);
 }
 
 void setupBLE() {
@@ -256,6 +267,7 @@ void setupInterface() {
   if (DEBUG) Serial.println("Setup interface.");
   interface.setCompositeHID(compositeHID);
   interface.setButtonMatrix(&buttonMatrix);
+  interface.setBattery(&battery);
   interface.setLeds(&leds);
   interface.setBuzzer(&buzzer);
   interface.setTouchpad(&touchpad);
@@ -270,6 +282,7 @@ void setupSettings() {
   settings = &eprom.getSettings();
 
   buttonMatrix.setSettings(settings);
+  battery.setSettings(settings);
   leds.setSettings(settings);
   buzzer.setSettings(settings);
   touchpad.setSettings(settings);

@@ -13,6 +13,7 @@ class Interface {
     BleCompositeHID* compositeHID;
 
     ButtonMatrix* buttonMatrix;
+    Battery* battery;
     Leds* leds;
     Buzzer* buzzer;
     Touchpad* touchpad;
@@ -73,6 +74,7 @@ class Interface {
     InactiveSettingsEntry inactiveSettingsEntry;
     InactiveTimeSettingsEntry inactiveTimeSettingsEntry;
     ShowSleepSettingsEntry showSleepSettingsEntry;
+    ReloadSettingsEntry reloadSettingsEntry;
 
     LedsSettingsEntry ledsSettingsEntry;
     LedsBrightnessSettingsEntry ledsBrightnessSettingsEntry;
@@ -210,11 +212,14 @@ class Interface {
       setSettingsEntryNode(batterySettingsEntryNode, &inactiveSettingsEntry);
       addSettingsEntryNode(batterySettingsEntryNode, &inactiveTimeSettingsEntry);
       addSettingsEntryNode(batterySettingsEntryNode, &showSleepSettingsEntry);
+      addSettingsEntryNode(batterySettingsEntryNode, &reloadSettingsEntry);
       batterySettingsIndexScreen.setSettingsEntries(batterySettingsEntryNode);
 
       setSettingsEntryParameters(&inactiveSettingsEntry);
       setSettingsEntryParameters(&inactiveTimeSettingsEntry);
       setSettingsEntryParameters(&showSleepSettingsEntry);
+      setSettingsEntryParameters(&reloadSettingsEntry);
+      reloadSettingsEntry.setBattery(battery);
 
       //Leds
       SettingsEntryNode* ledsSettingsEntryNode = new SettingsEntryNode();
@@ -293,6 +298,10 @@ class Interface {
       this->buttonMatrix = buttonMatrix;
     }
 
+    void setBattery(Battery* battery) {
+      this->battery = battery;
+    }
+
     void setLeds(Leds* leds) {
       this->leds = leds;
     }
@@ -329,6 +338,10 @@ class Interface {
       return *this->buttonMatrix;
     }
 
+    Battery& getBattery() {
+      return *this->battery;
+    }
+
     Leds& getLeds() {
       return *this->leds;
     }
@@ -357,6 +370,7 @@ class Interface {
       screen->setSettings(settings);
       screen->setCompositeHID(compositeHID);
       screen->setButtonMatrix(buttonMatrix);
+      screen->setBattery(battery);
       screen->setLeds(leds);
       screen->setBuzzer(buzzer);
       screen->setTouchpad(touchpad);
