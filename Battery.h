@@ -5,9 +5,6 @@ class Battery {
     Settings* settings;
 
   public:
-    void reset() {
-      digitalWrite(RESET_PIN, HIGH);
-    }
 
     void setSettings(Settings* settings) {
       this->settings = settings;

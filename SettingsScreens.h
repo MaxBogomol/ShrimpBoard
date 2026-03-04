@@ -1166,7 +1166,7 @@ class ReloadSettingsEntry : public SettingsEntry {
     }
 
     virtual void use() override {
-      getSettings().setInactive(!getSettings().isInactive());
+      ESP.restart();
     }
 
     void setBattery(Battery* battery) {

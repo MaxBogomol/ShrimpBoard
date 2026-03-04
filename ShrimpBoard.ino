@@ -35,7 +35,6 @@
 
 //Battery
 #define BATTERY_PIN 14
-#define RESET_PIN 47
 
 //Leds
 #define LED_NUM_LOCK_PIN 6
@@ -182,8 +181,6 @@ void setupPins() {
   pinMode(BATTERY_PIN, OUTPUT);
   analogWriteResolution(BATTERY_PIN, 12);
   analogSetPinAttenuation(BATTERY_PIN, ADC_11db);
-
-  pinMode(RESET_PIN, OUTPUT);
 
   pinMode(LED_NUM_LOCK_PIN, OUTPUT);
   pinMode(LED_SCROLL_LOCK_PIN, OUTPUT);
