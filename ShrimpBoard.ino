@@ -178,7 +178,7 @@ void setupPins() {
   pinMode(TOUCH_BUTTON_PIN, INPUT_PULLUP);
   esp_sleep_enable_ext0_wakeup(TOUCH_BUTTON_PIN_GPIO, 1);
 
-  pinMode(BATTERY_PIN, OUTPUT);
+  pinMode(BATTERY_PIN, INPUT);
   analogWriteResolution(BATTERY_PIN, 12);
   analogSetPinAttenuation(BATTERY_PIN, ADC_11db);
 
