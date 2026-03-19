@@ -35,7 +35,7 @@ class EPROM {
       settings->setTouchpadRoundLimit(readIntLimit(2, 10, 5));
       settings->setTouchpadInertia(readBool());
       settings->setTouchpadInertiaRounded(readBool());
-      settings->setTouchpadInertiaStresshold(readIntLimit(5, 300, 50));
+      settings->setTouchpadInertiaThreshold(readIntLimit(5, 300, 50));
       settings->setTouchpadInertiaStep(readIntLimit(1, 50, 5));
 
       index = 200;
@@ -81,7 +81,7 @@ class EPROM {
       writeIntIf(settings->getTouchpadRoundLimit() != settingsSaved->getTouchpadRoundLimit(), settings->getTouchpadRoundLimit());
       writeBoolIf(settings->isTouchpadInertia() != settingsSaved->isTouchpadInertia(), settings->isTouchpadInertia());
       writeBoolIf(settings->isTouchpadInertiaRounded() != settingsSaved->isTouchpadInertiaRounded(), settings->isTouchpadInertiaRounded());
-      writeIntIf(settings->getTouchpadInertiaStresshold() != settingsSaved->getTouchpadInertiaStresshold(), settings->getTouchpadInertiaStresshold());
+      writeIntIf(settings->getTouchpadInertiaThreshold() != settingsSaved->getTouchpadInertiaThreshold(), settings->getTouchpadInertiaThreshold());
       writeIntIf(settings->getTouchpadInertiaStep() != settingsSaved->getTouchpadInertiaStep(), settings->getTouchpadInertiaStep());
 
       index = 200;

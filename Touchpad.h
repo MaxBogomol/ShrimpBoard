@@ -119,28 +119,28 @@ class Touchpad {
       secondTouchXRounded = secondTouchXRounded / roundLimit;
       secondTouchYRounded = secondTouchYRounded / roundLimit;
 
-      int inertiaStresshold = getInertiaStresshold();
+      int inertiaThreshold = getInertiaThreshold();
       int inertiaStep = getInertiaStep();
 
       if (getSettings().isTouchpadInertiaRounded()) {
-        if (firstTouchXRounded <= -inertiaStresshold || firstTouchXRounded >= inertiaStresshold ||
-            firstTouchYRounded <= -inertiaStresshold || firstTouchYRounded >= inertiaStresshold) {
+        if (firstTouchXRounded <= -inertiaThreshold || firstTouchXRounded >= inertiaThreshold ||
+            firstTouchYRounded <= -inertiaThreshold || firstTouchYRounded >= inertiaThreshold) {
           firstTouchXInertial = firstTouchXRounded;
           firstTouchYInertial = firstTouchYRounded;
         }
-        if (secondTouchXRounded <= -inertiaStresshold || secondTouchXRounded >= inertiaStresshold ||
-            secondTouchYRounded <= -inertiaStresshold || secondTouchYRounded >= inertiaStresshold) {
+        if (secondTouchXRounded <= -inertiaThreshold || secondTouchXRounded >= inertiaThreshold ||
+            secondTouchYRounded <= -inertiaThreshold || secondTouchYRounded >= inertiaThreshold) {
           firstTouchXInertial = firstTouchXRounded;
           firstTouchYInertial = secondTouchYRounded;
         }
       } else {
-        if (firstTouchXMoved <= -inertiaStresshold || firstTouchXMoved >= inertiaStresshold ||
-            firstTouchYMoved <= -inertiaStresshold || firstTouchYMoved >= inertiaStresshold) {
+        if (firstTouchXMoved <= -inertiaThreshold || firstTouchXMoved >= inertiaThreshold ||
+            firstTouchYMoved <= -inertiaThreshold || firstTouchYMoved >= inertiaThreshold) {
           firstTouchXInertial = firstTouchXMoved;
           firstTouchYInertial = firstTouchYMoved;
         }
-        if (secondTouchXMoved <= -inertiaStresshold || secondTouchXMoved >= inertiaStresshold ||
-            secondTouchYMoved <= -inertiaStresshold || secondTouchYMoved >= inertiaStresshold) {
+        if (secondTouchXMoved <= -inertiaThreshold || secondTouchXMoved >= inertiaThreshold ||
+            secondTouchYMoved <= -inertiaThreshold || secondTouchYMoved >= inertiaThreshold) {
           firstTouchXInertial = firstTouchXMoved;
           firstTouchYInertial = secondTouchYMoved;
         }
@@ -176,8 +176,8 @@ class Touchpad {
       return settings->getTouchpadRoundLimit();
     }
 
-    int getInertiaStresshold() {
-      return settings->getTouchpadInertiaStresshold();
+    int getInertiaThreshold() {
+      return settings->getTouchpadInertiaThreshold();
     }
 
     int getInertiaStep() {

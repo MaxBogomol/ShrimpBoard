@@ -62,7 +62,7 @@ class Interface {
     TouchpadRoundLimitSettingsEntry touchpadRoundLimitSettingsEntry;
     TouchpadInertiaSettingsEntry touchpadInertiaSettingsEntry;
     TouchpadInertiaRoundedSettingsEntry touchpadInertiaRoundedSettingsEntry;
-    TouchpadInertiaStressholdSettingsEntry touchpadInertiaStressholdSettingsEntry;
+    TouchpadInertiaThresholdSettingsEntry touchpadInertiaThresholdSettingsEntry;
     TouchpadInertiaStepSettingsEntry touchpadInertiaStepSettingsEntry;
 
     DisplayUpdateDelaySettingsEntry displayUpdateDelaySettingsEntry;
@@ -174,7 +174,7 @@ class Interface {
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadRoundLimitSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaRoundedSettingsEntry);
-      addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaStressholdSettingsEntry);
+      addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaThresholdSettingsEntry);
       addSettingsEntryNode(mouseSettingsEntryNode, &touchpadInertiaStepSettingsEntry);
       mouseSettingsIndexScreen.setSettingsEntries(mouseSettingsEntryNode);
 
@@ -189,7 +189,7 @@ class Interface {
       setSettingsEntryParameters(&touchpadRoundLimitSettingsEntry);
       setSettingsEntryParameters(&touchpadInertiaSettingsEntry);
       setSettingsEntryParameters(&touchpadInertiaRoundedSettingsEntry);
-      setSettingsEntryParameters(&touchpadInertiaStressholdSettingsEntry);
+      setSettingsEntryParameters(&touchpadInertiaThresholdSettingsEntry);
       setSettingsEntryParameters(&touchpadInertiaStepSettingsEntry);
 
       //Screen

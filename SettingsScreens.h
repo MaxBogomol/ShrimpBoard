@@ -914,26 +914,26 @@ class TouchpadInertiaRoundedSettingsEntry : public SettingsEntry {
     }
 };
 
-class TouchpadInertiaStressholdSettingsEntry : public SettingsEntry {
+class TouchpadInertiaThresholdSettingsEntry : public SettingsEntry {
   public:
     virtual String getName() override {
-      return "Inertia stresshold: " + String(getSettings().getTouchpadInertiaStresshold());
+      return "Inertia Threshold: " + String(getSettings().getTouchpadInertiaThreshold());
     }
 
     virtual void left() override {
-      int value = getSettings().getTouchpadInertiaStresshold();
+      int value = getSettings().getTouchpadInertiaThreshold();
       if (value - 5 >= 5) {
         value -= 5;
-        getSettings().setTouchpadInertiaStresshold(value);
+        getSettings().setTouchpadInertiaThreshold(value);
         if (getSettings().isPressSound()) playTone();
       }
     }
 
     virtual void right() override {
-      int value = getSettings().getTouchpadInertiaStresshold();
+      int value = getSettings().getTouchpadInertiaThreshold();
       if (value + 5 <= 300) {
         value += 5;
-        getSettings().setTouchpadInertiaStresshold(value);
+        getSettings().setTouchpadInertiaThreshold(value);
         if (getSettings().isPressSound()) playTone();
       }
     }
