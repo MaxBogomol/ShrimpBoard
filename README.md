@@ -2,7 +2,7 @@
 
 ## Dependencies
 - esp32 3.3.0v
-- [ESP32-BLE-CompositeHID fork](https://github.com/MaxBogomol/ESP32-BLE-CompositeHID) ([original](https://github.com/Mystfit/ESP32-BLE-CompositeHID))
+- [ESP32-BLE-CompositeHID](https://github.com/Mystfit/ESP32-BLE-CompositeHID)
 - Nimble-Arduino
 - Callback
 - Adafruit_SSD1306 and Adafruit_GFX
