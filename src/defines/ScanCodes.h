@@ -1,3 +1,5 @@
+#pragma once
+
 //Mod keys
 #define KEY_MOD_LCTRL 0x01
 #define KEY_MOD_LSHIFT 0x02
