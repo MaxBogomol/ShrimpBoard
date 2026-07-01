@@ -581,11 +581,19 @@ bool isRightMouseLock() {
     return settings->isRightMouseLock();
 }
 
+bool isModifierKey(uint8_t k) {
+    return (k >= 0xE0 && k <= 0xE7);
+}
+
 void keyboardPress(uint8_t k) {
     if (isUseUSB()) {
         keyboardUSB.pressRaw(k);
     } else if (isUseBLE()) {
-        keyboardBLE->keyPress(k);
+        if (isModifierKey(k)) {
+            keyboardBLE->modifierKeyPress(1 << (k - 0xE0));
+        } else {
+            keyboardBLE->keyPress(k);
+        }
     }
 }
 
@@ -593,7 +601,11 @@ void keyboardRelease(uint8_t k) {
     if (isUseUSB()) {
         keyboardUSB.releaseRaw(k);
     } else if (isUseBLE()) {
-        keyboardBLE->keyRelease(k);
+        if (isModifierKey(k)) {
+            keyboardBLE->modifierKeyRelease(1 << (k - 0xE0));
+        } else {
+            keyboardBLE->keyRelease(k);
+        }
     }
 }
 
