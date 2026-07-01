@@ -276,7 +276,7 @@ void Settings::setPressSound(bool value) {
 }
 
 void Settings::setPressSoundFrequency(int value) {
-    if (value < 10) value = 10;
+    if (value < 40) value = 40;
     if (value > 5000) value = 5000;
     pressSoundFrequency = value;
 }

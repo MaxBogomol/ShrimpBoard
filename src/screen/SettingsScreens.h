@@ -923,7 +923,7 @@ class TouchpadInertiaRoundedSettingsEntry : public SettingsEntry {
 class TouchpadInertiaThresholdSettingsEntry : public SettingsEntry {
     public:
         virtual String getName() override {
-            return "Inertia Threshold: " + String(getSettings().getTouchpadInertiaThreshold());
+            return "Inertia threshold: " + String(getSettings().getTouchpadInertiaThreshold());
         }
 
         virtual void left() override {
@@ -1253,7 +1253,7 @@ class PressSoundFrequencySettingsEntry : public SettingsEntry {
 
         virtual void left() override {
             int value = getSettings().getPressSoundFrequency();
-            if (value - 10 >= 10) {
+            if (value - 10 >= 40) {
                 value -= 10;
                 getSettings().setPressSoundFrequency(value);
                 if (getSettings().isPressSound()) playTone();
