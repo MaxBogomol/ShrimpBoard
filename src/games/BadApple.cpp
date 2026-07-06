@@ -22,7 +22,7 @@ void BadAppleScreen::loop() {
 
     if (frame == BAD_APPLE_ARRAY_LEN) next = true;
 
-    if (isEscPress()) next = true;
+    if (getKeyboard().isEscPress()) next = true;
 
     if (currentMillis - previousMillisMusic >= pause) {
         int size = sizeof(BAD_APPLE_MELODY) / sizeof(int);

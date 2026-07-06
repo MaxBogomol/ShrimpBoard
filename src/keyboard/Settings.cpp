@@ -462,3 +462,7 @@ int Settings::getPressSoundFrequency() {
 int Settings::getPressSoundDuration() {
     return pressSoundDuration;
 }
+
+bool Settings::isMouseLock() {
+    return isLeftMouseLock() || isRightMouseLock();
+}

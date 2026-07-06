@@ -4,38 +4,75 @@
 #include <BleCompositeHID.h>
 
 #include "../defines/Images.h"
-#include "../keyboard/Settings.h"
-#include "../hardware/ButtonMatrix.h"
-#include "../hardware/Battery.h"
-#include "../hardware/Leds.h"
-#include "../hardware/Buzzer.h"
-#include "../hardware/Touchpad.h"
-#include "../hardware/Display.h"
-#include "../hardware/EPROM.h"
+
 #include "Screen.h"
-#include "LoadingScreens.h"
-#include "MainScreens.h"
-#include "SettingsScreens.h"
+#include "loading/LinesLoadingScreen.h"
+#include "loading/NameLoadingScreen.h"
+#include "main/MainScreen.h"
+#include "settings/SettingsScreen.h"
+#include "settings/SettingsIndexScreen.h"
+
+#include "settings/SettingsIndex.h"
+#include "settings/SettingsEntry.h"
+
 #include "../games/BadApple.h"
+
+#include "settings/entries/main/ModeSettingsEntry.h"
+#include "settings/entries/main/USBStatusSettingsEntry.h"
+#include "settings/entries/main/BLEStatusSettingsEntry.h"
+#include "settings/entries/main/SaveSettingsEntry.h"
+#include "settings/entries/main/ResetSettingsEntry.h"
+#include "settings/entries/main/ResetEPROMSettingsEntry.h"
+
+#include "settings/entries/keyboard/DebounceSettingsEntry.h"
+#include "settings/entries/keyboard/DebounceTimeSettingsEntry.h"
+#include "settings/entries/keyboard/ButtonScrollSettingsEntry.h"
+#include "settings/entries/keyboard/ButtonScrollDelaySettingsEntry.h"
+#include "settings/entries/keyboard/ButtonScrollTimeSettingsEntry.h"
+
+#include "settings/entries/mouse/MouseSpeedSettingsEntry.h"
+#include "settings/entries/mouse/TouchpadScrollSettingsEntry.h"
+#include "settings/entries/mouse/MouseLockScrollSettingsEntry.h"
+#include "settings/entries/mouse/LeftMouseLockScrollSettingsEntry.h"
+#include "settings/entries/mouse/RightMouseLockScrollSettingsEntry.h"
+#include "settings/entries/mouse/MouseScrollSpeedSettingsEntry.h"
+#include "settings/entries/mouse/MouseButtonScrollTimeSettingsEntry.h"
+#include "settings/entries/mouse/TouchpadRoundedSettingsEntry.h"
+#include "settings/entries/mouse/TouchpadRoundLimitSettingsEntry.h"
+#include "settings/entries/mouse/TouchpadInertiaSettingsEntry.h"
+#include "settings/entries/mouse/TouchpadInertiaRoundedSettingsEntry.h"
+#include "settings/entries/mouse/TouchpadInertiaThresholdSettingsEntry.h"
+#include "settings/entries/mouse/TouchpadInertiaStepSettingsEntry.h"
+
+#include "settings/entries/screen/DisplayUpdateDelaySettingsEntry.h"
+#include "settings/entries/screen/LoadingScreenSettingsEntry.h"
+#include "settings/entries/screen/LoadingScreenTypeSettingsEntry.h"
+#include "settings/entries/screen/LoadingScreenSpeedSettingsEntry.h"
+#include "settings/entries/screen/ShowLoadingScreenSettingsEntry.h"
+
+#include "settings/entries/battery/InactiveSettingsEntry.h"
+#include "settings/entries/battery/InactiveTimeSettingsEntry.h"
+#include "settings/entries/battery/ShowSleepSettingsEntry.h"
+#include "settings/entries/battery/ReloadSettingsEntry.h"
+
+#include "settings/entries/leds/LedsSettingsEntry.h"
+#include "settings/entries/leds/LedsBrightnessSettingsEntry.h"
+
+#include "settings/entries/buzzer/SoundSettingsEntry.h"
+#include "settings/entries/buzzer/PressSoundSettingsEntry.h"
+#include "settings/entries/buzzer/PressSoundFrequencySettingsEntry.h"
+#include "settings/entries/buzzer/PressSoundDurationSettingsEntry.h"
+
+class ShrimpBoard;
 
 class Interface {
     private:
-        Settings* settings;
-
-        BleCompositeHID* compositeHID;
-
-        ButtonMatrix* buttonMatrix;
-        Battery* battery;
-        Leds* leds;
-        Buzzer* buzzer;
-        Touchpad* touchpad;
-        Display* display;
-        EPROM* eprom;
+        ShrimpBoard* shrimpBoard;
 
         Screen* screen;
 
-        LoadingLinesScreen loadingLinesScreen;
-        LoadingShrimpBoardScreen loadingShrimpBoardScreen;
+        LinesLoadingScreen linesLoadingScreen;
+        NameLoadingScreen nameLoadingScreen;
 
         MainScreen mainScreen;
 
@@ -100,64 +137,32 @@ class Interface {
 
     public:
         void setupScreens();
-
         void setupScreensParameters();
-
         void setupScreensNexts();
-
         void loop();
 
-        void setSettings(Settings* settings);
-
-        void setCompositeHID(BleCompositeHID* compositeHID);
-
-        void setButtonMatrix(ButtonMatrix* buttonMatrix);
-
-        void setBattery(Battery* battery);
-
-        void setLeds(Leds* leds);
-
-        void setBuzzer(Buzzer* buzzer);
-
-        void setTouchpad(Touchpad* touchpad);
-
-        void setDisplay(Display* display);
-
-        void setEPROM(EPROM* eprom);
-
+        void setShrimpBoard(ShrimpBoard* shrimpBoard);
         void setScreen(Screen* screen);
 
-        Settings& getSettings();
-
-        BleCompositeHID& getCompositeHID();
-
-        ButtonMatrix& getButtonMatrix();
-
-        Battery& getBattery();
-
-        Leds& getLeds();
-
-        Buzzer& getBuzzer();
-
-        Touchpad& getTouchpad();
-
-        Display& getDisplay();
-
-        EPROM& getEPROM();
-
+        ShrimpBoard& getShrimpBoard();
         Screen& getScreen();
 
-        void setScreenParameters(Screen* screen);
-
-        void setSettingsEntryParameters(SettingsEntry* entry);
-
-        void addSettingsIndexNode(SettingsIndexNode* indexNode, Screen* data, const uint8_t BMP[]);
-
-        void setSettingsIndexNode(SettingsIndexNode* indexNode, Screen* data, const uint8_t BMP[]);
-
-        void addSettingsEntryNode(SettingsEntryNode* entryNode, SettingsEntry* data);
-
-        void setSettingsEntryNode(SettingsEntryNode* entryNode, SettingsEntry* data);
+        Screen& setScreenParameters(Screen* screen);
+        SettingsEntry& setSettingsEntryParameters(SettingsEntry* entry);
+        SettingsIndex& getSettingsIndex(Screen* screen, const uint8_t BMP[]);
+        SettingsIndex& getSettingsIndex(Screen* screen);
 
         Screen& getLoadingScreen();
+
+        BleCompositeHID& getCompositeHID();
+        Settings& getSettings();
+        ButtonMatrix& getButtonMatrix();
+        Battery& getBattery();
+        Leds& getLeds();
+        Buzzer& getBuzzer();
+        Keyboard& getKeyboard();
+        Touchpad& getTouchpad();
+        Display& getDisplay();
+        EPROM& getEPROM();
+        Interface& getInterface();
 };

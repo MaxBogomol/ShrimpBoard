@@ -147,4 +147,6 @@ class Settings {
         bool isPressSound();
         int getPressSoundFrequency();
         int getPressSoundDuration();
+
+        bool isMouseLock();
 };

@@ -1,31 +1,31 @@
 #pragma once
 
-#include <BleCompositeHID.h>
+#include "../Screen.h"
 
-#include "../defines/Images.h"
-
-#include "../keyboard/Settings.h"
-#include "../hardware/ButtonMatrix.h"
-#include "../hardware/Battery.h"
-#include "../hardware/Leds.h"
-#include "../hardware/Buzzer.h"
-#include "../hardware/Keyboard.h"
-#include "../hardware/Touchpad.h"
-#include "../hardware/Display.h"
-#include "../hardware/EPROM.h"
+#include "../../keyboard/Settings.h"
+#include "../../hardware/ButtonMatrix.h"
+#include "../../hardware/Battery.h"
+#include "../../hardware/Leds.h"
+#include "../../hardware/Buzzer.h"
+#include "../../hardware/Keyboard.h"
+#include "../../hardware/Touchpad.h"
+#include "../../hardware/Display.h"
+#include "../../hardware/EPROM.h"
 
 class ShrimpBoard;
 
-class Screen {
+class SettingsEntry {
     private:
         ShrimpBoard* shrimpBoard;
 
         Screen* nextScreen;
 
     public:
-        virtual void begin();
-        virtual void loop() {};
-        virtual void end() {};
+        virtual String getName();
+
+        virtual void use() {};
+        virtual void left() {};
+        virtual void right() {};
 
         void setShrimpBoard(ShrimpBoard* shrimpBoard);
 
@@ -35,7 +35,9 @@ class Screen {
         virtual void setNextScreen(Screen* nextScreen);
         virtual Screen& getNextScreen();
 
-        virtual bool isScreenFocus();
+        String getBoolName(String name, bool value);
+        void playTone();
+        void playToneSettings();
 
         Settings& getSettings();
         ButtonMatrix& getButtonMatrix();
