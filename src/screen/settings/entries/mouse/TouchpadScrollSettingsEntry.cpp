@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "TouchpadScrollSettingsEntry.h"
 
 String TouchpadScrollSettingsEntry::getName() {

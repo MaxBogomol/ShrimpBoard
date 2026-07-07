@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "TouchpadRoundLimitSettingsEntry.h"
 
 String TouchpadRoundLimitSettingsEntry::getName() {

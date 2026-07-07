@@ -1,5 +1,7 @@
 #include "Battery.h"
 
+#include <Arduino.h>
+
 int Battery::getPercentage() {
     return 100;
 }

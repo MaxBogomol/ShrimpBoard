@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "InactiveSettingsEntry.h"
 
 String InactiveSettingsEntry::getName() {

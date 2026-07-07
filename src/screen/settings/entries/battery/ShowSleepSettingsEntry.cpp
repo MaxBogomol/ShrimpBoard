@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "ShowSleepSettingsEntry.h"
 
 String ShowSleepSettingsEntry::getName() {

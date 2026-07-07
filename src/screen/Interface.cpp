@@ -1,5 +1,7 @@
 #include "Interface.h"
 
+#include "../defines/Images.h"
+
 #include "../keyboard/ShrimpBoard.h"
 
 void Interface::setupScreens() {

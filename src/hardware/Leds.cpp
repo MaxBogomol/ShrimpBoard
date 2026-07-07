@@ -1,5 +1,7 @@
 #include "Leds.h"
 
+#include <Arduino.h>
+
 void Leds::setNumLockBrightness(int brightness) {
     setLedBrightness(LED_NUM_LOCK_PIN, brightness);
 }

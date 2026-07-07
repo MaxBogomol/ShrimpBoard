@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "MouseButtonScrollTimeSettingsEntry.h"
 
 String MouseButtonScrollTimeSettingsEntry::getName() {

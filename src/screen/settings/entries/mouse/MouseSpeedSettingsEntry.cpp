@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "MouseSpeedSettingsEntry.h"
 
 String MouseSpeedSettingsEntry::getName() {

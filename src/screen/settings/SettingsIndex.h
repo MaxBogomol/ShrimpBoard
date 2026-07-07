@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 
+#include "../../defines/Images.h"
 #include "../Screen.h"
 
 class SettingsIndex {

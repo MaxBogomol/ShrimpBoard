@@ -1,5 +1,7 @@
 #include "ButtonMatrix.h"
 
+#include <Arduino.h>
+
 void ButtonMatrix::setup() {
     digitalWrite(BUTTON_COLUMN_PIN_OE, HIGH);
 }

@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "DisplayUpdateDelaySettingsEntry.h"
 
 String DisplayUpdateDelaySettingsEntry::getName() {

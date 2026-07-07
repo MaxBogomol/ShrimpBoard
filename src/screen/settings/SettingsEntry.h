@@ -2,16 +2,6 @@
 
 #include "../Screen.h"
 
-#include "../../keyboard/Settings.h"
-#include "../../hardware/ButtonMatrix.h"
-#include "../../hardware/Battery.h"
-#include "../../hardware/Leds.h"
-#include "../../hardware/Buzzer.h"
-#include "../../hardware/Keyboard.h"
-#include "../../hardware/Touchpad.h"
-#include "../../hardware/Display.h"
-#include "../../hardware/EPROM.h"
-
 class ShrimpBoard;
 
 class SettingsEntry {

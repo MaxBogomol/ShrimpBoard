@@ -1,9 +1,6 @@
 #pragma once
 
 #include <Arduino.h>
-#include <BleCompositeHID.h>
-
-#include "../defines/Images.h"
 
 #include "Screen.h"
 #include "loading/LinesLoadingScreen.h"
@@ -14,8 +11,6 @@
 
 #include "settings/SettingsIndex.h"
 #include "settings/SettingsEntry.h"
-
-#include "../games/BadApple.h"
 
 #include "settings/entries/main/ModeSettingsEntry.h"
 #include "settings/entries/main/USBStatusSettingsEntry.h"
@@ -62,6 +57,8 @@
 #include "settings/entries/buzzer/PressSoundSettingsEntry.h"
 #include "settings/entries/buzzer/PressSoundFrequencySettingsEntry.h"
 #include "settings/entries/buzzer/PressSoundDurationSettingsEntry.h"
+
+#include "../games/BadApple.h"
 
 class ShrimpBoard;
 
@@ -154,7 +151,6 @@ class Interface {
 
         Screen& getLoadingScreen();
 
-        BleCompositeHID& getCompositeHID();
         Settings& getSettings();
         ButtonMatrix& getButtonMatrix();
         Battery& getBattery();
@@ -164,5 +160,4 @@ class Interface {
         Touchpad& getTouchpad();
         Display& getDisplay();
         EPROM& getEPROM();
-        Interface& getInterface();
 };

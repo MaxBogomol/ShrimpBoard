@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "LoadingScreenSpeedSettingsEntry.h"
 
 String LoadingScreenSpeedSettingsEntry::getName() {

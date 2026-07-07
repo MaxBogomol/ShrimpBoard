@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "ModeSettingsEntry.h"
 
 String ModeSettingsEntry::getName() {

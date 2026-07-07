@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "ResetEPROMSettingsEntry.h"
 
 String ResetEPROMSettingsEntry::getName() {

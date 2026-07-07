@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "BLEStatusSettingsEntry.h"
 
 #include "../../../../keyboard/ShrimpBoard.h"

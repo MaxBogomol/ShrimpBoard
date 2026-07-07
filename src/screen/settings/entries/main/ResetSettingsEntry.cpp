@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "ResetSettingsEntry.h"
 
 String ResetSettingsEntry::getName() {

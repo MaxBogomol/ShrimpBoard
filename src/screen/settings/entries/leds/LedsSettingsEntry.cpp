@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "LedsSettingsEntry.h"
 
 String LedsSettingsEntry::getName() {

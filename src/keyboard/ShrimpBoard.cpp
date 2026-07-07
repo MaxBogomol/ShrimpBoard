@@ -1,5 +1,13 @@
 #include "ShrimpBoard.h"
 
+#include <soc/rtc_cntl_reg.h>
+#include <USB.h>
+#include <Wire.h>
+
+#include "../defines/Defines.h"
+#include "../defines/ScanCodes.h"
+#include "../defines/ScanMatrix.h"
+
 #include "Events.h"
 
 void ShrimpBoard::setup() {

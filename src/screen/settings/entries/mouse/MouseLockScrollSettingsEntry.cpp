@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "MouseLockScrollSettingsEntry.h"
 
 String MouseLockScrollSettingsEntry::getName() {

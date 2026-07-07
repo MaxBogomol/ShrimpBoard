@@ -1,5 +1,7 @@
 #include "PS4Touchpad.h"
 
+#include <Wire.h>
+
 void PS4Touchpad::read() {
     Wire.beginTransmission(TOUCHPAD_ADDR);
     Wire.requestFrom(TOUCHPAD_ADDR, 32);

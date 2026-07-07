@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "ButtonScrollSettingsEntry.h"
 
 String ButtonScrollSettingsEntry::getName() {

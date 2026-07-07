@@ -1,9 +1,5 @@
 #pragma once
 
-#include <BleCompositeHID.h>
-
-#include "../defines/Images.h"
-
 #include "../keyboard/Settings.h"
 #include "../hardware/ButtonMatrix.h"
 #include "../hardware/Battery.h"

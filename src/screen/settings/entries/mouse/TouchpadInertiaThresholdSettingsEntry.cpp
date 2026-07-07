@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "TouchpadInertiaThresholdSettingsEntry.h"
 
 String TouchpadInertiaThresholdSettingsEntry::getName() {

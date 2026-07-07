@@ -2,10 +2,10 @@
 
 #include <vector>
 
-using namespace std;
-
 #include "../Screen.h"
 #include "SettingsEntry.h"
+
+using namespace std;
 
 class SettingsIndexScreen : public Screen {
     private:

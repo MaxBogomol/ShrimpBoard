@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "USBStatusSettingsEntry.h"
 
 String USBStatusSettingsEntry::getName() {

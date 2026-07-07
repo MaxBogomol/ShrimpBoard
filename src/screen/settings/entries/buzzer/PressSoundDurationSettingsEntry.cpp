@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "PressSoundDurationSettingsEntry.h"
 
 String PressSoundDurationSettingsEntry::getName() {

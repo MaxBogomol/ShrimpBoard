@@ -1,4 +1,3 @@
-#include "../../SettingsEntry.h"
 #include "LoadingScreenSettingsEntry.h"
 
 String LoadingScreenSettingsEntry::getName() {

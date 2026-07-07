@@ -1,5 +1,7 @@
 #include "Buzzer.h"
 
+#include <Arduino.h>
+
 void Buzzer::playTone(unsigned int frequency, unsigned int duration) {
     if (getSettings().isSound()) tone(BUZZER_PIN, frequency, duration);
 }

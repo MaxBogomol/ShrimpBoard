@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Arduino.h>
-
 #include "../defines/Defines.h"
 #include "../keyboard/Settings.h"
 
