@@ -36,7 +36,7 @@ void MainScreen::drawStats(int x, int y) {
     getDisplay().drawBitmap(getShrimpBoard().isBLEConnected() ? BLE_BMP : NO_BLE_BMP, x + 8, y + 16, 16, 16, getDisplay().white());
     getDisplay().drawBitmap(BATTERY_10_BMP, x + 24, y, 16, 16, getDisplay().white());
     getDisplay().setTextPos(x + 24, y + 20);
-    getDisplay().drawText("100%");
+    getDisplay().drawText(String(getBattery().getPercentageRounded()) + "%");
 }
 
 void MainScreen::drawKeyboard(int x, int y) {

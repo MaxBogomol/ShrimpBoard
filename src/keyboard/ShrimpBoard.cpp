@@ -165,6 +165,7 @@ void ShrimpBoard::setupScreens() {
 void ShrimpBoard::loop() {
     buttonMatrix.read();
     touchpad.read();
+    battery.read();
 
     loopSleep();
     loopLeds();
