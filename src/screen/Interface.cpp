@@ -168,9 +168,9 @@ SettingsIndex& Interface::getSettingsIndex(Screen* screen, const uint8_t BMP[]) 
 }
 
 SettingsIndex& Interface::getSettingsIndex(Screen* screen) {
-    SettingsIndex index = SettingsIndex();
-    index.setScreen(screen);
-    return index;
+    SettingsIndex* index = new SettingsIndex();
+    index->setScreen(screen);
+    return *index;
 }
 
 Screen& Interface::getLoadingScreen() {

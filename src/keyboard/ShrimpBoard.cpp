@@ -145,6 +145,7 @@ void ShrimpBoard::setupSettings() {
 
     settings = &eprom.getSettings();
 
+    Events::setSettings(settings);
     buttonMatrix.setSettings(settings);
     battery.setSettings(settings);
     leds.setSettings(settings);
