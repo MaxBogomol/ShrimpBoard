@@ -16,40 +16,31 @@ void SettingsIndexScreen::loop() {
     int scrollDelay = getSettings().getButtonScrollDelay();
     int scrollTime = getSettings().getButtonScrollTime();
 
-    SettingsEntry* entry = getSettingsEntries()[0];
     int max = getSettingsEntries().size();
 
     if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
         getDisplay().clear();
         getDisplay().textReset();
         getDisplay().setTextWrap(false);
-        /*
-        i = 0;
-        while (true) {
-            SettingsEntry* index = &node->getData();
-
-            int offset = i - selectedOffset;
-            String s = index->getName();
-            if (i == selectedIndex) s = ">" + s;
-            if (offset >= 0 && offset <= 3) {
-                int x = 0;
-                int l = s.length() * 6;
-                float speed = 10;
-                if (l > 128) {
-                    double t = (double) fmod((currentMillis / (l / 128.0)) * (1 / speed), 360);
-                    double xOffset = sin(t * (PI / 180.0));
-                    x = (int) (xOffset * (l - 128 + 2));
-                    x = -abs(x);
-                }
-
-                getDisplay().setTextPos(x, offset * 8);
-                getDisplay().drawText(s);
+        for (int i = 0; i < 4; i++) {
+            int index = selectedOffset + i;
+            if (index > max - 1) break;
+            SettingsEntry* entry = getSettingsEntries()[index];
+            String s = entry->getName();
+            if (index == selectedIndex) s = ">" + s;
+            int x = 0;
+            int l = s.length() * 6;
+            float speed = 10;
+            if (l > 128) {
+                double t = (double) fmod((currentMillis / (l / 128.0)) * (1 / speed), 360);
+                double xOffset = sin(t * (PI / 180.0));
+                x = (int) (xOffset * (l - 128 + 2));
+                x = -abs(x);
             }
 
-            if (!node->hasNext()) break;
-            node = &(node->getNextNode());
-            i++;
-        }*/
+            getDisplay().setTextPos(x, i * 8);
+            getDisplay().drawText(s);
+        }
         getDisplay().update();
 
         previousMillis = currentMillis;
@@ -89,21 +80,10 @@ void SettingsIndexScreen::loop() {
             rightPressMillis = millis();
         }
     }
-/*
-    node = settingsEntries;
-    i = 0;
-    while (true) {
-        if (i == selectedIndex) {
-            SettingsEntry* index = &node->getData();
-            if (left) index->left();
-            if (right) index->right();
-            if (left || right) select = index->hasNextScreen();
-        }
-
-        if (!node->hasNext()) break;
-        node = &(node->getNextNode());
-        i++;
-    }*/
+    SettingsEntry* entry = getSettingsEntries()[selectedIndex];
+    if (left) entry->left();
+    if (right) entry->right();
+    if (left || right) select = entry->hasNextScreen();
 
     bool up = false;
     bool down = false;

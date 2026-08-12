@@ -14,8 +14,8 @@ class SettingsEntry {
         virtual String getName();
 
         virtual void use() {};
-        virtual void left() {};
-        virtual void right() {};
+        virtual void left();
+        virtual void right();
 
         void setShrimpBoard(ShrimpBoard* shrimpBoard);
 

@@ -6,6 +6,14 @@ String SettingsEntry::getName() {
     return "Entry";
 }
 
+void SettingsEntry::left() {
+    use();
+}
+
+void SettingsEntry::right() {
+    use();
+}
+
 void SettingsEntry::setShrimpBoard(ShrimpBoard* shrimpBoard) {
     this->shrimpBoard = shrimpBoard;
 }

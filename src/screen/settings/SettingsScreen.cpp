@@ -20,11 +20,11 @@ void SettingsScreen::loop() {
 
     if (currentMillis - previousMillis >= getSettings().getDisplayUpdateDelay()) {
         getDisplay().clear();
-        //for (int i = 0; i < 6; i++) { 
-        //    int offset = selectedOffset - i;
-        //    if (offset >= -1 && offset <= 6) drawIndex(6 + (offset * 24), (i == selectedIndex) ? 2 : 6, node->getBitmap());
-        //    i++;
-        //}
+        for (int i = -1; i < 7; i++) {
+            int index = selectedOffset + i;
+            if (index > max - 1) break;
+            if (index >= 0) drawIndex(6 + (i * 24), (index == selectedIndex) ? 2 : 6, getSettingsIndices()[index]->getBitmap());
+        }
         getDisplay().update();
 
         previousMillis = currentMillis;
