@@ -1,6 +1,7 @@
 #include "ShrimpBoard.h"
 
 #include <soc/rtc_cntl_reg.h>
+#include <NimBLEDevice.h>
 #include <USB.h>
 #include <Wire.h>
 
@@ -95,6 +96,9 @@ void ShrimpBoard::setupBLE() {
     hostConfiguration.setHidType(HID_KEYBOARD);
 
     compositeHID->begin(hostConfiguration);
+
+    NimBLEDevice::setSecurityAuth(true, false, true);
+    NimBLEDevice::setSecurityIOCap(BLE_HS_IO_NO_INPUT_OUTPUT);
 }
 
 void ShrimpBoard::setupUSB() {
