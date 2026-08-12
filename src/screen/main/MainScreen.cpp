@@ -34,9 +34,9 @@ void MainScreen::drawStats(int x, int y) {
     getDisplay().drawText(">");
     getDisplay().drawBitmap(getSettings().isUSB() ? USB_BMP : NO_USB_BMP, x + 8, y, 16, 16, getDisplay().white());
     getDisplay().drawBitmap(getShrimpBoard().isBLEConnected() ? BLE_BMP : NO_BLE_BMP, x + 8, y + 16, 16, 16, getDisplay().white());
-    getDisplay().drawBitmap(BATTERY_10_BMP, x + 24, y, 16, 16, getDisplay().white());
+    getDisplay().drawBitmap(getBatteryBitmap(), x + 24, y, 16, 16, getDisplay().white());
     getDisplay().setTextPos(x + 24, y + 20);
-    getDisplay().drawText(String(getBattery().getPercentageRounded()) + "%");
+    if (isBattery()) getDisplay().drawText(String(getBattery().getPercentageRounded()) + "%");
 }
 
 void MainScreen::drawKeyboard(int x, int y) {
@@ -119,4 +119,31 @@ void MainScreen::drawKeyboard(int x, int y) {
     if (getButtonMatrix().isPressed(5, 14)) getDisplay().drawRectangle(x + 68, y + 15, 2, 2, getDisplay().white());
     if (getButtonMatrix().isPressed(5, 15)) getDisplay().drawRectangle(x + 68, y + 18, 2, 2, getDisplay().white());
     if (getButtonMatrix().isPressed(5, 16)) getDisplay().drawRectangle(x + 68, y + 21, 2, 2, getDisplay().white());
+}
+
+bool MainScreen::isBattery() {
+    return getBattery().getVoltage() > 0.5;
+}
+
+const uint8_t (*MainScreen::getBatteryBitmap()) {
+    if (isBattery()) {
+        int percentage = getBattery().getPercentageRounded();
+        if (percentage == 0) {
+            return BATTERY_0_BMP;
+        } 
+        int index = constrain(ceil(percentage / 10.0), 1, 10);
+        switch (index) {
+            case 10: return BATTERY_10_BMP;
+            case 9: return BATTERY_9_BMP;
+            case 8: return BATTERY_8_BMP;
+            case 7: return BATTERY_7_BMP;
+            case 6: return BATTERY_6_BMP;
+            case 5: return BATTERY_5_BMP;
+            case 4: return BATTERY_4_BMP;
+            case 3: return BATTERY_3_BMP;
+            case 2: return BATTERY_2_BMP;
+            case 1: return BATTERY_1_BMP;
+        }
+    }
+    return BATTERY_UNKNOWN_BMP;
 }

@@ -15,4 +15,7 @@ class MainScreen : public Screen {
 
         void drawStats(int x, int y);
         void drawKeyboard(int x, int y);
+
+        bool isBattery();
+        const uint8_t (*getBatteryBitmap());
 };
