@@ -168,6 +168,7 @@ void ShrimpBoard::loop() {
     battery.read();
 
     loopSleep();
+    loopBattery();
     loopLeds();
     if (!screenFocus) {
         loopKeyboard();
@@ -210,6 +211,16 @@ void ShrimpBoard::loopSleep() {
             display.clear();
             display.update();
             esp_light_sleep_start();
+        }
+    }
+}
+
+void ShrimpBoard::loopBattery() {
+    if (isBLEConnected()) {
+        if (battery.getVoltage() > 0.5) {
+            compositeHID->setBatteryLevel(battery.getPercentageRounded());
+        } else {
+            compositeHID->setBatteryLevel(100);
         }
     }
 }

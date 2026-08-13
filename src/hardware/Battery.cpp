@@ -8,7 +8,7 @@ void Battery::read() {
     }
     float voltage = getRawVoltage();
     if (filteredVoltage < 0) {
-        filteredVoltage = voltage;
+        filteredVoltage = (voltage * (1.0 - emaAlpha));
     }
     voltage = (voltage * emaAlpha) + (filteredVoltage * (1.0 - emaAlpha));
     voltageRound[getRoundLimit() - 1] = voltage;
