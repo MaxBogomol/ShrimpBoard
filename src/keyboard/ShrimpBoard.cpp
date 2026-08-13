@@ -216,12 +216,20 @@ void ShrimpBoard::loopSleep() {
 }
 
 void ShrimpBoard::loopBattery() {
+    unsigned long currentMillis = millis();
+
     if (isBLEConnected()) {
-        if (battery.getVoltage() > 0.5) {
-            compositeHID->setBatteryLevel(battery.getPercentageRounded());
-        } else {
-            compositeHID->setBatteryLevel(100);
+        if (currentMillis - batteryMillis >= 1000 * 60) {
+            if (battery.getVoltage() > 0.5) {
+                compositeHID->setBatteryLevel(battery.getPercentageRounded());
+            } else {
+                compositeHID->setBatteryLevel(100);
+            }
+
+            batteryMillis = currentMillis;
         }
+    } else {
+        batteryMillis = currentMillis - ((1000 * 60) - (1000 * 10));
     }
 }
 

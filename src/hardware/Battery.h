@@ -8,7 +8,7 @@ class Battery {
         Settings* settings;
 
         float emaAlpha = 0.05;
-        double filteredVoltage = -1;
+        bool emaFirst = true;
         int roundLimit = 64;
         double voltageRound[64] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 

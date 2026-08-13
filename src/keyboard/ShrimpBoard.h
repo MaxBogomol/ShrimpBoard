@@ -40,6 +40,8 @@ class ShrimpBoard {
         int sleepCount = 0;
         int awakeCount = 0;
 
+        unsigned long batteryMillis = 0;
+
         bool screenFocus = false;
         bool mouseScroll = false;
 
