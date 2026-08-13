@@ -1,5 +1,8 @@
 #include "ShrimpBoard.h"
 
+#define CONFIG_BT_NIMBLE_MAX_BONDS 15
+#define CONFIG_BT_NIMBLE_MAX_CCCDS 60
+
 #include <soc/rtc_cntl_reg.h>
 #include <NimBLEDevice.h>
 #include <USB.h>
@@ -94,11 +97,12 @@ void ShrimpBoard::setupBLE() {
 
     BLEHostConfiguration hostConfiguration;
     hostConfiguration.setHidType(HID_KEYBOARD);
+    NimBLEDevice::setSecurityInitKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID);
+    NimBLEDevice::setSecurityRespKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID);
 
     compositeHID->begin(hostConfiguration);
 
     NimBLEDevice::setSecurityAuth(true, false, true);
-    NimBLEDevice::setSecurityIOCap(BLE_HS_IO_NO_INPUT_OUTPUT);
 }
 
 void ShrimpBoard::setupUSB() {
@@ -168,7 +172,7 @@ void ShrimpBoard::loop() {
     battery.read();
 
     loopSleep();
-    loopBattery();
+    loopBLE();
     loopLeds();
     if (!screenFocus) {
         loopKeyboard();
@@ -215,10 +219,14 @@ void ShrimpBoard::loopSleep() {
     }
 }
 
-void ShrimpBoard::loopBattery() {
+void ShrimpBoard::loopBLE() {
     unsigned long currentMillis = millis();
 
     if (isBLEConnected()) {
+        if (NimBLEDevice::getNumBonds() >= CONFIG_BT_NIMBLE_MAX_BONDS) {
+            NimBLEDevice::deleteBond(NimBLEDevice::getBondedAddress(0));
+        }
+
         if (currentMillis - batteryMillis >= 1000 * 60) {
             if (battery.getVoltage() > 0.5) {
                 compositeHID->setBatteryLevel(battery.getPercentageRounded());

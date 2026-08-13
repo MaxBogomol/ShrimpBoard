@@ -70,7 +70,7 @@ class ShrimpBoard {
 
         void loop();
         void loopSleep();
-        void loopBattery();
+        void loopBLE();
         void loopLeds();
         void loopKeyboard();
         void loopMouse();
