@@ -45,6 +45,8 @@ void Interface::setupScreensParameters() {
     mainSettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&modeSettingsEntry));
     mainSettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&usbStatusSettingsEntry));
     mainSettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&bleStatusSettingsEntry));
+    mainSettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&bleBondsSettingsEntry));
+    mainSettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&bleDeleteBondsSettingsEntry));
     mainSettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&saveSettingsEntry));
     mainSettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&resetSettingsEntry));
     mainSettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&resetEPROMSettingsEntry));

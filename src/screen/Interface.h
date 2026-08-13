@@ -15,6 +15,8 @@
 #include "settings/entries/main/ModeSettingsEntry.h"
 #include "settings/entries/main/USBStatusSettingsEntry.h"
 #include "settings/entries/main/BLEStatusSettingsEntry.h"
+#include "settings/entries/main/BLEBondsSettingsEntry.h"
+#include "settings/entries/main/BLEDeleteBondsSettingsEntry.h"
 #include "settings/entries/main/SaveSettingsEntry.h"
 #include "settings/entries/main/ResetSettingsEntry.h"
 #include "settings/entries/main/ResetEPROMSettingsEntry.h"
@@ -87,6 +89,8 @@ class Interface {
         ModeSettingsEntry modeSettingsEntry;
         USBStatusSettingsEntry usbStatusSettingsEntry;
         BLEStatusSettingsEntry bleStatusSettingsEntry;
+        BLEBondsSettingsEntry bleBondsSettingsEntry;
+        BLEDeleteBondsSettingsEntry bleDeleteBondsSettingsEntry;
         SaveSettingsEntry saveSettingsEntry;
         ResetSettingsEntry resetSettingsEntry;
         ResetEPROMSettingsEntry resetEPROMSettingsEntry;
