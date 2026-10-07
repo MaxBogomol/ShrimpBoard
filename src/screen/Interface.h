@@ -47,6 +47,7 @@
 #include "settings/entries/screen/LoadingScreenSpeedSettingsEntry.h"
 #include "settings/entries/screen/ShowLoadingScreenSettingsEntry.h"
 
+#include "settings/entries/battery/VoltageSettingsEntry.h"
 #include "settings/entries/battery/InactiveSettingsEntry.h"
 #include "settings/entries/battery/InactiveTimeSettingsEntry.h"
 #include "settings/entries/battery/ShowSleepSettingsEntry.h"
@@ -121,6 +122,7 @@ class Interface {
         LoadingScreenSpeedSettingsEntry loadingScreenSpeedSettingsEntry;
         ShowLoadingScreenSettingsEntry showLoadingScreenSettingsEntry;
 
+        VoltageSettingsEntry voltageSettingsEntry;
         InactiveSettingsEntry inactiveSettingsEntry;
         InactiveTimeSettingsEntry inactiveTimeSettingsEntry;
         ShowSleepSettingsEntry showSleepSettingsEntry;
