@@ -81,6 +81,7 @@ void Interface::setupScreensParameters() {
     screenSettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&showLoadingScreenSettingsEntry));
     
     //Battery
+    batterySettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&voltageSettingsEntry));
     batterySettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&inactiveSettingsEntry));
     batterySettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&inactiveTimeSettingsEntry));
     batterySettingsIndexScreen.addSettingsEntry(&setSettingsEntryParameters(&showSleepSettingsEntry));
