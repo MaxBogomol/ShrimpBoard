@@ -101,6 +101,7 @@ void ShrimpBoard::setupBLE() {
     NimBLEDevice::setSecurityRespKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID);
 
     compositeHID->begin(hostConfiguration);
+    delay(10);
 
     NimBLEDevice::setSecurityAuth(true, false, true);
 }
@@ -331,29 +332,31 @@ void ShrimpBoard::loopMouse() {
         }
     }
 
+    int matrixId = isUSBMode() ? 0 : 1;
+
     if (settings->isScreenFocus() && !screenFocus) {
         mouseReleaseAll();
     }
 
     if (buttonMatrix.isPress(0, 0)) {
         settings->setLeftMouseLock(!settings->isLeftMouseLock());
-        mouseRelease(MOUSE_FORWARD);
-        mouseRelease(MOUSE_BACKWARD);
+        mouseRelease(MOUSE_MATRIX[matrixId][4]);
+        mouseRelease(MOUSE_MATRIX[matrixId][3]);
     }
     if (buttonMatrix.isPress(4, 14)) {
         settings->setRightMouseLock(!settings->isRightMouseLock());
-        mouseRelease(MOUSE_FORWARD);
-        mouseRelease(MOUSE_BACKWARD);
+        mouseRelease(MOUSE_MATRIX[matrixId][4]);
+        mouseRelease(MOUSE_MATRIX[matrixId][3]);
     }
 
-    if (keyboard.isTwoLinkedButtonPress(1, 0, 4, 15)) mousePress(MOUSE_LEFT);
-    if (keyboard.isTwoLinkedButtonRelease(1, 0, 4, 15)) mouseRelease(MOUSE_LEFT);
+    if (keyboard.isTwoLinkedButtonPress(1, 0, 4, 15)) mousePress(MOUSE_MATRIX[matrixId][0]);
+    if (keyboard.isTwoLinkedButtonRelease(1, 0, 4, 15)) mouseRelease(MOUSE_MATRIX[matrixId][0]);
 
-    if (keyboard.isTwoLinkedButtonPress(2, 0, 5, 13)) mousePress(MOUSE_MIDDLE);
-    if (keyboard.isTwoLinkedButtonRelease(2, 0, 5, 13)) mouseRelease(MOUSE_MIDDLE);
+    if (keyboard.isTwoLinkedButtonPress(2, 0, 5, 13)) mousePress(MOUSE_MATRIX[matrixId][1]);
+    if (keyboard.isTwoLinkedButtonRelease(2, 0, 5, 13)) mouseRelease(MOUSE_MATRIX[matrixId][1]);
 
-    if (keyboard.isTwoLinkedButtonPress(3, 0, 5, 14)) mousePress(MOUSE_RIGHT);
-    if (keyboard.isTwoLinkedButtonRelease(3, 0, 5, 14)) mouseRelease(MOUSE_RIGHT);
+    if (keyboard.isTwoLinkedButtonPress(3, 0, 5, 14)) mousePress(MOUSE_MATRIX[matrixId][2]);
+    if (keyboard.isTwoLinkedButtonRelease(3, 0, 5, 14)) mouseRelease(MOUSE_MATRIX[matrixId][2]);
 
     unsigned long currentMillis = millis();
     bool scroll = settings->isButtonScroll();
@@ -361,11 +364,11 @@ void ShrimpBoard::loopMouse() {
     int scrollTime = settings->getMouseButtonScrollTime();
 
     if (!settings->isLeftMouseLock() && !settings->isRightMouseLock()) {
-        if (keyboard.isTwoLinkedButtonPress(4, 0, 5, 15)) mousePress(MOUSE_FORWARD);
-        if (keyboard.isTwoLinkedButtonRelease(4, 0, 5, 15)) mouseRelease(MOUSE_FORWARD);
+        if (keyboard.isTwoLinkedButtonPress(4, 0, 5, 15)) mousePress(MOUSE_MATRIX[matrixId][4]);
+        if (keyboard.isTwoLinkedButtonRelease(4, 0, 5, 15)) mouseRelease(MOUSE_MATRIX[matrixId][4]);
 
-        if (keyboard.isTwoLinkedButtonPress(5, 0, 5, 16)) mousePress(MOUSE_BACKWARD);
-        if (keyboard.isTwoLinkedButtonRelease(5, 0, 5, 16)) mouseRelease(MOUSE_BACKWARD);
+        if (keyboard.isTwoLinkedButtonPress(5, 0, 5, 16)) mousePress(MOUSE_MATRIX[matrixId][3]);
+        if (keyboard.isTwoLinkedButtonRelease(5, 0, 5, 16)) mouseRelease(MOUSE_MATRIX[matrixId][3]);
     } else {
         if (settings->isLeftMouseLock()) {
             if (buttonMatrix.isPress(4, 0)) {
@@ -403,11 +406,11 @@ void ShrimpBoard::loopMouse() {
                 }
             }
         } else {
-            if (buttonMatrix.isPress(4, 0)) mousePress(MOUSE_FORWARD);
-            if (buttonMatrix.isRelease(4, 0)) mouseRelease(MOUSE_FORWARD);
+            if (buttonMatrix.isPress(4, 0)) mousePress(MOUSE_MATRIX[matrixId][4]);
+            if (buttonMatrix.isRelease(4, 0)) mouseRelease(MOUSE_MATRIX[matrixId][4]);
 
-            if (buttonMatrix.isPress(5, 0)) mousePress(MOUSE_BACKWARD);
-            if (buttonMatrix.isRelease(5, 0)) mouseRelease(MOUSE_BACKWARD);
+            if (buttonMatrix.isPress(5, 0)) mousePress(MOUSE_MATRIX[matrixId][3]);
+            if (buttonMatrix.isRelease(5, 0)) mouseRelease(MOUSE_MATRIX[matrixId][3]);
         }
         if (settings->isRightMouseLock()) {
             if (buttonMatrix.isPress(5, 15)) {
@@ -445,11 +448,11 @@ void ShrimpBoard::loopMouse() {
                 }
             }
         } else {
-            if (buttonMatrix.isPress(5, 15)) mousePress(MOUSE_FORWARD);
-            if (buttonMatrix.isRelease(5, 15)) mouseRelease(MOUSE_FORWARD);
+            if (buttonMatrix.isPress(5, 15)) mousePress(MOUSE_MATRIX[matrixId][4]);
+            if (buttonMatrix.isRelease(5, 15)) mouseRelease(MOUSE_MATRIX[matrixId][4]);
 
-            if (buttonMatrix.isPress(5, 16)) mousePress(MOUSE_BACKWARD);
-            if (buttonMatrix.isRelease(5, 16)) mouseRelease(MOUSE_BACKWARD);
+            if (buttonMatrix.isPress(5, 16)) mousePress(MOUSE_MATRIX[matrixId][3]);
+            if (buttonMatrix.isRelease(5, 16)) mouseRelease(MOUSE_MATRIX[matrixId][3]);
         }
     }
 
@@ -552,7 +555,7 @@ void ShrimpBoard::mouseMove(int x, int y, int wheel, int pan) {
     if (isUseUSB()) {
         mouseUSB.move(x, y, wheel, pan);
     } else if (isUseBLE()) {
-        mouseBLE->mouseMove(x, y, wheel, pan);
+        mouseBLE->mouseMove(x, y, pan, wheel);
     }
 }
 
